@@ -14,7 +14,7 @@ export default class SidebarLine extends Component {
                     <input className="line" type="text" name="alphabet" />
                 </label>
                 <label name="initEndState">
-                    Initial State:
+                    Initial States:
                     <input className="line" type="text" name="initState" />
                 </label>
                 <label name="initEndState">
