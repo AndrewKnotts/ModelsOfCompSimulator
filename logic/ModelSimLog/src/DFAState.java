@@ -10,4 +10,16 @@ public class DFAState {
         connected = false;
     }
 
+    public DFAState(String _name) {
+        name = _name;
+        conn = new ArrayList<DFAState>();
+        connected = false;
+    }
+
+    public boolean equals(DFAState other) {
+        if (other.name != name) return false;
+        if (!other.conn.equals(conn)) return false;
+        return true;
+    }
+
 }

@@ -14,13 +14,14 @@ public class DFAModel {
     private Map<DFAState, List<String>> trans;
     private Map<String, DFAState> stateNames;
 
-    public DFAModel (DFAState _initial, List<DFAState> _accepting, List<DFAState> _all, List<String> _alphabet, DFAState _current, List<Transition> ts) {
+    public DFAModel (DFAState _initial, List<DFAState> _accepting, List<DFAState> _all, List<String> _alphabet, List<Transition> ts) {
         initial = _initial;
         accepting = _accepting;
         all = _all;
         alphabet = _alphabet;
-        current = _current;
+        //current = _current;
         transitions = ts;
+        trans = new HashMap<DFAState, List<String>>();
 
         if (!checkAlphabet()) System.out.println("Invalid Alphabet");
         if (!checkStates()) System.out.println("Invalid states");
@@ -35,8 +36,20 @@ public class DFAModel {
                 System.out.println("State " + s.name + " is not reachable");
             }
         }
+        System.out.println("Valid DFA");
+
     }
 
+    public boolean checkInputString(String input) {
+        DFAState current = initial;
+        for(int i = 0; i < input.length(); i++) {
+            for(Transition t: transitions) {
+
+            }
+        }
+
+        return true;
+    }
     public boolean checkAlphabet() {
         if (alphabet.size() == 0) {
             return false;
@@ -73,6 +86,7 @@ public class DFAModel {
         if (accepting.isEmpty()) { return false; }
         for (DFAState s : accepting) {
             if (! (states.contains(s))) { return false;}
+            s.accepting = true;
         }
         return true;
     }
@@ -109,8 +123,10 @@ public class DFAModel {
     // call from somewhere
     public void makeConnected(DFAState start) {
         for(DFAState d: start.conn) {
-            d.connected = true;
-            makeConnected(d);
+            if (!d.connected) {
+                d.connected = true;
+                makeConnected(d);
+            }
         }
     }
 }
