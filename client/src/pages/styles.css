@@ -1,0 +1,26 @@
+.bg {
+  background-color: #ececec;
+  height: 100%;
+  margin: 0;
+  border-bottom: solid;
+  padding-bottom: 1rem;
+}
+
+h1 {
+  padding-top: 1.5rem;
+  font-size: 300%;
+  letter-spacing: 1px;
+}
+
+.splitScreen {
+  display: flex;
+}
+
+.topPane {
+  width: 50%;
+}
+
+.bottomPane {
+  width: 50%;
+  background-color: black;
+}
