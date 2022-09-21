@@ -10,13 +10,14 @@ body {
   background-color: white;
   color: black;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: stretch;
   gap: 2rem;
   padding: 0 1rem;
-  padding-top: 4rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid black;
+  padding-top: 1.5rem;
+  padding-bottom: 0rem;
+  border-bottom: 1.5px solid black;
   width: auto;
   height: auto;
 }
@@ -40,7 +41,7 @@ body {
   height: 100%;
   display: flex;
   align-items: center;
-  padding: 1.1rem;
+  padding: 1rem;
 }
 
 .nav li.active {

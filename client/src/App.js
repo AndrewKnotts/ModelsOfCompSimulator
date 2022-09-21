@@ -5,6 +5,7 @@ import DFA from './pages/DFA';
 import NFA from './pages/NFA';
 import PDA from './pages/PDA';
 import InputArea from './components/input/InputArea';
+import Graph from './components/graph/Graph';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/Turing" element={<Turing />} />
         </Routes>
         <InputArea />
+        <Graph />
 
       </div>
 
