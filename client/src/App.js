@@ -16,7 +16,7 @@ function App() {
           <Route path="/DFA" element={<DFA />} />
           <Route path="/NFA" element={<NFA />} />
           <Route path="/PDA" element={<PDA />} />
-          <Route path="/Turing" element={<Turing />} />
+          <Route path="/TuringMachine" element={<Turing />} />
         </Routes>
         <InputArea />
         <Graph />

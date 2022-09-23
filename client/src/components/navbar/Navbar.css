@@ -33,6 +33,9 @@ body {
   list-style: none;
   display: flex;
   gap: 7rem;
+  display: flex;
+  flex-wrap: wrap;
+  word-wrap: break-word;
 }
 
 .nav a {

@@ -1,24 +1,44 @@
 import React, { Component } from 'react'
 import './InputArea.css'
+import { page } from '../navbar/Navbar.js';
 
 export default class InputArea extends Component {
 
-
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            alphabet: '',
-            states: '',
-            startingState: '',
-            acceptingStates: '',
-            transitions: '',
-            input: '',
+            alphabet: localStorage.getItem('alphabet'),
+            states: localStorage.getItem('states'),
+            startingState: localStorage.getItem('startingState'),
+            acceptingStates: localStorage.getItem('acceptingStates'),
+            transitions: localStorage.getItem('transitions'),
+            input: localStorage.getItem('input'),
         };
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(evt, field) {
         this.setState({ [field]: evt.target.value });
+        localStorage.setItem([field], evt.target.value);
+    }
+
+    handleSubmit(event) {
+
+        if (page === "DFA") {
+            console.log("Test1");
+        }
+        else if (page === "NFA") {
+            console.log("Test2");
+        }
+        else if (page === "PDA") {
+            console.log("Test3");
+        }
+        else if (page === "TuringMachine") {
+            console.log("Test4");
+        }
+
+        event.preventDefault()
+
     }
 
     render() {
@@ -52,8 +72,8 @@ export default class InputArea extends Component {
                         <label>Input:</label>
                         <input type="text" value={this.state.input} onChange={(event) => this.handleChange(event, "input")} name="input" placeholder="ex: abcde" />
                     </div>
-                    <div className='formGroup'>
-                        <input type="submit" value="Run" />
+                    <div className='btnGroup'>
+                        <input onClick={(event) => this.handleSubmit(event)} type="submit" value="Run" />
                     </div>
                 </form>
                 <h1>{this.state.alphabet}</h1>
