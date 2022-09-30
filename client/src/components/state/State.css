@@ -1,0 +1,24 @@
+.circle-res {
+  width: 10%;
+  border-radius: 50%;
+  background: white;
+  line-height: 0;
+  position: relative;
+  display: inline-block;
+  border: black solid;
+}
+
+.circle-res::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.circle-txt {
+  position: absolute;
+  bottom: 50%;
+  width: 100%;
+  text-align: center;
+  font-family: arial, sans-serif;
+  font-weight: bold;
+}

@@ -19,8 +19,9 @@ function App() {
           <Route path="/TuringMachine" element={<Turing />} />
         </Routes>
         <InputArea />
+      </div>
+      <div className='visualization'>
         <Graph />
-
       </div>
 
     </>

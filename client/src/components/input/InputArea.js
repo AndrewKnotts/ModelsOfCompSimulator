@@ -2,10 +2,19 @@ import React, { Component } from 'react'
 import './InputArea.css'
 import { page } from '../navbar/Navbar.js';
 
+var alphabet = ""
+var states = ""
+var startingState = ""
+var acceptingStates = ""
+var transitions = ""
+var input = ""
+
+
 export default class InputArea extends Component {
 
     constructor(props) {
         super(props);
+        // set the states to their current values in local storage
         this.state = {
             alphabet: localStorage.getItem('alphabet'),
             states: localStorage.getItem('states'),
@@ -15,13 +24,22 @@ export default class InputArea extends Component {
             input: localStorage.getItem('input'),
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    // Update the states as keys are pressed
     handleChange(evt, field) {
         this.setState({ [field]: evt.target.value });
         localStorage.setItem([field], evt.target.value);
+        alphabet = this.state.alphabet;
+        states = this.state.states;
+        startingState = this.state.startingState;
+        acceptingStates = this.state.acceptingStates;
+        transitions = this.state.transitions;
+        input = this.state.input;
     }
 
+    // On submit, run the correct model simulation
     handleSubmit(event) {
 
         if (page === "DFA") {
@@ -76,14 +94,9 @@ export default class InputArea extends Component {
                         <input onClick={(event) => this.handleSubmit(event)} type="submit" value="Run" />
                     </div>
                 </form>
-                <h1>{this.state.alphabet}</h1>
-                <h1>{this.state.states}</h1>
-                <h1>{this.state.startingState}</h1>
-                <h1>{this.state.acceptingStates}</h1>
-                <h1>{this.state.transitions}</h1>
-                <h1>{this.state.input}</h1>
             </div>
         )
     }
 }
 
+export { alphabet, states, startingState, acceptingStates, transitions, input }

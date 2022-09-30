@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React from 'react';
 import './Navbar.css';
 import { useMatch, Link, useResolvedPath } from 'react-router-dom';
 
@@ -6,13 +6,14 @@ var page = "DFA";
 
 function Navbar() {
 
+    //HandleClick tracks our current page to help specify which model we want to run
     function handleClick(currPage) {
         page = currPage;
     }
 
     return (
         <nav className='nav'>
-            <Link to="/" className='site-title'>Simulator for Models of Computation </Link>
+            <Link to="/" className='site-title' onClick={() => { handleClick("DFA") }}>Simulator for Models of Computation</Link>
             <ul>
                 <CustomLink to="/DFA" onClick={() => { handleClick("DFA") }}>DFA</CustomLink>
                 <CustomLink to="/NFA" onClick={() => { handleClick("NFA") }}>NFA</CustomLink>
@@ -23,7 +24,7 @@ function Navbar() {
     );
 }
 
-//Function designed to keep track of the current computing style being used - updates in the navbar
+//CustomoLink tag designed to keep track of the current computing style being used - updates in the navbar
 function CustomLink({ to, onClick, children, ...props }) {
     const resolvedPath = useResolvedPath(to)
     const isActive = useMatch({ path: resolvedPath.pathname, end: true })
