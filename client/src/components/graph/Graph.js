@@ -1,26 +1,15 @@
 import React, { Component } from 'react'
 import State from '../state/State'
-import { alphabet, states, startingState, acceptingStates, transitions, input } from '../input/InputArea';
+import { alphabet, states, startingState, acceptingStates, transitions, input, model } from '../input/InputArea';
 
 export default class Graph extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            numStates: input.length
-        };
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleSubmit() {
-        this.props.handleSubmit(this.state);
-    }
 
     render() {
         return (
             <div>
-                {Array(this.state.numStates).fill(<State />)}
+                {Array().fill(<State />)}
             </div>
         )
     }
 }
+//{Array(this.state.numStates).fill(<State />)}
