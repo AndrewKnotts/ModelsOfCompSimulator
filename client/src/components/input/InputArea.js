@@ -49,11 +49,17 @@ export class DFAModel {
         console.log("transitions: ", transitions);
 
         // check components
-        if (!this.checkAlphabet()) console.log("Invalid Alphabet");
+        /*if (!this.checkAlphabet()) console.log("Invalid Alphabet");
         if (!this.checkStates()) console.log("Invalid states");
         if (!this.checkInitial(initial)) console.log("Invalid initial");
         if (!this.checkAccepting(accepting)) console.log("Invalid accepting");
-        if (!this.checkTransitions()) console.log("Invalid transitions");
+        if (!this.checkTransitions()) console.log("Invalid transitions"); */
+        // window alert version
+        if (!this.checkAlphabet()) window.alert("Invalid Alphabet");
+        if (!this.checkStates()) window.alert("Invalid states");
+        if (!this.checkInitial(initial)) window.alert("Invalid initial");
+        if (!this.checkAccepting(accepting)) window.alert("Invalid accepting");
+        if (!this.checkTransitions()) window.alert("Invalid transitions");
 
         // make Connected for all and check
         this.makeConnected(this.initial);
@@ -85,7 +91,12 @@ export class DFAModel {
                     break;
                 }
             }
-            if (!worked) return null;
+            if (!worked) {
+                let fail_state = new State("🙁");
+                let failure = new Transition(str, null, fail_state);
+                path.push(failure);
+                return path;
+            }
         }
 
         // Once finished with string, check if end state is accepting and return if so
@@ -196,7 +207,7 @@ export class DFAModel {
 }
 
 // parse alphabet string input into String array
-function parseAlphabet(input) {
+export function parseAlphabet(input) {
     let alphabet_array = input.split(',');
     for (let i in alphabet_array) {
         let alpha = alphabet_array[i];
@@ -206,7 +217,7 @@ function parseAlphabet(input) {
 }
 
 // parse states string input into State array
-function parseStates(input) {
+export function parseStates(input) {
     let input_array = input.split(',');
     let states_array = [];
     for (let i in input_array) {
@@ -217,7 +228,7 @@ function parseStates(input) {
 }
 
 // parse transition string input into Transition array
-function parseTransition(input) {
+export function parseTransition(input) {
     let transitions = input.split(';');
     let trans_array = [];
     for (let i in transitions) {
@@ -230,32 +241,6 @@ function parseTransition(input) {
     }
     return trans_array;
 }
-
-// CONSOLE TESTS
-/* let testA = new State("A");
-let testB = new State("B");
-let t1 = new Transition("0", testA, testA);
-let t2 = new Transition("1", testA, testB);
-let t3 = new Transition("1", testB, testA);
-let t4 = new Transition("0", testB, testB);
- 
-let test_states = [testA, testB];
-let test_alphabet = ["0", "1"];
-let test_accepting = [testB];
-let test_transitions = [t1,t2,t3,t4];
- 
-let test_model = new DFAModel(testA, test_accepting, test_states, test_alphabet, test_transitions);
- 
-console.log(test_model.checkInputString("10101"));
-console.log(test_model.checkInputString("1"));
-console.log(test_model.checkInputString("1011"));
-console.log(test_model.checkInputString("10000"));
- 
-console.log(test_model.checkInputString("11"));
-console.log(test_model.checkInputString("000101"));
-console.log(test_model.checkInputString("0"));
-console.log(test_model.checkInputString(""));
-console.log(test_model.checkInputString("1001101")); */
 
 export default class InputArea extends Component {
     constructor(props) {
