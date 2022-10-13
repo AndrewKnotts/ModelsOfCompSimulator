@@ -43,3 +43,7 @@
   position: relative;
   top: -2rem;
 }
+
+.visualArea {
+  flex-wrap: wrap;
+}

@@ -28,8 +28,8 @@ export default class App extends Component {
       acceptingStates: localStorage.getItem('acceptingStates'),
       transitions: localStorage.getItem('transitions'),
       input: localStorage.getItem('input'),
-      //modelStates: [],
-      //modelTransitions: []
+      modelStates: [],
+      modelTransitions: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -136,7 +136,7 @@ export default class App extends Component {
           </div>
 
         </div>
-        <div>
+        <div className='visualArea'>
           {this.outputDest.map((txt, index) => {
             if (index % 2 == 0)
               return <State symbol={txt}></State>
