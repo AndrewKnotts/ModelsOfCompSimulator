@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import State from '../state/State'
-import { alphabet, states, startingState, acceptingStates, transitions, input } from '../input/InputArea';
+import { alphabet, states, startingState, acceptingStates, transitions, input, getInput } from '../input/InputArea';
 
 export default class Graph extends Component {
 
@@ -14,13 +14,16 @@ export default class Graph extends Component {
 
     handleSubmit() {
         this.props.handleSubmit(this.state);
+        this.state.numStates = input.length + 1
     }
 
     render() {
         return (
             <div>
-                {Array(this.state.numStates).fill(<State />)}
+                {Array(1).fill(<State />)}
             </div>
         )
     }
 }
+
+//{Array(getInput(input)).fill(<State />)}

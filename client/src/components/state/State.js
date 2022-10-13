@@ -4,8 +4,8 @@ import './State.css'
 export default class State extends Component {
     render() {
         return (
-            <div class="circle-res">
-                <div className='circle-txt'>A</div>
+            <div className="circle-res">
+                <div className='circle-txt'>😀</div>
             </div>
         )
     }

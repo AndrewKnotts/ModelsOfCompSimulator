@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import './InputArea.css'
 import { page } from '../navbar/Navbar.js';
+import Picker from 'emoji-picker-react';
+import State from '../state/State';
+import { renderGraph } from '../../App';
 
 var alphabet = ""
 var states = ""
@@ -8,6 +11,7 @@ var startingState = ""
 var acceptingStates = ""
 var transitions = ""
 var input = ""
+var inputObj = ""
 
 
 export default class InputArea extends Component {
@@ -22,9 +26,11 @@ export default class InputArea extends Component {
             acceptingStates: localStorage.getItem('acceptingStates'),
             transitions: localStorage.getItem('transitions'),
             input: localStorage.getItem('input'),
+            //graph: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        //this.hideComponent = this.hideComponent.bind(this);
     }
 
     // Update the states as keys are pressed
@@ -38,6 +44,15 @@ export default class InputArea extends Component {
         transitions = this.state.transitions;
         input = this.state.input;
     }
+
+    /*hideComponent(name) {
+        console.log(name);
+        switch (name) {
+            case "graph":
+                this.setState({ graph: !this.state.graph });
+                break;
+        }
+    }*/
 
     // On submit, run the correct model simulation
     handleSubmit(event) {
@@ -54,13 +69,16 @@ export default class InputArea extends Component {
         else if (page === "TuringMachine") {
             console.log("Test4");
         }
-
+        inputObj = JSON.stringify(this.state);
+        localStorage.setItem('inputState', inputObj);
         event.preventDefault()
+        console.log(inputObj);
+        //console.log(this.state);
 
+        //renderGraph(true);
     }
 
     render() {
-
 
         return (
             <div>
@@ -100,3 +118,6 @@ export default class InputArea extends Component {
 }
 
 export { alphabet, states, startingState, acceptingStates, transitions, input }
+export function getInput(a) {
+    return a.length;
+}
