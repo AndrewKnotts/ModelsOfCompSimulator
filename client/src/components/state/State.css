@@ -6,6 +6,10 @@
   position: relative;
   display: inline-block;
   border: black solid;
+  margin-top: 25px;
+  margin-left: 20px;
+  margin-right: 10px;
+  font-size: 250%;
 }
 
 .circle-res::after {
