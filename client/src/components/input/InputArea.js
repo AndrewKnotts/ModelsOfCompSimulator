@@ -112,12 +112,14 @@ export class DFAModel {
         if (this.alphabet.size === 0) return false;
 
         let symbols = new Set();
-        for (let s in this.alphabet) {
+        for (let i in this.alphabet) {
+            let s = this.alphabet[i];
             if (symbols.has(s)) return false;
             symbols.add(s);
         }
 
         this.syms = symbols;
+        console.log(this.syms);
         return true;
     }
 
@@ -169,6 +171,7 @@ export class DFAModel {
 
         for (let i in this.transitions) {
             let t = this.transitions[i];
+            console.log(t);
             if (!this.syms.has(t.symbol)) return false;
             if (!this.states.has(t.source)) return false;
             if (!this.states.has(t.dest)) return false;
