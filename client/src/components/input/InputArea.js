@@ -28,11 +28,11 @@ class State {
   
   class DFAModel {
     constructor(initial, accepting, all_states, alphabet, transitions) {
-      this.initial = initial;
-      this.accepting = accepting;
-      this.all = all_states;
-      this.alphabet = alphabet;
-      this.transitions = transitions;
+      this.all = parseStates(all_states);
+      this.initial = null;
+      this.accepting = [];
+      this.alphabet = parseAlphabet(alphabet);
+      this.transitions = parseTransition(transitions);
       this.current = null;
       this.syms = null;
       this.states = null;
@@ -46,8 +46,8 @@ class State {
       // check components
       if (!this.checkAlphabet()) console.log("Invalid Alphabet");
       if (!this.checkStates()) console.log("Invalid states");
-      if (!this.checkInitial()) console.log("Invalid initial");
-      if (!this.checkAccepting()) console.log("Invalid accepting");
+      if (!this.checkInitial(initial)) console.log("Invalid initial");
+      if (!this.checkAccepting(accepting)) console.log("Invalid accepting");
       if (!this.checkTransitions()) console.log("Invalid transitions");
   
       // make Connected for all and check
@@ -109,34 +109,38 @@ class State {
     checkStates() {
       if (this.all.size == 0) return false;
   
-      let states = new Set();
+      let states = new Map();
       for (let i in this.all) {
         let s = this.all[i];
         if (states.has(s.name) || this.syms.has(s.name)) return false;
-        states.add(s);
+        states.set(s.name, s);
       }
   
       this.states = states;
       return true;
     }
   
-    // Checks that initial state is a valid state
-    checkInitial() {
-      if (this.states.has(this.initial)) {
-        this.initial.connected = true;
+    // Checks that initial state is a valid state and assigns it
+    checkInitial(initial) {
+      if (this.states.has(initial)) {
+        this.initial = this.states.get(initial);
         return true;
       }
       return false;
     }
   
     // Checks that accepting states are present and valid
-    checkAccepting() {
-      if (this.accepting.size == 0) return false;
+    checkAccepting(accepting) {
+      let acc_array = parseAlphabet(accepting);
+      if (acc_array.size == 0) return false;
   
-      for (let i in this.accepting) {
-        let s = this.accepting[i];
-        if (! (this.states.has(s))) return false;
-        s.accepting = true;
+      for (let i in acc_array) {
+        let acc_name = acc_array[i];
+        if (!this.states.has(acc_name)) {
+            return false;
+        } 
+        this.states.get(acc_name).accepting = true;
+        this.accepting.push(this.states.get(acc_name));
       }
       return true;
     }
@@ -152,6 +156,9 @@ class State {
         if (!this.states.has(t.source)) return false;
         if (!this.states.has(t.dest)) return false;
   
+        t.source = this.states.get(t.source);
+        t.dest = this.states.get(t.dest);
+
         if (this.ts.has(t.source) && this.ts.get(t.source).includes(t.symbol)) {
           return false;
         } else if (this.ts.has(t.source)) {
@@ -163,7 +170,7 @@ class State {
           this.ts.set(t.source, new_list);
         }
   
-        if (!t.source.conn.includes(t.dest)) {
+        if (t.source.conn.includes(t.dest)) {
           t.source.conn.push(t.dest);
         }
       }
@@ -181,9 +188,46 @@ class State {
       }
     }
   }
+
+  // parse alphabet string input into String array
+  function parseAlphabet(input) {
+    let alphabet_array = input.split(',');
+    for (let i in alphabet_array) {
+        let alpha = alphabet_array[i];
+        alphabet_array[i] = alpha.replace(" ", "");
+    }
+    return alphabet_array;
+  }
+
+  // parse states string input into State array
+  function parseStates(input) {
+    let input_array = input.split(',');
+    let states_array = [];
+    for (let i in input_array) {
+        let str_state = input_array[i];
+        states_array[i] = new State(str_state.replace(" ", ""));
+    }
+    return states_array;
+  }
+
+  // parse transition string input into Transition array
+  function parseTransition(input) {
+    let transitions = input.split(';');
+    let trans_array = [];
+    for (let i in transitions) {
+        let trans = transitions[i];
+        let split = trans.split(',');
+        for (let j in split) {
+            split[j] = split[j].replace(" ", "").replace("(", "").replace(")", "");
+        }
+        trans_array[i] = new Transition(split[0], split[1], split[2]);
+    }
+    console.log(trans_array);
+    return trans_array; 
+  }
   
   // CONSOLE TESTS
-  let testA = new State("A");
+  /* let testA = new State("A");
   let testB = new State("B");
   let t1 = new Transition("0", testA, testA);
   let t2 = new Transition("1", testA, testB);
@@ -206,7 +250,7 @@ class State {
   console.log(test_model.checkInputString("000101"));
   console.log(test_model.checkInputString("0"));
   console.log(test_model.checkInputString(""));
-  console.log(test_model.checkInputString("1001101"));
+  console.log(test_model.checkInputString("1001101")); */
 
 export default class InputArea extends Component {
     constructor(props) {
@@ -241,8 +285,8 @@ export default class InputArea extends Component {
 
         if (page === "DFA") {
             console.log("Test1");
-            console.log(typeof(acceptingState));
-            let new_model = new DFAModel(startingState, acceptingStates, states, alphabet, transitions);
+            let new_model = new DFAModel(this.state.startingState, this.state.acceptingStates, this.state.states, this.state.alphabet, this.state.transitions);
+            console.log(new_model.checkInputString(this.state.input));
         }
         else if (page === "NFA") {
             console.log("Test2");
@@ -290,7 +334,7 @@ export default class InputArea extends Component {
                         <input type="text" value={this.state.input} onChange={(event) => this.handleChange(event, "input")} name="input" placeholder="ex: abcde" />
                     </div>
                     <div className='btnGroup'>
-                        <input onClick={(event) => this.handleSubmit(event)} type="submit" value="Run" />
+                        <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
                     </div>
                 </form>
             </div>

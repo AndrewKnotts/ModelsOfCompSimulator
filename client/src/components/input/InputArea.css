@@ -17,7 +17,7 @@ input[type="text"] {
   flex-wrap: wrap;
 }
 
-input[type="submit"] {
+input[type="button"] {
   background-color: #39ff14;
   text-decoration: none;
   cursor: pointer;
