@@ -124,6 +124,7 @@ class State {
     checkInitial(initial) {
       if (this.states.has(initial)) {
         this.initial = this.states.get(initial);
+        this.initial.connected = true;
         return true;
       }
       return false;
@@ -170,7 +171,7 @@ class State {
           this.ts.set(t.source, new_list);
         }
   
-        if (t.source.conn.includes(t.dest)) {
+        if (!t.source.conn.includes(t.dest)) {
           t.source.conn.push(t.dest);
         }
       }
@@ -222,7 +223,6 @@ class State {
         }
         trans_array[i] = new Transition(split[0], split[1], split[2]);
     }
-    console.log(trans_array);
     return trans_array; 
   }
   
