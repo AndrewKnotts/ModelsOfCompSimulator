@@ -8,7 +8,8 @@ import InputArea from './components/input/InputArea';
 //import Graph from './components/graph/Graph';
 import { Component } from 'react';
 import { page } from './components/navbar/Navbar';
-import { DFAModel, Transition } from './components/input/InputArea';
+import { DFAModel, Transition } from './components/input/DFAModel.js';
+import { NFAModel } from './components/input/NFAModel.js';
 import State from './components/state/State';
 import Arrow from './components/arrow/arrow';
 
@@ -78,6 +79,11 @@ export default class App extends Component {
     }
     else if (page === "NFA") {
       console.log("Test2");
+      console.log(this.state.alphabet);
+      let nfa_model = new NFAModel(this.state.startingState, this.state.acceptingStates, this.state.states, 
+        this.state.alphabet, this.state.transitions);
+      let output = nfa_model.checkInputString(this.state.input);
+      console.log(output);
     }
     else if (page === "PDA") {
       console.log("Test3");
