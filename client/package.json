@@ -1,7 +1,6 @@
 {
   "name": "mocsimulator",
   "version": "0.1.0",
-  "homepage": "https://jmadams3.github.io/ModelsOfCompSimulator",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -42,6 +41,7 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0"
+    "gh-pages": "^4.0.0",
+    "netlify-cli": "^12.0.11"
   }
 }
