@@ -12,6 +12,10 @@ import { DFAModel, Transition } from './components/input/DFAModel.js';
 import { NFAModel } from './components/input/NFAModel.js';
 import State from './components/state/State';
 import Arrow from './components/arrow/arrow';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 export default class App extends Component {
@@ -80,7 +84,7 @@ export default class App extends Component {
     else if (page === "NFA") {
       console.log("Test2");
       console.log(this.state.alphabet);
-      let nfa_model = new NFAModel(this.state.startingState, this.state.acceptingStates, this.state.states, 
+      let nfa_model = new NFAModel(this.state.startingState, this.state.acceptingStates, this.state.states,
         this.state.alphabet, this.state.transitions);
       let output = nfa_model.checkInputString(this.state.input);
       console.log(output);
@@ -100,7 +104,7 @@ export default class App extends Component {
 
     return (
       <>
-        <div className='container'>
+        <div className='contain'>
           <Routes>
             <Route path="/" element={<DFA />} />
             <Route path="/DFA" element={<DFA />} />
