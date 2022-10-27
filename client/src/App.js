@@ -60,7 +60,7 @@ export default class App extends Component {
     if (page === "DFA") {
       console.log("Test1");
       let new_model = new DFAModel(this.state.startingState, this.state.acceptingStates, this.state.states, this.state.alphabet, this.state.transitions);
-      console.log(new_model.checkInputString(this.state.input));
+      //console.log(new_model.checkInputString(this.state.input));
       let output = new_model.checkInputString(this.state.input);
       this.setState({
         modelStates: output[0].dest.name,
@@ -79,11 +79,25 @@ export default class App extends Component {
     }
     else if (page === "NFA") {
       console.log("Test2");
-      console.log(this.state.alphabet);
       let nfa_model = new NFAModel(this.state.startingState, this.state.acceptingStates, this.state.states, 
         this.state.alphabet, this.state.transitions);
       let output = nfa_model.checkInputString(this.state.input);
       console.log(output);
+      
+      this.setState({
+        modelStates: output[0].right.name,
+        modelTransitions: output[0].left
+      });
+
+      this.outputDest = [];
+      this.outputSymbols = [];
+      this.outputDest.push(output[0].right.name)
+      for (let i = 1; i < output.length; i++) {
+        this.outputDest.push(output[i].left);
+        this.outputDest.push(output[i].right.name);
+      }
+      console.log(this.outputDest, this.outputSymbols);
+
     }
     else if (page === "PDA") {
       console.log("Test3");

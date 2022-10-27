@@ -31,6 +31,7 @@ export class DFAModel {
         this.syms = null;
         this.states = null;
         this.ts = new Map();
+        this.error = null;
         
         /* console.log("initial: ", initial);
         console.log("accepting: ", accepting);
@@ -39,11 +40,11 @@ export class DFAModel {
         console.log("transitions: ", transitions); */
 
         // check components and alert if error
-        if (!this.checkAlphabet()) window.alert("Invalid Alphabet");
-        if (!this.checkStates()) window.alert("Invalid states");
-        if (!this.checkInitial(initial)) window.alert("Invalid initial");
-        if (!this.checkAccepting(accepting)) window.alert("Invalid accepting");
-        if (!this.checkTransitions()) window.alert("Invalid transitions");
+        if (!this.checkAlphabet()) window.alert(this.error);
+        if (!this.checkStates()) window.alert(this.error);
+        if (!this.checkInitial(initial)) window.alert(this.error);
+        if (!this.checkAccepting(accepting)) window.alert(this.error);
+        if (!this.checkTransitions()) window.alert(this.error);
 
         // make Connected for all and check
         this.makeConnected(this.initial);
@@ -55,9 +56,28 @@ export class DFAModel {
         }
     }
 
+    // given a path, checks whether end state is accepting and adds success/fail marker if so
+    acceptString(path) {
+        // Check if the current state is an accepting state
+        for (let i in this.accepting) {
+            let s = this.accepting[i];
+            if (s == this.current) {
+                // create acceptance visualization and add it to end of path
+                let accept_state = new State("🙂");
+                let acceptance = new Transition("✔️", null, accept_state);
+                path.push(acceptance);
+                return path;
+            }
+        }
+        // if not accepting, create fail visualization and add it to end of path
+        let fail_state = new State("🙁");
+        let failure = new Transition("❌", null, fail_state);
+        path.push(failure);
+        return path;
+    }
+
     // Takes input string and runs it through model, returning list of transitions to acceptance or null for failure
     checkInputString(input) {
-        //console.log(input);
         // Set current state to initial and create new path starting from initial
         this.current = this.initial;
         let path = [];
@@ -65,40 +85,46 @@ export class DFAModel {
         // Iterate through each char in string, check transitions for match, update to new state and repeat when found
         for (let i = 0; i < input.length; i++) {
             let str = input.substring(i, i + 1);
-            let worked = false;;
+            // input string fails if a character is not in alphabet
+            if (!this.syms.has(str)) {
+                window.alert("Character " + str + " is not in alphabet");
+                return null;
+            }
+            //let worked = false;
             for (let i in this.transitions) {
                 let t = this.transitions[i];
                 if ((t.source === this.current) && (t.symbol === str)) {
                     path.push(t);
                     this.current = t.dest;
-                    worked = true;
+                    //worked = true;
                     break;
                 }
             }
-            if (!worked) {
+            /* if (!worked) {
                 let fail_state = new State("🙁");
                 let failure = new Transition(str, null, fail_state);
                 path.push(failure);
                 return path;
-            }
+            } */
         }
-
-        // Once finished with string, check if end state is accepting and return if so
-        for (let i in this.accepting) {
-            let s = this.accepting[i];
-            if (s === this.current) return path;
-        }
-        return null;
+        return this.acceptString(path);
     }
 
     // Checks alphabet for repeated symbols or being empty
     checkAlphabet() {
-        if (this.alphabet.size === 0) return false;
+        if (this.alphabet.size === 0){
+            this.error = "Empty alphabet";
+            return false;
+        }
 
+        // Add each character to a set, checking for duplicates
         let symbols = new Set();
         for (let i in this.alphabet) {
             let s = this.alphabet[i];
-            if (symbols.has(s)) return false;
+            if (symbols.has(s)) {
+                this.error = "Duplicate in alphabet: " + s;
+                return false;
+            }
             symbols.add(s);
         }
 
@@ -108,12 +134,19 @@ export class DFAModel {
 
     // Checks states for repeats or conflicts with alphabet
     checkStates() {
-        if (this.all.size === 0) return false;
+        if (this.all.size === 0) {
+            this.error = "Empty States";
+            return false;
+        }
 
+        // map state names to state object, checking for duplicates or conflict with alphabet
         let states = new Map();
         for (let i in this.all) {
             let s = this.all[i];
-            if (states.has(s.name) || this.syms.has(s.name)) return false;
+            if (states.has(s.name) || this.syms.has(s.name)) {
+                this.error = "Conflicting state name: " + s.name;
+                return false;
+            }
             states.set(s.name, s);
         }
 
@@ -128,17 +161,22 @@ export class DFAModel {
             this.initial.connected = true;
             return true;
         }
+        this.error = "Invalid initial state";
         return false;
     }
 
     // Checks that accepting states are present and valid
     checkAccepting(accepting) {
         let acc_array = parseAlphabet(accepting);
-        if (acc_array.size === 0) return false;
+        if (acc_array.size === 0) {
+            this.error = "Empty accepting states";
+            return false;
+        }
 
         for (let i in acc_array) {
             let acc_name = acc_array[i];
             if (!this.states.has(acc_name)) {
+                this.error = "Accepting state " + acc_name + " does not exist";
                 return false;
             }
             this.states.get(acc_name).accepting = true;
@@ -149,20 +187,38 @@ export class DFAModel {
 
     // Checks that transitions are valid symbols/states/states
     // Sets up connections to check all states are connected
+    // ts is a map of Sources to a list of symbols that have been assigned a transition
     checkTransitions() {
-        if (this.transitions.size === 0) return false;
+        if (this.transitions.size === 0) {
+            this.error = "Empty transitions";
+            return false;
+        }
 
+        // iterate through each transition in the array
         for (let i in this.transitions) {
             let t = this.transitions[i];
-            console.log(t);
-            if (!this.syms.has(t.symbol)) return false;
-            if (!this.states.has(t.source)) return false;
-            if (!this.states.has(t.dest)) return false;
 
+            // confirm that the symbol and source/dest states exist 
+            if (!this.syms.has(t.symbol)) {
+                this.error = "Invalid symbol in transition: (" + t.symbol + ", " + t.source + ", " + t.dest + ")";
+                return false;
+            }
+            if (!this.states.has(t.source)) {
+                this.error = "Invalid source in transition: (" + t.symbol + ", " + t.source + ", " + t.dest + ")";
+                return false;
+            }
+            if (!this.states.has(t.dest)) {
+                this.error = "Invalid destination in transition: (" + t.symbol + ", " + t.source + ", " + t.dest + ")";
+                return false;
+            }
+
+            // reassign t.source/dest from string names to the actual states
             t.source = this.states.get(t.source);
             t.dest = this.states.get(t.dest);
 
+            // fails if source already has the symbol; else add it to the sym_list or create a new sym_list for it
             if (this.ts.has(t.source) && this.ts.get(t.source).includes(t.symbol)) {
+                this.error = "State " + t.source.name + " has multiple transitions for symbol " + t.symbol;
                 return false;
             } else if (this.ts.has(t.source)) {
                 let sym_list = this.ts.get(t.source);
@@ -173,11 +229,32 @@ export class DFAModel {
                 this.ts.set(t.source, new_list);
             }
 
-            // add for connection check
+            // add to the state for connection check
             if (!t.source.conn.includes(t.dest)) {
                 t.source.conn.push(t.dest);
             }
         }
+
+        // check that all states have all alphabet symbols represented
+        for (let i in this.all) {
+            let s = this.states.get(this.all[i].name);
+            // fails if a state is missing from the transitions map
+            if (!this.ts.has(s)) {
+                this.error = "State " + s.name + " has no transitions";
+                return false;
+            }
+        }
+
+        for (let trans of this.ts.keys()) {
+            for (let sym of this.syms) {
+                // fails if a symbol is missing from a state
+                if (!this.ts.get(trans).includes(sym)) {
+                    this.error = "State " + trans.name + " has no transition for symbol " + sym;
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 
