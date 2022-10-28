@@ -79,7 +79,7 @@ export class NFAModel {
         if (!this.checkInitial(initial)) window.alert(this.error);
         if (!this.checkAccepting(accepting)) window.alert(this.error);
         if (!this.checkTransitions()) window.alert(this.error);
-        
+
         // make Connected for all and check
         this.makeConnected(this.initial);
         for (let i in this.all) {
@@ -99,6 +99,7 @@ export class NFAModel {
                 let accept_state = new NFAState("🙂");
                 let acceptance = new Pair("✔️", accept_state);
                 ret_path.push(acceptance);
+                console.log(ret_path);
                 return ret_path;
             }
         }
@@ -121,7 +122,7 @@ export class NFAModel {
                 next.add(trans.right);
             }
             this.current.add(...next);
-        } 
+        }
 
         this.setPath.push(this.current);
 
@@ -144,7 +145,7 @@ export class NFAModel {
                         next.add(trans.right);
                     }
                 }
-            } 
+            }
 
             for (let b of next) {
                 let eps_trans = b.getEpsilonTrans();
@@ -158,7 +159,6 @@ export class NFAModel {
             this.setPath.push(this.current);
             this.current = next;
         }
-
         return this.acceptString();
     }
 
