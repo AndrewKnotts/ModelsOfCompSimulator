@@ -40,11 +40,10 @@ export default class NFA extends Component {
 
     // On submit, run the correct model simulation
     handleSubmit(event) {
-        console.log("Test2");
         let nfa_model = new NFAModel(this.state.startingState, this.state.acceptingStates, this.state.states,
             this.state.alphabet, this.state.transitions);
         let output = nfa_model.checkInputString(this.state.input);
-        //console.log(output);
+        console.log(output);
 
         this.setState({
             modelStates: output[0].right.name,
@@ -58,7 +57,6 @@ export default class NFA extends Component {
             this.outputDest.push(output[i].left);
             this.outputDest.push(output[i].right.name);
         }
-        //console.log(this.outputDest, this.outputSymbols);
 
     }
 

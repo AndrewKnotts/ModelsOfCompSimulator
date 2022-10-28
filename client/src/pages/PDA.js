@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Navbar from '../components/navbar/Navbar';
 import './styles.css';
-import { NFAModel } from '../components/input/NFAModel';
+import { PDAModel } from '../components/input/PDAModel';
 import State from '../components/state/State';
 import Arrow from '../components/arrow/arrow';
 
@@ -18,6 +18,7 @@ export default class PDA extends Component {
             startingState: localStorage.getItem('startingState'),
             acceptingStates: localStorage.getItem('acceptingStates'),
             stack: localStorage.getItem('stack'),
+            pushdownAlphabet: localStorage.getItem('pushdownAlphabet'),
             transitions: localStorage.getItem('transitions'),
             input: localStorage.getItem('input'),
             modelStates: [],
@@ -48,9 +49,8 @@ export default class PDA extends Component {
     // On submit, run the correct model simulation
     handleSubmit(event) {
 
-        /*if (page === "DFA") {
-        console.log("Test1");
-        let new_model = new DFAModel(this.state.startingState, this.state.acceptingStates, this.state.states, this.state.alphabet, this.state.transitions);
+
+        let new_model = new PDAModel(this.state.states, this.state.startingState, this.state.alphabet, this.state.pushdownAlphabet, this.state.transitions, this.state.stack, this.state.acceptingStates);
         //console.log(new_model.checkInputString(this.state.input));
         let output = new_model.checkInputString(this.state.input);
         this.setState({
@@ -65,33 +65,13 @@ export default class PDA extends Component {
             this.outputDest.push(output[i].dest.name);
         }
         console.log(this.outputDest, this.outputSymbols);
-        //this._showMessage.bind(null, true)*/
+        //this._showMessage.bind(null, true)
 
         // }
-        //else if (page === "NFA") {
-        /*console.log("Test2");
-        let nfa_model = new NFAModel(this.state.startingState, this.state.acceptingStates, this.state.states,
-            this.state.alphabet, this.state.transitions);
-        let output = nfa_model.checkInputString(this.state.input);
-        console.log(output);
 
-        this.setState({
-            modelStates: output[0].right.name,
-            modelTransitions: output[0].left
-        });
-
-        this.outputDest = [];
-        this.outputSymbols = [];
-        this.outputDest.push(output[0].right.name)
-        for (let i = 1; i < output.length; i++) {
-            this.outputDest.push(output[i].left);
-            this.outputDest.push(output[i].right.name);
-        }
-        console.log(this.outputDest, this.outputSymbols);*/
-
-        //}
         //else if (page === "PDA") {
-        console.log("Test3");
+        //console.log("Test3");
+
         // }
         //else if (page === "TuringMachine") {
         //    console.log("Test4");
@@ -127,8 +107,12 @@ export default class PDA extends Component {
                                 <input type="text" value={this.state.acceptingStates} onChange={(event) => this.handleChange(event, "acceptingStates")} name="acceptingStates" placeholder="ex: C, B" />
                             </div>
                             <div className='formGroup'>
+                                <label>Stack Alphabet:</label>
+                                <input type="text" value={this.state.pushdownAlphabet} onChange={(event) => this.handleChange(event, "pushdownAlphabet")} name="pushdownAlphabet" placeholder="ex: 1,2,3" />
+                            </div>
+                            <div className='formGroup'>
                                 <label>Stack:</label>
-                                <input type="text" value={this.state.stack} onChange={(event) => this.handleChange(event, "stack")} name="stack" placeholder="ex: stack" />
+                                <input type="text" value={this.state.stack} onChange={(event) => this.handleChange(event, "stack")} name="stack" placeholder="ex: []" />
                             </div>
                             <div className='formGroup'>
                                 <label>Transitions:</label>

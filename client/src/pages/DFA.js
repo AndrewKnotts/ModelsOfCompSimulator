@@ -56,7 +56,7 @@ export default class DFA extends Component {
             this.outputDest.push(output[i].symbol);
             this.outputDest.push(output[i].dest.name);
         }
-        console.log(this.outputDest, this.outputSymbols);
+        console.log(output);
 
     }
 
