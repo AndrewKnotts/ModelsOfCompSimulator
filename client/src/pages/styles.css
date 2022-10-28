@@ -22,3 +22,19 @@ h1 {
   width: 50%;
   background-color: black;
 }
+
+.inputArea {
+  border-top: solid;
+  border-left: solid;
+  border-right: solid;
+}
+
+.visualArea {
+  flex-wrap: wrap;
+}
+
+.contain {
+  margin: 0;
+  text-align: center;
+  position: relative;
+}
