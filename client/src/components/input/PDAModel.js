@@ -99,13 +99,14 @@ class PDAModel {
         if (!this.checkInputAlphabet()) console.log("Invalid Input Alphabet");
         //console.log(this.pushdownAlphabet.size);
         if (!this.checkPushdownAlphabet()) console.log("Invalid Pushdown alphabet");
-        console.log("here");
+        //console.log("here");
         if (!this.checkStates()) console.log("Invalid states");
         if (!this.checkInitialStack()) console.log("Invalid Initial Stack");
         if (!this.checkInitialState()) console.log("Invalid initial state");
         if (!this.checkAccepting()) console.log("Invalid Accepting array");
         if (!this.checkTransitions()) console.log("Invalid transitions");
-        if (!this.checkDeterministic()) console.log("Non-deterministic");
+        //if (!this.checkDeterministic()) console.log("Non-deterministic");
+        //else console.log("Deterministic");
 
         this.makeConnected(this.initialState);
         for (let i in this.all) {
@@ -121,7 +122,6 @@ class PDAModel {
         this.currentStack = this.initialStack;
         let path = []; // path is gonna have each transition object
         for(let i = 0; i < input.length; i++) {
-            console.log("run: " + i);
             let sym = input.substring(i, i+1);
             let worked = false;
             for(let j in this.transitions) {
@@ -144,16 +144,21 @@ class PDAModel {
         return true;
     }
 
+    /*
     checkDeterministic() {
         let symPairs = new Set();
-        for (let i in transitions) {
-            let t = transitions[i]; 
+        for (let i in this.transitions) {
+            let t = this.transitions[i]; 
             let symPair = [t.input, t.stack0];
-            if (symPairs.has(symPair)) {
-                return false;
+            for (let x in symPairs) {
+                let j = symPairs[x];
+                if (t.input == j[0] && t.stack0 === j[1]) return false;
             }
+            symPairs.add(symPair);
         }
+        return true; 
     }
+    */
 
     checkInputAlphabet() {
         if (this.inputAlphabet.size === 0) return false;
@@ -329,7 +334,7 @@ console.log(testPDA.checkInputString("aaabbb"));
 (q1, eps,  Z) -> (qf, eps)
 */
 
-/*
+
 let qq0 = new State("q0");
 let qq1 = new State("q1");
 let qq2 = new State("q2");
@@ -346,7 +351,7 @@ let test2_stAlphabet = ["A", "Z"];
 let test2_accepting = [qq2];
 let test2_transitions = [tt1, tt2, tt3, tt4, tt5];
 
-let test2PDA = new PDAModel(test2_states, qq1, test2_inAlphabet, test2_stAlphabet, test2_transitions, "Z", qq2);
+let test2PDA = new PDAModel(test2_states, qq0, test2_inAlphabet, test2_stAlphabet, test2_transitions, "Z", qq2);
 
 console.log(test2PDA.checkInputString("aabb"));
-*/
+
