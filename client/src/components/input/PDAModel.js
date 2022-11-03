@@ -39,10 +39,10 @@ function parsePushdownAlphabet(input) {
 }
 
 // (q0, a, S) -> (q1, S); (q1, e, S) -> (q2, SS); ...
-function parseTransitions(input) {
-    let transitions = input.split(',');
+export function parseTransitions(input) {
+    let transitions = input.split(';');
     for (let i in transitions) {
-        let pair = transitions.split("->");
+        let pair = transitions.split(" -> ");
         let src = pair[0].split(',');
         let dest = pair[1].split(',');
 
@@ -54,6 +54,7 @@ function parseTransitions(input) {
 
         transArray = new Transition(src[0], dest[0], src[1], src[2], dest[1]);
     }
+    return transArray; 
 }
 
 class State { // same as DFA
@@ -334,7 +335,7 @@ console.log(testPDA.checkInputString("aaabbb"));
 (q1, eps,  Z) -> (qf, eps)
 */
 
-
+/*
 let qq0 = new State("q0");
 let qq1 = new State("q1");
 let qq2 = new State("q2");
@@ -354,4 +355,8 @@ let test2_transitions = [tt1, tt2, tt3, tt4, tt5];
 let test2PDA = new PDAModel(test2_states, qq0, test2_inAlphabet, test2_stAlphabet, test2_transitions, "Z", qq2);
 
 console.log(test2PDA.checkInputString("aabb"));
+*/
 
+
+let transArr = parseTransitions("(q0, a, S) -> (q1, S); (q1, e, S) -> (q2, SS)");
+console.log(transArr[0].input);
