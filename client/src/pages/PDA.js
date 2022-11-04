@@ -48,9 +48,9 @@ export default class PDA extends Component {
     // On submit, run the correct model simulation
     handleSubmit(event) {
 
-        /*if (page === "DFA") {
-        console.log("Test1");
-        let new_model = new DFAModel(this.state.startingState, this.state.acceptingStates, this.state.states, this.state.alphabet, this.state.transitions);
+        //if (page === "DFA") {
+        //console.log("Test1");
+        let new_model = new PDAModel(this.state.startingState, this.state.acceptingStates, this.state.states, this.state.alphabet, this.state.transitions);
         //console.log(new_model.checkInputString(this.state.input));
         let output = new_model.checkInputString(this.state.input);
         this.setState({
@@ -91,7 +91,7 @@ export default class PDA extends Component {
 
         //}
         //else if (page === "PDA") {
-        console.log("Test3");
+        //console.log("Test3");
         // }
         //else if (page === "TuringMachine") {
         //    console.log("Test4");
@@ -125,6 +125,10 @@ export default class PDA extends Component {
                             <div className='formGroup'>
                                 <label>Accepting States:</label>
                                 <input type="text" value={this.state.acceptingStates} onChange={(event) => this.handleChange(event, "acceptingStates")} name="acceptingStates" placeholder="ex: C, B" />
+                            </div>
+                            <div className='formGroup'>
+                                <label>Pushdown Alphabet:</label>
+                                <input type="text" value={this.state.pushdownAlphabet} onChange={(event) => this.handleChange(event, "pushdownAlphabet")} name="pushdownAlphabet" placeholder="ex: 1,2,3" />
                             </div>
                             <div className='formGroup'>
                                 <label>Stack:</label>
