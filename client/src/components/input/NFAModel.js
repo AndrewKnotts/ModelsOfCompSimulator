@@ -29,6 +29,7 @@ export class NFAState {
         return this.transitions;
     }
 
+    // return an array of only epsilon transitions
     getEpsilonTrans() {
         let ret_list = [];
         for (let i in this.transitions) {
@@ -40,6 +41,7 @@ export class NFAState {
         return ret_list;
     }
 
+    // return an array of only non-epsilon transitions
     getSymbolTrans(sym) {
         let ret_list = [];
         for (let i in this.transitions) {
@@ -66,7 +68,7 @@ export class NFAModel {
         this.error = null;
         this.setPath = [];
         this.input = null;
-        //this.ts = new Map();
+        this.acceptance_result = null;
 
         console.log("initial: ", initial);
         console.log("accepting: ", accepting);
@@ -97,6 +99,7 @@ export class NFAModel {
         }
     }
 
+    // once checkInputString has run, determine whether or not to accept input
     acceptString() {
         console.log(this.setPath);
         let ret_path = [new Pair("", this.initial)];
@@ -106,7 +109,7 @@ export class NFAModel {
                 let accept_state = new NFAState("🙂");
                 let acceptance = new Pair("✔️", accept_state);
                 ret_path.push(acceptance);
-                console.log(ret_path);
+                this.acceptance_result = true;
                 return ret_path;
             }
         }
@@ -114,9 +117,11 @@ export class NFAModel {
         let fail_state = new NFAState("🙁");
         let failure = new Pair("❌", fail_state);
         ret_path.push(failure);
+        this.acceptance_result = false;
         return ret_path;
     }
 
+    // given an input string, simulate it in the NFA model
     checkInputString(input) {
         // create Set to represent next states and initialize current Set to initial state
         let next = new Set();
@@ -144,9 +149,10 @@ export class NFAModel {
                 let eps_trans = a.getEpsilonTrans();
                 if (eps_trans.length != 0) {
                     for (let trans of eps_trans) {
-                        next.add(trans.right);
+                        this.current.add(trans.right);
                     }
                 }
+                console.log(a);
                 let sym_trans = a.getSymbolTrans(str);
                 if (sym_trans.length != 0) {
                     for (let trans of sym_trans) {
@@ -155,6 +161,16 @@ export class NFAModel {
                 }
             }
 
+            // if there are no possible next states for the input, the input is rejected
+            if (next.size == 0) {
+                let ret_path = [new Pair("", this.initial)];
+                let fail_state = new NFAState("🙁");
+                let failure = new Pair("❌", fail_state);
+                ret_path.push(failure);
+                this.acceptance_result = false;
+                return ret_path;
+            }
+            
             for (let b of next) {
                 let eps_trans = b.getEpsilonTrans();
                 if (eps_trans != 0) {
@@ -162,7 +178,7 @@ export class NFAModel {
                         next.add(trans.right);
                     }
                 }
-            }
+            } 
 
             this.setPath.push(this.current);
             this.current = next;
@@ -249,7 +265,7 @@ export class NFAModel {
     // Checks that transitions are valid symbols/states/states, and are not duplicates of prior transitions
     // Sets up connections to check all states are connected
     checkTransitions() {
-        if (this.transitions.size === 0) {
+        if (this.transitions.length === 0) {
             this.error = "Empty transitions";
             return false;
         }
@@ -306,6 +322,7 @@ export class NFAModel {
 // parse states string input into NFAState array
 export function parseNFAStates(input) {
     input = input.replaceAll(" ", "");
+    if (input.length == 0) return [];
 
     let input_array = input.split(',');
     let states_array = [];

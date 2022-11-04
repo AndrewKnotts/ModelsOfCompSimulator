@@ -43,7 +43,7 @@ export default class NFA extends Component {
         let nfa_model = new NFAModel(this.state.startingState, this.state.acceptingStates, this.state.states,
             this.state.alphabet, this.state.transitions);
         let output = nfa_model.checkInputString(this.state.input);
-        console.log(output);
+        //console.log(output);
 
         this.setState({
             modelStates: output[0].right.name,
