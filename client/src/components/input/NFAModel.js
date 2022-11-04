@@ -134,7 +134,15 @@ export class NFAModel {
             for (let trans of eps_trans) {
                 next.add(trans.right);
             }
-            this.current.add(...next);
+            for (let a of next) {
+                let next_eps = a.getEpsilonTrans();
+                if (next_eps != 0) {
+                    for (let trans of next_eps) {
+                        next.add(trans.right);
+                    }
+                }
+            }
+            next.forEach(item => this.current.add(item))
         }
 
         this.setPath.push(this.current);
@@ -152,7 +160,6 @@ export class NFAModel {
                         this.current.add(trans.right);
                     }
                 }
-                console.log(a);
                 let sym_trans = a.getSymbolTrans(str);
                 if (sym_trans.length != 0) {
                     for (let trans of sym_trans) {
@@ -162,7 +169,8 @@ export class NFAModel {
             }
 
             // if there are no possible next states for the input, the input is rejected
-            if (next.size == 0) {
+            if (next.size == 0 && input.length != 0) {
+                console.log("no possible next states");
                 let ret_path = [new Pair("", this.initial)];
                 let fail_state = new NFAState("🙁");
                 let failure = new Pair("❌", fail_state);

@@ -235,3 +235,135 @@ it('rejects sample string 3 for test model 1', () => {
     test.checkInputString("ababa");
     expect(test.acceptance_result).toBe(false);
 });
+
+it('accepts sample string 1 for test model 2', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    let initial = "q0";
+    let accepting = "q6";
+    let all_states = "q0,q1,q2,q3,q4,q5,q6";
+    let alphabet = "0,1";
+    let transitions = "(1,q0,q1);(eps,q0,q1);(eps,q1,q0);(eps,q1,q2);(0,q2,q3);(eps ,q2,q4);(1,q3,q4);(eps,q4,q2);(eps,q4,q5);(1,q5,q6);(eps,q5,q6);(eps,q6,q5)"
+    let test = new NFAModel(initial, accepting, all_states, alphabet, transitions);
+    test.checkInputString("1");
+    expect(test.acceptance_result).toBe(true);
+})
+
+it('accepts sample string 2 for test model 2', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    let initial = "q0";
+    let accepting = "q6";
+    let all_states = "q0,q1,q2,q3,q4,q5,q6";
+    let alphabet = "0,1";
+    let transitions = "(1,q0,q1);(eps,q0,q1);(eps,q1,q0);(eps,q1,q2);(0,q2,q3);(eps ,q2,q4);(1,q3,q4);(eps,q4,q2);(eps,q4,q5);(1,q5,q6);(eps,q5,q6);(eps,q6,q5)"
+    let test = new NFAModel(initial, accepting, all_states, alphabet, transitions);
+    test.checkInputString("101");
+    expect(test.acceptance_result).toBe(true);
+})
+
+it('accepts sample string 3 for test model 2', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    let initial = "q0";
+    let accepting = "q6";
+    let all_states = "q0,q1,q2,q3,q4,q5,q6";
+    let alphabet = "0,1";
+    let transitions = "(1,q0,q1);(eps,q0,q1);(eps,q1,q0);(eps,q1,q2);(0,q2,q3);(eps ,q2,q4);(1,q3,q4);(eps,q4,q2);(eps,q4,q5);(1,q5,q6);(eps,q5,q6);(eps,q6,q5)"
+    let test = new NFAModel(initial, accepting, all_states, alphabet, transitions);
+    test.checkInputString("01");
+    expect(test.acceptance_result).toBe(true);
+})
+
+it('accepts sample string 4 for test model 2', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    let initial = "q0";
+    let accepting = "q6";
+    let all_states = "q0,q1,q2,q3,q4,q5,q6";
+    let alphabet = "0,1";
+    let transitions = "(1,q0,q1);(eps,q0,q1);(eps,q1,q0);(eps,q1,q2);(0,q2,q3);(eps ,q2,q4);(1,q3,q4);(eps,q4,q2);(eps,q4,q5);(1,q5,q6);(eps,q5,q6);(eps,q6,q5)"
+    let test = new NFAModel(initial, accepting, all_states, alphabet, transitions);
+    test.checkInputString("1011");
+    expect(test.acceptance_result).toBe(true);
+})
+
+it('accepts sample string 5 for test model 2', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    let initial = "q0";
+    let accepting = "q6";
+    let all_states = "q0,q1,q2,q3,q4,q5,q6";
+    let alphabet = "0,1";
+    let transitions = "(1,q0,q1);(eps,q0,q1);(eps,q1,q0);(eps,q1,q2);(0,q2,q3);(eps ,q2,q4);(1,q3,q4);(eps,q4,q2);(eps,q4,q5);(1,q5,q6);(eps,q5,q6);(eps,q6,q5)"
+    let test = new NFAModel(initial, accepting, all_states, alphabet, transitions);
+    test.checkInputString("0101111");
+    expect(test.acceptance_result).toBe(true);
+})
+
+it('accepts sample string 6 for test model 2', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    let initial = "q0";
+    let accepting = "q6";
+    let all_states = "q0,q1,q2,q3,q4,q5,q6";
+    let alphabet = "0,1";
+    let transitions = "(1,q0,q1);(eps,q0,q1);(eps,q1,q0);(eps,q1,q2);(0,q2,q3);(eps,q2,q4);(1,q3,q4);(eps,q4,q2);(eps,q4,q5);(1,q5,q6);(eps,q5,q6);(eps,q6,q5)"
+    let test = new NFAModel(initial, accepting, all_states, alphabet, transitions);
+    test.checkInputString("");
+    expect(test.acceptance_result).toBe(true);
+})
+
+it('rejects sample string 1 for test model 2', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    let initial = "q0";
+    let accepting = "q6";
+    let all_states = "q0,q1,q2,q3,q4,q5,q6";
+    let alphabet = "0,1";
+    let transitions = "(1,q0,q1);(eps,q0,q1);(eps,q1,q0);(eps,q1,q2);(0,q2,q3);(eps ,q2,q4);(1,q3,q4);(eps,q4,q2);(eps,q4,q5);(1,q5,q6);(eps,q5,q6);(eps,q6,q5)"
+    let test = new NFAModel(initial, accepting, all_states, alphabet, transitions);
+    test.checkInputString("0");
+    expect(test.acceptance_result).toBe(false);
+})
+
+it('rejects sample string 2 for test model 2', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    let initial = "q0";
+    let accepting = "q6";
+    let all_states = "q0,q1,q2,q3,q4,q5,q6";
+    let alphabet = "0,1";
+    let transitions = "(1,q0,q1);(eps,q0,q1);(eps,q1,q0);(eps,q1,q2);(0,q2,q3);(eps ,q2,q4);(1,q3,q4);(eps,q4,q2);(eps,q4,q5);(1,q5,q6);(eps,q5,q6);(eps,q6,q5)"
+    let test = new NFAModel(initial, accepting, all_states, alphabet, transitions);
+    test.checkInputString("00");
+    expect(test.acceptance_result).toBe(false);
+})
+
+it('rejects sample string 3 for test model 2', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    let initial = "q0";
+    let accepting = "q6";
+    let all_states = "q0,q1,q2,q3,q4,q5,q6";
+    let alphabet = "0,1";
+    let transitions = "(1,q0,q1);(eps,q0,q1);(eps,q1,q0);(eps,q1,q2);(0,q2,q3);(eps ,q2,q4);(1,q3,q4);(eps,q4,q2);(eps,q4,q5);(1,q5,q6);(eps,q5,q6);(eps,q6,q5)"
+    let test = new NFAModel(initial, accepting, all_states, alphabet, transitions);
+    test.checkInputString("0100");
+    expect(test.acceptance_result).toBe(false);
+})
+
+it('rejects sample string 4 for test model 2', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    let initial = "q0";
+    let accepting = "q6";
+    let all_states = "q0,q1,q2,q3,q4,q5,q6";
+    let alphabet = "0,1";
+    let transitions = "(1,q0,q1);(eps,q0,q1);(eps,q1,q0);(eps,q1,q2);(0,q2,q3);(eps ,q2,q4);(1,q3,q4);(eps,q4,q2);(eps,q4,q5);(1,q5,q6);(eps,q5,q6);(eps,q6,q5)"
+    let test = new NFAModel(initial, accepting, all_states, alphabet, transitions);
+    test.checkInputString("110");
+    expect(test.acceptance_result).toBe(false);
+})
+
+it('rejects sample string 5 for test model 2', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    let initial = "q0";
+    let accepting = "q6";
+    let all_states = "q0,q1,q2,q3,q4,q5,q6";
+    let alphabet = "0,1";
+    let transitions = "(1,q0,q1);(eps,q0,q1);(eps,q1,q0);(eps,q1,q2);(0,q2,q3);(eps ,q2,q4);(1,q3,q4);(eps,q4,q2);(eps,q4,q5);(1,q5,q6);(eps,q5,q6);(eps,q6,q5)"
+    let test = new NFAModel(initial, accepting, all_states, alphabet, transitions);
+    test.checkInputString("101011011");
+    expect(test.acceptance_result).toBe(false);
+})
