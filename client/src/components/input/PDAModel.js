@@ -11,6 +11,7 @@ var all = ""
 
 
 function parseStates(input) {
+    //console.log("Parsing States");
     let input_array = input.split(',');
     let states_array = [];
     for (let i in input_array) {
@@ -21,6 +22,7 @@ function parseStates(input) {
 }
 
 function parseInputAlphabet(input) {
+    //console.log("Paring Input Alphabet");
     let inputAlphabet_array = input.split(',');
     for (let i in inputAlphabet_array) {
         let alpha = inputAlphabet_array[i];
@@ -30,6 +32,7 @@ function parseInputAlphabet(input) {
 }
 
 function parsePushdownAlphabet(input) {
+    //console.log("Parsing Pushdown Alphabet");
     let pushdownAlphabet_array = input.split(',');
     for (let i in pushdownAlphabet_array) {
         let alpha = pushdownAlphabet_array[i];
@@ -40,6 +43,7 @@ function parsePushdownAlphabet(input) {
 
 // (q0, a, S) -> (q1, S); (q1, e, S) -> (q2, SS); ...
 function parseTransitions(input) {
+    //console.log("Parsing Transitions");
     let transitions = input.split(';');
     let transArray = [];
     for (let i in transitions) {
@@ -87,12 +91,12 @@ class Transition { // (source, input, stack0) -> (dest, stack1)
 class PDAModel {
     constructor(all_states, initialState, inputAlphabet, pushdownAlphabet, transitions, initialStack, final) {
         this.all = all_states;
-        this.initialState = initialState;
+       
         this.pushdownAlphabet = pushdownAlphabet;
         this.transitions = transitions;
         this.inputAlphabet = inputAlphabet;
         this.initialStack = initialStack;
-        this.final = final;
+        this.accepting = final;
         this.inputSyms = null;
         this.pdSyms = null;
         //this.ts = new Map();
@@ -101,13 +105,19 @@ class PDAModel {
         this.currentState = null;
         this.currentStack = null;
 
+        
+        
         if (!this.checkInputAlphabet()) console.log("Invalid Input Alphabet");
         //console.log(this.pushdownAlphabet.size);
         if (!this.checkPushdownAlphabet()) console.log("Invalid Pushdown alphabet");
         //console.log("here");
-        if (!this.checkStates()) console.log("Invalid states");
         if (!this.checkInitialStack()) console.log("Invalid Initial Stack");
-        if (!this.checkInitialState()) console.log("Invalid initial state");
+        if (!this.checkStates()) console.log("Invalid states");
+        //if (!this.checkInitialState()) console.log("Invalid initial state");
+        //else {
+         //   this.initialState = this.getInitialState(initialState);
+        //}
+        if (!this.getInitialState(initialState)) console.log("Invalid Initial State");
         if (!this.checkAccepting()) console.log("Invalid Accepting array");
         if (!this.checkTransitions()) console.log("Invalid transitions");
         //if (!this.checkDeterministic()) console.log("Non-deterministic");
@@ -120,6 +130,18 @@ class PDAModel {
                 console.log("State " + s.name + " is not reachable.");
             }
         }
+    }
+
+    getInitialState(name) {
+        if (name == null || name == "") return false; 
+        for (let i in this.all) {
+            let st = this.all[i];
+            if (st.name === name) {
+                this.initialState = st;
+                return true;
+            }
+        }
+        return false; 
     }
 
     checkInputString(input) {
@@ -142,11 +164,16 @@ class PDAModel {
             if (!worked) return false;     
         }
 
+        let endState = false; 
         for (let i in this.accepting) {
             let s = this.accepting[i];
-            if (s === this.currentState) return path;
+            if (s.name === this.currentState.name) {
+                endState = true; 
+                break;
+            }
         }
-        return true;
+        if (endState) return path;
+        else return false; 
     }
 
     /*
@@ -217,11 +244,15 @@ class PDAModel {
     }
 
     checkInitialStack() {
-        if (this.pdSyms.has(this.initialStack)) {
-            //this.initialStack = this.pdSyms.get(initialStack)
-            return true;
+        for(let i in initialStack) {
+            let sym = initialStack.substring(i, i+1);
+            if (!this.pdSyms.has(sym)) {
+                //this.initialStack = this.pdSyms.get(initialStack)
+                return false
+            }
         }
-        return false;
+        
+        return true;
     }
 
     checkAccepting() {
@@ -306,8 +337,9 @@ class PDAModel {
                 this.srcToStack.set(t.source, stList);
             }
 
-            if (!t.source.conn.includes(t.dest)) {
+            if (!t.source.conn.includes(t.dest) && t.source.name != t.dest.name) {
                 t.source.conn.push(t.dest);
+                t.source.connected = true; 
                 if (t.source.name === this.initialState.name) this.initialState = t.source;
             }
         }
@@ -316,7 +348,7 @@ class PDAModel {
     
     makeConnected(start) {
         for (let i in start.conn) {
-            let s = start.conn[i];
+            let s = start.conn[i]; 
             if (!s.connected) {
                 s.connected = true;
                 this.makeConnected(s);
@@ -356,18 +388,112 @@ let startStack = "Z";
 let inputbox = "a, b";
 let stackBox = "A, Z";
 let finalbox = "q1";
-let inString = "aaabbb";
+
 
 let _states = parseStates(statebox);
 let _inAlph = parseInputAlphabet(inputbox);
 let _pdAlph = parsePushdownAlphabet(stackBox);
 let _acc = parseStates(finalbox);
 let _trans = parseTransitions(_transitions);
-let _initSt = new State(startstatebox);
+let _initSt = startstatebox;
 
-let _testPDA = new PDAModel(_states, _initSt, _inAlph, _pdAlph, _trans, startStack, _acc);
+let _testPDA1 = new PDAModel(_states, _initSt, _inAlph, _pdAlph, _trans, startStack, _acc);
 
-console.log(_testPDA.checkInputString(inString));
+let astring1 = "aaabbb"; // Z
+let astring2 = "aaaabbbb"; // Z
+let astring3 = "abbb"; // AZAZ
+let astring4 = "bbbbb"; // AAAAA
+let astring5 = "bbb"; // AZAZAZZZZ
+
+let rstring1 = "aabbba"; // A, Z, AAZ
+let rstring2 = ""; // anything: A, Z, AA, AAZZ
+let rstring3 = "ab" // Z
+let rstring4 = "a" // Z, A
+let rstring5 = "aaabbb"; // AA, A
+
+if (_testPDA1.checkInputString(astring1)) {
+    console.log("test1: correct output");
+}
+else console.log("fail test1");
+if (_testPDA1.checkInputString(astring2)) {
+    console.log("test2: correct output");
+}
+else console.log("fail test2");
+
+let _newTestStates = parseStates("q0, q1");
+let _newTestTransitions = parseTransitions("(q0, a, Z) -> (q0,A); (q0, a, A) -> (q0, AA); (q0, b, A) -> (q1, eps); (q1, b, A) -> (q1, eps); (q1, eps, Z) -> (q1, eps)");
+let _newTestStartState = "q0";
+let _newTestStartStack = "Z";
+let _newTestInputAlphabet = parseInputAlphabet("a, b");
+let _newTestPushdownAlphabet = parsePushdownAlphabet("A, Z");
+let _newTestAccepting = parseStates("q1");
+
+let _testPDA2_withNewObjects  = new PDAModel(_newTestStates, _newTestStartState, _newTestInputAlphabet, _newTestPushdownAlphabet, _newTestTransitions, _newTestStartStack, _newTestAccepting);
+if (_testPDA2_withNewObjects.checkInputString(astring3)) {
+    console.log("new test3: correct output");
+}
+else console.log("fail new test3");
+
+let _testPDA2 = new PDAModel(_states, _initSt, _inAlph, _pdAlph, _trans, "AZAZ", _acc);
+if (_testPDA2.checkInputString(astring3)) {
+    console.log("test3: correct output");
+}
+else console.log("fail test3");
+
+let _testPDA3 = new PDAModel(_states, _initSt, _inAlph, _pdAlph, _trans, "AAAAA", _acc);
+if (_testPDA3.checkInputString(astring4)) {
+    console.log("test4: correct output");
+}
+else console.log("fail test4");
+
+let _testPDA4 = new PDAModel(_states, _initSt, _inAlph, _pdAlph, _trans, "AZAZAZZZZ", _acc);
+if (_testPDA4.checkInputString(astring5)) {
+    console.log("test5: correct output");
+}
+else console.log("fail test5");
+
+let _A_PDA = new PDAModel(_states, _initSt, _inAlph, _pdAlph, _trans, "A", _acc);
+let _Z_PDA = new PDAModel(_states, _initSt, _inAlph, _pdAlph, _trans, "Z", _acc);
+let _AAZ_PDA = new PDAModel(_states, _initSt, _inAlph, _pdAlph, _trans, "AAZ", _acc);
+let _AA_PDA = new PDAModel(_states, _initSt, _inAlph, _pdAlph, _trans, "A", _acc);
+if (!_A_PDA.checkInputString("aabbba")) {
+    console.log("test6: correct output - rejected");
+}
+if (!_A_PDA.checkInputString("a")) {
+    console.log("test7: correct output - rejected");
+}
+if (!_Z_PDA.checkInputString("aabbba")) {
+    console.log("test8: correct output - rejected");
+}
+if (!_AAZ_PDA.checkInputString("aabbba")) {
+    console.log("test9: correct output - rejected");
+}
+if (!_Z_PDA.checkInputString("ab")) {
+    console.log("test10: correct output - rejected");
+}
+if (!_Z_PDA.checkInputString("a")) {
+    console.log("test11: correct output - rejected");
+}
+if (!_AA_PDA.checkInputString("aaabbb")) {
+    console.log("test12: correct output - rejected");
+}
+if (!_A_PDA.checkInputString("aaabbb")) {
+    console.log("test13: correct output - rejected");
+}
+if (!_A_PDA.checkInputString("")) {
+    console.log("test14: correct output - rejected");
+}
+if (!_Z_PDA.checkInputString("")) {
+    console.log("test15: correct output - rejected");
+}
+if (!_AA_PDA.checkInputString("")) {
+    console.log("test16: correct output - rejected");
+}
+if (!_AAZ_PDA.checkInputString("")) {
+    console.log("test17: correct output - rejected");
+}
+
+
 
 
 //console.log(t1.input);
