@@ -21,7 +21,7 @@ export default class PDA extends Component {
             transitions: localStorage.getItem('transitions'),
             input: localStorage.getItem('input'),
             modelStates: [],
-            modelTransitions: []
+            modelTransitions: [] //alphabet, states, starting state, acceptingStates, stack, transitions, input, modelStates, modelTransitions
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -47,7 +47,8 @@ export default class PDA extends Component {
 
     // On submit, run the correct model simulation
     handleSubmit(event) {
-
+        let new_model = new PDAModel(this.state.states, this.state.startingState, this.state.alphabet, this.state.stack, this.state.transitions, this.state.acceptingStates,  this.state.input)
+        //(all_states, initialState, inputAlphabet, pushdownAlphabet, transitions, initialStack, final)
         /*if (page === "DFA") {
         console.log("Test1");
         let new_model = new DFAModel(this.state.startingState, this.state.acceptingStates, this.state.states, this.state.alphabet, this.state.transitions);
