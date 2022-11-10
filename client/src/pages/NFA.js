@@ -43,20 +43,23 @@ export default class NFA extends Component {
         let nfa_model = new NFAModel(this.state.startingState, this.state.acceptingStates, this.state.states,
             this.state.alphabet, this.state.transitions);
         let output = nfa_model.checkInputString(this.state.input);
+        let sets = nfa_model.setPath;
         //console.log(output);
 
         this.setState({
-            modelStates: output[0].right.name,
-            modelTransitions: output[0].left
+            modelStates: sets[0].name,
+            modelTransitions: ""
         });
 
         this.outputDest = [];
         this.outputSymbols = [];
-        this.outputDest.push(output[0].right.name)
-        for (let i = 1; i < output.length; i++) {
-            this.outputDest.push(output[i].left);
-            this.outputDest.push(output[i].right.name);
+        for (let i = 0; i < sets.length; i++) {
+            let set = [];
+            sets[i].forEach(state => set.push(state.name))
+            this.outputDest.push(set);
+            this.outputDest.push("");
         }
+        this.outputDest.push(output[0].right.name)
 
     }
 

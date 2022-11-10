@@ -1,4 +1,4 @@
-import { Transition, parseAlphabet, parseTransition } from "./DFAModel";
+import { parseAlphabet, parseTransition } from "./DFAModel";
 
 export class Pair {
     constructor(left, right) {
@@ -7,7 +7,7 @@ export class Pair {
     }
 
     equalTo(other) {
-        if ((this.left == other.left) && (this.right == other.right)) return true;
+        if ((this.left === other.left) && (this.right === other.right)) return true;
         return false;
     }
 }
@@ -101,8 +101,8 @@ export class NFAModel {
 
     // once checkInputString has run, determine whether or not to accept input
     acceptString() {
+        let ret_path = [];
         console.log(this.setPath);
-        let ret_path = [new Pair("", this.initial)];
         for (let a of this.current) {
             if (a.accepting) {
                 // create acceptance visualization and add it to end of path
@@ -130,22 +130,23 @@ export class NFAModel {
 
         // add all epsilon transitons from initial state
         let eps_trans = this.initial.getEpsilonTrans();
-        if (eps_trans.length != 0) {
+        if (eps_trans.length !== 0) {
+            this.setPath.push(this.current);
             for (let trans of eps_trans) {
                 next.add(trans.right);
             }
             for (let a of next) {
                 let next_eps = a.getEpsilonTrans();
-                if (next_eps != 0) {
+                if (next_eps.length !== 0) {
                     for (let trans of next_eps) {
                         next.add(trans.right);
-                    }
+                    } 
                 }
             }
-            next.forEach(item => this.current.add(item))
+            next.add(this.initial);
+            this.current = next;
+            this.setPath.push(this.current);
         }
-
-        this.setPath.push(this.current);
 
         // loop through input
         while (input.length > 0) {
@@ -154,14 +155,8 @@ export class NFAModel {
             let next = new Set();
 
             for (let a of this.current) {
-                let eps_trans = a.getEpsilonTrans();
-                if (eps_trans.length != 0) {
-                    for (let trans of eps_trans) {
-                        this.current.add(trans.right);
-                    }
-                }
                 let sym_trans = a.getSymbolTrans(str);
-                if (sym_trans.length != 0) {
+                if (sym_trans.length !== 0) {
                     for (let trans of sym_trans) {
                         next.add(trans.right);
                     }
@@ -169,7 +164,7 @@ export class NFAModel {
             }
 
             // if there are no possible next states for the input, the input is rejected
-            if (next.size == 0 && input.length != 0) {
+            if (next.size === 0 && input.length !== 0) {
                 console.log("no possible next states");
                 let ret_path = [new Pair("", this.initial)];
                 let fail_state = new NFAState("🙁");
@@ -181,16 +176,17 @@ export class NFAModel {
             
             for (let b of next) {
                 let eps_trans = b.getEpsilonTrans();
-                if (eps_trans != 0) {
+                if (eps_trans !== 0) {
                     for (let trans of eps_trans) {
                         next.add(trans.right);
                     }
                 }
             } 
-
+            
             this.setPath.push(this.current);
             this.current = next;
         }
+        this.setPath.push(this.current);
         return this.acceptString();
     }
 
@@ -300,7 +296,7 @@ export class NFAModel {
             let src_state = t.source;
             for (let j in src_state.getAllTrans()) {
                 let ts = src_state.getAllTrans()[j];
-                if ((ts.left == t.symbol) && (ts.right == t.dest)) {
+                if ((ts.left === t.symbol) && (ts.right === t.dest)) {
                     this.error = "Transition (" + t.symbol + ", " + t.source.name + ", " + t.dest.name + ") already exists";
                     return false;
                 }
@@ -330,7 +326,7 @@ export class NFAModel {
 // parse states string input into NFAState array
 export function parseNFAStates(input) {
     input = input.replaceAll(" ", "");
-    if (input.length == 0) return [];
+    if (input.length === 0) return [];
 
     let input_array = input.split(',');
     let states_array = [];
