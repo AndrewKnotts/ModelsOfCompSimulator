@@ -12,12 +12,12 @@ export default class DFA extends Component {
         super(props);
         // set the states to their current values in local storage
         this.state = {
-            alphabet: localStorage.getItem('alphabet'),
-            states: localStorage.getItem('states'),
-            startingState: localStorage.getItem('startingState'),
-            acceptingStates: localStorage.getItem('acceptingStates'),
-            transitions: localStorage.getItem('transitions'),
-            input: localStorage.getItem('input'),
+            alphabetDFA: localStorage.getItem('alphabetDFA'),
+            statesDFA: localStorage.getItem('statesDFA'),
+            startingStateDFA: localStorage.getItem('startingStateDFA'),
+            acceptingStatesDFA: localStorage.getItem('acceptingStatesDFA'),
+            transitionsDFA: localStorage.getItem('transitionsDFA'),
+            inputDFA: localStorage.getItem('input'),
             modelStates: [],
             modelTransitions: []
         };
@@ -42,21 +42,21 @@ export default class DFA extends Component {
 
         //if (page === "DFA") {
         console.log("Test1");
-        let new_model = new DFAModel(this.state.startingState, this.state.acceptingStates, this.state.states, this.state.alphabet, this.state.transitions);
+        let new_model = new DFAModel(this.state.startingStateDFA, this.state.acceptingStatesDFA, this.state.statesDFA, this.state.alphabetDFA, this.state.transitionsDFA);
         //console.log(new_model.checkInputString(this.state.input));
-        let output = new_model.checkInputString(this.state.input);
+        let output = new_model.checkInputString(this.state.inputDFA);
         this.setState({
             modelStates: output[0].dest.name,
             modelTransitions: output[0].symbol
         });
         this.outputDest = [];
         this.outputSymbols = [];
-        this.outputDest.push(output[0].source.name) 
+        this.outputDest.push(output[0].source.name)
         for (let i = 0; i < output.length; i++) {
             this.outputDest.push(output[i].symbol);
             this.outputDest.push(output[i].dest.name);
         }
-        console.log(output);
+        console.log(this.outputDest, this.outputSymbols);
 
     }
 
@@ -70,28 +70,28 @@ export default class DFA extends Component {
                         <form onSubmit={this.handleSubmit} className="input" id="form" >
                             <div className='formGroup'>
                                 <label>Alphabet:</label>
-                                <input type="text" value={this.state.alphabet} onChange={(event) => this.handleChange(event, "alphabet")} name="alphabet" placeholder='ex: a,b,c,d,e' />
+                                <input type="text" value={this.state.alphabetDFA} onChange={(event) => this.handleChange(event, "alphabetDFA")} name="alphabet" placeholder='ex: 0, 1' />
 
                             </div>
                             <div className='formGroup'>
                                 <label>States:</label>
-                                <input type="text" value={this.state.states} onChange={(event) => this.handleChange(event, "states")} name="states" placeholder='ex: A, B, C' />
+                                <input type="text" value={this.state.statesDFA} onChange={(event) => this.handleChange(event, "statesDFA")} name="states" placeholder='ex: A, B' />
                             </div>
                             <div className='formGroup'>
                                 <label>Starting State:</label>
-                                <input type="text" value={this.state.startingState} onChange={(event) => this.handleChange(event, "startingState")} name="startingState" placeholder='ex: A' />
+                                <input type="text" value={this.state.startingStateDFA} onChange={(event) => this.handleChange(event, "startingStateDFA")} name="startingState" placeholder='ex: A' />
                             </div>
                             <div className='formGroup'>
                                 <label>Accepting States:</label>
-                                <input type="text" value={this.state.acceptingStates} onChange={(event) => this.handleChange(event, "acceptingStates")} name="acceptingStates" placeholder="ex: C, B" />
+                                <input type="text" value={this.state.acceptingStatesDFA} onChange={(event) => this.handleChange(event, "acceptingStatesDFA")} name="acceptingStates" placeholder="ex: B" />
                             </div>
                             <div className='formGroup'>
                                 <label>Transitions:</label>
-                                <input type="text" value={this.state.transitions} onChange={(event) => this.handleChange(event, "transitions")} name="transitions" placeholder="ex: (a, A, B); (b, B, C)" />
+                                <input type="text" value={this.state.transitionsDFA} onChange={(event) => this.handleChange(event, "transitionsDFA")} name="transitions" placeholder="ex: (0, A, A); (1, A, B); (1, B, A); (0, B, B)" />
                             </div>
                             <div className='formGroup'>
                                 <label>Input:</label>
-                                <input type="text" value={this.state.input} onChange={(event) => this.handleChange(event, "input")} name="input" placeholder="ex: abcde" />
+                                <input type="text" value={this.state.inputDFA} onChange={(event) => this.handleChange(event, "inputDFA")} name="input" placeholder="ex: 10101" />
                             </div>
                             <div className='btnGroup'>
                                 <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />

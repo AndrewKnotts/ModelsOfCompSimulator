@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Navbar from '../components/navbar/Navbar';
 import './styles.css';
+import { PDAModel } from '../components/input/PDAModel';
 import State from '../components/state/State';
 import Arrow from '../components/arrow/arrow';
-import { PDAModel } from '../components/input/PDAModel';
 
 export default class PDA extends Component {
     outputDest = [];
@@ -13,14 +13,14 @@ export default class PDA extends Component {
         super(props);
         // set the states to their current values in local storage
         this.state = {
-            inputAlphabet: localStorage.getItem('inputAlphabet'),
-            pushdownAlphabet: localStorage.getItem('pushdownAlphabet'),
-            states: localStorage.getItem('states'),
-            startingState: localStorage.getItem('startingState'),
-            startingStack: localStorage.getItem('startingStack'),
-            acceptingStates: localStorage.getItem('acceptingStates'),
-            transitions: localStorage.getItem('transitions'),
-            input: localStorage.getItem('input'),
+            inputAlphabetPDA: localStorage.getItem('inputAlphabetPDA'),
+            pushdownAlphabetPDA: localStorage.getItem('pushdownAlphabetPDA'),
+            statesPDA: localStorage.getItem('statesPDA'),
+            startingStatePDA: localStorage.getItem('startingStatePDA'),
+            startingStackPDA: localStorage.getItem('startingStackPDA'),
+            acceptingStatesPDA: localStorage.getItem('acceptingStatesPDA'),
+            transitionsPDA: localStorage.getItem('transitionsPDA'),
+            inputPDA: localStorage.getItem('inputPDA'),
             modelStates: [],
             modelTransitions: [] //alphabet, states, starting state, acceptingStates, stack, transitions, input, modelStates, modelTransitions
         };
@@ -49,8 +49,8 @@ export default class PDA extends Component {
     // On submit, run the correct model simulation
     handleSubmit(event) {
         console.log("PDA Test");
-        let new_model = new PDAModel(this.state.states, this.state.startingState, this.state.inputAlphabet, this.state.pushdownAlphabet, this.state.transitions, this.state.startingStack, this.state.acceptingStates)
-        let output = new_model.checkInputString(this.state.input);
+        let new_model = new PDAModel(this.state.statesPDA, this.state.startingStatePDA, this.state.inputAlphabetPDA, this.state.pushdownAlphabetPDA, this.state.transitionsPDA, this.state.startingStackPDA, this.state.acceptingStatesPDA)
+        let output = new_model.checkInputString(this.state.inputPDA);
         this.setState({
             modelStates: output[0].dest.name,
             modelTransitions: output[0].input
@@ -75,8 +75,7 @@ export default class PDA extends Component {
         let new_model = new DFAModel(this.state.startingState, this.state.acceptingStates, this.state.states, this.state.alphabet, this.state.transitions);
         //console.log(new_model.checkInputString(this.state.input));
         let output = new_model.checkInputString(this.state.input);
-        console.log(output);
-        /*this.setState({
+        this.setState({
             modelStates: output[0].dest.name,
             modelTransitions: output[0].symbol
         });
@@ -114,35 +113,35 @@ export default class PDA extends Component {
                         <form onSubmit={this.handleSubmit} className="input" id="form" >
                             <div className='formGroup'>
                                 <label>Input Alphabet:</label>
-                                <input type="text" value={this.state.inputAlphabet} onChange={(event) => this.handleChange(event, "inputAlphabet")} name="inputAlphabet" placeholder='ex: a,b,c,d,e' />
+                                <input type="text" value={this.state.inputAlphabetPDA} onChange={(event) => this.handleChange(event, "inputAlphabetPDA")} name="inputAlphabet" placeholder='ex: a,b,c,d,e' />
                             </div>
                             <div className='formGroup'>
                                 <label>Pushdown Alphabet:</label>
-                                <input type="text" value={this.state.pushdownAlphabet} onChange={(event) => this.handleChange(event, "pushdownAlphabet")} name="pushdownAlphabet" placeholder='ex: A,Z,F,N' />
+                                <input type="text" value={this.state.pushdownAlphabetPDA} onChange={(event) => this.handleChange(event, "pushdownAlphabetPDA")} name="pushdownAlphabet" placeholder='ex: A,Z,F,N' />
                             </div>
                             <div className='formGroup'>
                                 <label>States:</label>
-                                <input type="text" value={this.state.states} onChange={(event) => this.handleChange(event, "states")} name="states" placeholder='ex: A, B, C' />
+                                <input type="text" value={this.state.statesPDA} onChange={(event) => this.handleChange(event, "statesPDA")} name="states" placeholder='ex: A, B, C' />
                             </div>
                             <div className='formGroup'>
                                 <label>Starting State:</label>
-                                <input type="text" value={this.state.startingState} onChange={(event) => this.handleChange(event, "startingState")} name="startingState" placeholder='ex: A' />
+                                <input type="text" value={this.state.startingStatePDA} onChange={(event) => this.handleChange(event, "startingStatePDA")} name="startingState" placeholder='ex: A' />
                             </div>
                             <div className='formGroup'>
                                 <label>Accepting States:</label>
-                                <input type="text" value={this.state.acceptingStates} onChange={(event) => this.handleChange(event, "acceptingStates")} name="acceptingStates" placeholder="ex: C, B" />
+                                <input type="text" value={this.state.acceptingStatesPDA} onChange={(event) => this.handleChange(event, "acceptingStatesPDA")} name="acceptingStates" placeholder="ex: C, B" />
                             </div>
                             <div className='formGroup'>
                                 <label>Initial Stack:</label>
-                                <input type="text" value={this.state.startingStack} onChange={(event) => this.handleChange(event, "startingStack")} name="startingStack" placeholder="ex: ZZAZ" />
+                                <input type="text" value={this.state.startingStackPDA} onChange={(event) => this.handleChange(event, "startingStackPDA")} name="startingStack" placeholder="ex: ZZAZ" />
                             </div>
                             <div className='formGroup'>
                                 <label>Transitions:</label>
-                                <input type="text" value={this.state.transitions} onChange={(event) => this.handleChange(event, "transitions")} name="transitions" placeholder="ex: (q0, a, Z) -> (q0, AZ); (q0, a, A) -> (q0, AA)" />
+                                <input type="text" value={this.state.transitionsPDA} onChange={(event) => this.handleChange(event, "transitionsPDA")} name="transitions" placeholder="ex: (q0, a, Z) -> (q0, AZ); (q0, a, A) -> (q0, AA)" />
                             </div>
                             <div className='formGroup'>
                                 <label>Input:</label>
-                                <input type="text" value={this.state.input} onChange={(event) => this.handleChange(event, "input")} name="input" placeholder="ex: abcde" />
+                                <input type="text" value={this.state.inputPDA} onChange={(event) => this.handleChange(event, "inputPDA")} name="input" placeholder="ex: abcde" />
                             </div>
                             <div className='btnGroup'>
                                 <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
