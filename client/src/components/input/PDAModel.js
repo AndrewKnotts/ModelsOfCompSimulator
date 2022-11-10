@@ -13,12 +13,10 @@ var all = ""
 function parseStates(input) {
     //console.log("Parsing States");
     let input_array = input.split(',');
-    //let input_array = input.split(',');
     let states_array = [];
     for (let i in input_array) {
-        //let str_state = input_array[i].replace(" ", "");
         let str_state = input_array[i];
-        states_array[i] = new State(str_state);
+        states_array[i] = new State(str_state.replace(" ", ""));
     }
     return states_array;
 }
@@ -319,9 +317,11 @@ export class PDAModel {
             if (!(st && end)) return false;
 
             // check new stack:
-            for (let x in t.stack1) {
-                let c = t.stack1.substring(x, x + 1);
-                if (!this.pdSyms.has(c)) return false;
+            if (t.stack1 != "eps") {
+                for (let x in t.stack1) {
+                    let c = t.stack1.substring(x, x + 1);
+                    if (!this.pdSyms.has(c)) return false;
+                }
             }
 
             if (this.srcToInput.has(t.source) && this.srcToInput.get(t.source).includes(t.input)
