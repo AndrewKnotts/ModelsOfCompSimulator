@@ -163,10 +163,11 @@ export class NFAModel {
                     }
                 }
             }
-
+            console.log(next);
             this.setPath.push(this.current);
             this.current = next;
         }
+        //console.log(this.setPath[this.setPath.length - 1]);
         return this.acceptString();
     }
 

@@ -43,7 +43,7 @@ export default class NFA extends Component {
         let nfa_model = new NFAModel(this.state.startingState, this.state.acceptingStates, this.state.states,
             this.state.alphabet, this.state.transitions);
         let output = nfa_model.checkInputString(this.state.input);
-        console.log(output);
+        //console.log(output);
 
         this.setState({
             modelStates: output[0].right.name,
@@ -52,7 +52,7 @@ export default class NFA extends Component {
 
         this.outputDest = [];
         this.outputSymbols = [];
-        this.outputDest.push(output[0].right.name)
+        this.outputDest.push(this.state.startingState)
         for (let i = 1; i < output.length; i++) {
             this.outputDest.push(output[i].left);
             this.outputDest.push(output[i].right.name);

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Navbar from '../components/navbar/Navbar';
 import './styles.css';
-import { PDAModel } from '../components/input/PDAModel';
 import State from '../components/state/State';
 import Arrow from '../components/arrow/arrow';
+import { PDAModel } from '../components/input/PDAModel';
 
 export default class PDA extends Component {
     outputDest = [];
@@ -51,9 +51,11 @@ export default class PDA extends Component {
 
 
         let new_model = new PDAModel(this.state.states, this.state.startingState, this.state.alphabet, this.state.pushdownAlphabet, this.state.transitions, this.state.stack, this.state.acceptingStates);
+        console.log(new_model);
         //console.log(new_model.checkInputString(this.state.input));
         let output = new_model.checkInputString(this.state.input);
-        this.setState({
+        console.log(output);
+        /*this.setState({
             modelStates: output[0].dest.name,
             modelTransitions: output[0].symbol
         });
@@ -107,7 +109,7 @@ export default class PDA extends Component {
                                 <input type="text" value={this.state.acceptingStates} onChange={(event) => this.handleChange(event, "acceptingStates")} name="acceptingStates" placeholder="ex: C, B" />
                             </div>
                             <div className='formGroup'>
-                                <label>Stack Alphabet:</label>
+                                <label>Pushdown Alphabet:</label>
                                 <input type="text" value={this.state.pushdownAlphabet} onChange={(event) => this.handleChange(event, "pushdownAlphabet")} name="pushdownAlphabet" placeholder="ex: 1,2,3" />
                             </div>
                             <div className='formGroup'>

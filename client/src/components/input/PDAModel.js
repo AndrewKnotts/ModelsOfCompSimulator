@@ -10,18 +10,22 @@ var initialStack = "" // leftmost char will be top of stack
 var all = ""
 
 
-function parseStates(input) {
+export function parseStates(input) {
+    input = input.toString().replaceAll(" ", "");
+
     let input_array = input.split(',');
+    //let input_array = input.split(',');
     let states_array = [];
     for (let i in input_array) {
+        //let str_state = input_array[i].replace(" ", "");
         let str_state = input_array[i];
-        states_array[i] = new State(str_state.replace(" ", ""));
+        states_array[i] = new State(str_state);
     }
     return states_array;
 }
 
-function parseInputAlphabet(input) {
-    let inputAlphabet_array = input.split(',');
+export function parseInputAlphabet(input) {
+    let inputAlphabet_array = input.toString().split(',');
     for (let i in inputAlphabet_array) {
         let alpha = inputAlphabet_array[i];
         inputAlphabet_array[i] = alpha.replace(" ", "");
@@ -29,8 +33,8 @@ function parseInputAlphabet(input) {
     return inputAlphabet_array;
 }
 
-function parsePushdownAlphabet(input) {
-    let pushdownAlphabet_array = input.split(',');
+export function parsePushdownAlphabet(input) {
+    let pushdownAlphabet_array = input.toString().split(',');
     for (let i in pushdownAlphabet_array) {
         let alpha = pushdownAlphabet_array[i];
         pushdownAlphabet_array[i] = alpha.replace(" ", "");
@@ -39,13 +43,13 @@ function parsePushdownAlphabet(input) {
 }
 
 // (q0, a, S) -> (q1, S); (q1, e, S) -> (q2, SS); ...
-function parseTransitions(input) {
-    let transitions = input.split(',');
-    let transArray = []
+export function parseTransitions(input) {
+    let transitions = input.split(';');
+    let transArray = [];
     for (let i in transitions) {
-        let pair = transitions.split("->");
-        let src = pair[0].split(',');
-        let dest = pair[1].split(',');
+        let pair = transitions[i].split(" -> ");
+        let src = pair[0].split(','); //(q0, a, Z)
+        let dest = pair[1].split(','); // (q1, A)
 
         for (let j in src) {
             src[j] = src[j].replace(" ", "").replace("(", "").replace(")", "");
@@ -53,13 +57,15 @@ function parseTransitions(input) {
         dest[0] = dest[0].replace(" ", "").replace("(", "");
         dest[1] = dest[1].replace(" ", "").replace(")", "");
 
-        let transition = new Transition(src[0], dest[0], src[1], src[2], dest[1]);
+        let state1 = new State(src[0]);
+        let state2 = new State(dest[0]);
 
-        transArray.push(transition);
+        transArray[i] = new Transition(state1, state2, src[1], src[2], dest[1]);
     }
+    return transArray;
 }
 
-class State { // same as DFA
+export class State { // same as DFA
     constructor(name) {
         this.name = name;
         this.accepting = false;
@@ -68,7 +74,7 @@ class State { // same as DFA
     }
 }
 
-class Transition { // (source, input, stack0) -> (dest, stack1)
+export class Transition { // (source, input, stack0) -> (dest, stack1)
     constructor(source, dest, input, stack0, stack1) {
         this.input = input;
         this.source = source;
@@ -82,11 +88,11 @@ class Transition { // (source, input, stack0) -> (dest, stack1)
     }
 }
 
-class PDAModel {
+export class PDAModel {
     constructor(all_states, initialState, inputAlphabet, pushdownAlphabet, transitions, initialStack, final) {
         this.all = all_states;
         this.initialState = initialState;
-        this.pushdownAlphabet = pushdownAlphabet;
+        this.pushdownAlphabet = parsePushdownAlphabet(pushdownAlphabet);
         this.transitions = transitions;
         this.inputAlphabet = inputAlphabet;
         this.initialStack = initialStack;
@@ -102,13 +108,14 @@ class PDAModel {
         if (!this.checkInputAlphabet()) console.log("Invalid Input Alphabet");
         //console.log(this.pushdownAlphabet.size);
         if (!this.checkPushdownAlphabet()) console.log("Invalid Pushdown alphabet");
-        console.log("here");
+        //console.log("here");
         if (!this.checkStates()) console.log("Invalid states");
         if (!this.checkInitialStack()) console.log("Invalid Initial Stack");
         if (!this.checkInitialState()) console.log("Invalid initial state");
         if (!this.checkAccepting()) console.log("Invalid Accepting array");
         if (!this.checkTransitions()) console.log("Invalid transitions");
-        if (!this.checkDeterministic()) console.log("Non-deterministic");
+        //if (!this.checkDeterministic()) console.log("Non-deterministic");
+        //else console.log("Deterministic");
 
         this.makeConnected(this.initialState);
         for (let i in this.all) {
@@ -124,7 +131,6 @@ class PDAModel {
         this.currentStack = this.initialStack;
         let path = []; // path is gonna have each transition object
         for (let i = 0; i < input.length; i++) {
-            console.log("run: " + i);
             let sym = input.substring(i, i + 1);
             let worked = false;
             for (let j in this.transitions) {
@@ -132,7 +138,7 @@ class PDAModel {
                 if ((t.source === this.currentState) && (t.input === sym) && (t.stack0 === this.currentStack.substring(0, 1))) {
                     path.push(t);
                     this.currentState = t.dest;
-                    this.currentStack = t.stack1.concat('', this.currentStack.substring(1, this.currentStack.length))
+                    if (t.stack1 != "eps") this.currentStack = t.stack1.concat('', this.currentStack.substring(1, this.currentStack.length));
                     worked = true;
                     break;
                 }
@@ -147,16 +153,21 @@ class PDAModel {
         return true;
     }
 
+    /*
     checkDeterministic() {
         let symPairs = new Set();
-        for (let i in transitions) {
-            let t = transitions[i];
+        for (let i in this.transitions) {
+            let t = this.transitions[i]; 
             let symPair = [t.input, t.stack0];
-            if (symPairs.has(symPair)) {
-                return false;
+            for (let x in symPairs) {
+                let j = symPairs[x];
+                if (t.input == j[0] && t.stack0 === j[1]) return false;
             }
+            symPairs.add(symPair);
         }
+        return true; 
     }
+    */
 
     checkInputAlphabet() {
         if (this.inputAlphabet.size === 0) return false;
@@ -233,16 +244,35 @@ class PDAModel {
 
         for (let i in this.transitions) {
             let t = this.transitions[i];
-            if (t.input.length > 0 && !this.inputSyms.has(t.input)) return false; // must accept empty
-            if (!this.pdSyms.has(t.stack0)) return false;
-            if (!this.all.includes(t.source)) return false;
-            if (!this.all.includes(t.dest)) return false;
+            if (t.input != "eps" && !this.inputSyms.has(t.input)) return false; // must accept empty
+            if (t.stack0 != "eps" && !this.pdSyms.has(t.stack0)) return false;
+            let st = false;
+            let end = false;
+            for (let x in this.all) {
+                let cc = this.all[x];
+                if (st && end) break;
+                if (cc.name === t.source.name) {
+                    st = true;
+                    t.source = cc;
+                }
+                if (cc.name === t.dest.name) {
+                    end = true;
+                    t.dest = cc;
+                }
+
+            }
+            if (!(st && end)) return false;
+            //if (!this.all.includes(t.source)) return false;
+            //if (!this.all.includes(t.dest)) return false;
 
             // check new stack:
-            for (let x in t.stack1) {
-                let c = t.stack1.substring(x, x + 1);
-                if (!this.pdSyms.has(c)) return false;
+            if (t.stack1 != "eps") {
+                for (let x in t.stack1) {
+                    let c = t.stack1.substring(x, x + 1);
+                    if (!this.pdSyms.has(c)) return false;
+                }
             }
+
 
             //t.source = this.states.get(t.source);
             //t.dest = this.states.get(t.dest);
@@ -282,6 +312,7 @@ class PDAModel {
 
             if (!t.source.conn.includes(t.dest)) {
                 t.source.conn.push(t.dest);
+                if (t.source.name === this.initialState.name) this.initialState = t.source;
             }
         }
         return true;
@@ -300,56 +331,47 @@ class PDAModel {
 
 // *TESTS*
 
-
+/*
 // Non-deterministic
 let q0 = new State("q0");
 let q1 = new State("q1");
-
 let t1 = new Transition(q0, q0, "a", "Z", "AZ"); // (q0, a, Z) -> (q0,A)
 let t2 = new Transition(q0, q0, "a", "A", "AA"); // (q0, a, A) -> (q0, AA)
 let t3 = new Transition(q0, q1, "b", "A", ""); // (q0, b, A) -> (q1, eps)
 let t4 = new Transition(q1, q1, "b", "A", ""); // (q1. b. A) -> (q1, eps)
 let t5 = new Transition(q1, q1, "", "Z", ""); // (q1, eps, Z) -> (q1, eps)
-
 var test_states = new Array(q0, q1);
 var test_inAlphabet = new Array("a", "b"); //["a", "b"];
 var test_stAlphabet = new Array("A", "Z"); //["A", "Z"];
 //console.log(test_stAlphabet.length);
 let test_accepting = [q1];
 let test_transitions = [t1, t2, t3, t4, t5];
-
 let testPDA = new PDAModel(test_states, q0, test_inAlphabet, test_stAlphabet, test_transitions, "Z", q1);
-
 console.log(testPDA.checkInputString("aaabbb"));
-
-
-//deterministic
-/*
-(q0, a,  Z) -> (q0, aZ) 
-(q0, a,  a) -> (q0, aa) 
-(q0, b,  a) -> (q1, eps) 
-(q1, b,  a) -> (q1, eps)  
-(q1, eps,  Z) -> (qf, eps)
 */
+let statebox = "q0, q1";
+let _transitions = "(q0, a, Z) -> (q0,A); (q0, a, A) -> (q0, AA); (q0, b, A) -> (q1, eps); (q1, b, A) -> (q1, eps); (q1, eps, Z) -> (q1, eps)";
+let startstatebox = "q0";
+let startStack = "Z";
+let inputbox = "a, b";
+let stackBox = "A, Z";
+let finalbox = "q1";
+let inString = "aaabbb";
 
-/*
-let qq0 = new State("q0");
-let qq1 = new State("q1");
-let qq2 = new State("q2");
+let _states = parseStates(statebox);
+let _inAlph = parseInputAlphabet(inputbox);
+let _pdAlph = parsePushdownAlphabet(stackBox);
+let _acc = parseStates(finalbox);
+let _trans = parseTransitions(_transitions);
+let _initSt = new State(startstatebox);
 
-let tt1 = new Transition(qq0, qq0, "a", "Z", "AZ");
-let tt2 = new Transition(qq0, qq0, "a", "A", "AA");
-let tt3 = new Transition(qq0, qq1, "b", "A", "");
-let tt4 = new Transition(qq1, qq1, "b", "A", "");
-let tt5 = new Transition(qq1, qq2, "", "Z", "");
+let _testPDA = new PDAModel(_states, _initSt, _inAlph, _pdAlph, _trans, startStack, _acc);
 
-let test2_states = [qq0, qq1, qq2];
-let test2_inAlphabet = ["a", "b"];
-let test2_stAlphabet = ["A", "Z"];
-let test2_accepting = [qq2];
-let test2_transitions = [tt1, tt2, tt3, tt4, tt5];
+console.log(_testPDA.checkInputString(inString));
+console.log(_testPDA.checkPushdownAlphabet(_pdAlph));
 
-let test2PDA = new PDAModel(test2_states, qq1, test2_inAlphabet, test2_stAlphabet, test2_transitions, "Z", qq2);
 
-console.log(test2PDA.checkInputString("aabb"));
-*/
+//console.log(t1.input);
+//let transArr = parseTransitions("(q0, a, S) -> (q1, S); (q1, e, S) -> (q2, SS)");
+//console.log(transArr[0].input);
+//console.log(transArr[1].stack1);
