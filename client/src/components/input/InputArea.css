@@ -6,7 +6,8 @@
 }
 
 .formGroup {
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
+  overflow: break-word;
 }
 
 input[type="text"] {
@@ -15,9 +16,8 @@ input[type="text"] {
   left: 10rem;
   width: 75%;
   flex-wrap: wrap;
-  border-color: black;
-  border-width: 1px;
-
+  flex-direction: row;
+  border: 1px solid black;
 }
 
 input[type="button"] {
@@ -34,6 +34,28 @@ input[type="button"] {
   text-align: center;
   text-decoration-color: white;
   border-color: transparent;
+}
+
+textarea {
+  clear: both;
+  float: right;
+  left: 10rem;
+  width: 75%;
+  height: 50%;
+  flex-wrap: wrap;
+  flex-direction: row;
+  border: 1px solid black;
+}
+
+textarea {
+  clear: both;
+  float: right;
+  left: 10rem;
+  width: 75%;
+  height: 50%;
+  flex-wrap: wrap;
+  flex-direction: row;
+  border: 1px solid black;
 }
 
 #form {

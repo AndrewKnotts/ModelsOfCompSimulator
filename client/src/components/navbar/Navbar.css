@@ -32,6 +32,10 @@ body {
   height: auto;
 }
 
+.site-title {
+  font-size: 2rem;
+}
+
 .nav ul {
   padding-right: 0rem;
   padding-top: .75rem;

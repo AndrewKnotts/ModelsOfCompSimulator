@@ -9,7 +9,7 @@ export default function Navbar() {
             <h1 to="/" className="site-title">
                 Models Of Computation Simulator
             </h1>
-            <ul className="navcat">
+            <ul>
                 <CustomLink to="/">DFA</CustomLink>
                 <CustomLink to="/nfa">NFA</CustomLink>
                 <CustomLink to="/pda">PDA</CustomLink>

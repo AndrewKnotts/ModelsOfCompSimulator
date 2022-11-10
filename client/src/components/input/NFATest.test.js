@@ -1,4 +1,4 @@
-import { NFAModel, NFAState, Pair } from "./NFAModel";
+import { NFAModel } from "./NFAModel";
 
 it('test works', () => {
     expect(1+2).toEqual(3);
