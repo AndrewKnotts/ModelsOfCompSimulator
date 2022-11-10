@@ -54,9 +54,9 @@ function parseTransitions(input) {
         for (let j in src) {
             src[j] = src[j].replace(" ", "").replace("(", "").replace(")", "");
         }
-        dest[0] = dest[0].replace(" " , "").replace("(", "");
+        dest[0] = dest[0].replace(" ", "").replace("(", "");
         dest[1] = dest[1].replace(" ", "").replace(")", "");
-
+       
         let state1 = new State(src[0]);
         let state2 = new State(dest[0]);
 
@@ -150,6 +150,7 @@ export class PDAModel {
         this.currentState = this.initialState;
         this.currentStack = this.initialStack;
         let path = []; // path is gonna have each transition object
+
         for(let i = 0; i < input.length; i++) {
             let sym = input.substring(i, i+1);
             let worked = false;
@@ -228,7 +229,7 @@ export class PDAModel {
         this.inputSyms = symbols;
         return true;
     }
-    
+
     checkPushdownAlphabet() {
         if (this.pushdownAlphabet.size == 0) return false;
 
@@ -287,8 +288,8 @@ export class PDAModel {
             s.accepting = true;
             this.accepting.push(s);
         }
-        return true; 
-    
+        return true;
+
     }
 
     checkTransitions() {
@@ -325,10 +326,10 @@ export class PDAModel {
 
             if (this.srcToInput.has(t.source) && this.srcToInput.get(t.source).includes(t.input) 
                 && this.srcToStack.has(t.source) && this.srcToStack.get(t.source).includes(t.stack0)) {
-                    return false;
+                return false;
             }
             // doesn't have the stack symbol yet
-            else if (this.srcToInput.has(t.source) && this.srcToInput.get(t.source).includes(t.input)){
+            else if (this.srcToInput.has(t.source) && this.srcToInput.get(t.source).includes(t.input)) {
                 let symList = this.srcToInput.get(t.source);
                 symList.push(t.input);
                 this.srcToInput.set(t.source, symList);
@@ -340,7 +341,7 @@ export class PDAModel {
                 this.srcToStack.set(t.source, symList);
             }
             // has the source, but neither the symbol nor the input
-            else if (this.srcToStack.has(t.source) && this.srcToInput.has(t.source)){
+            else if (this.srcToStack.has(t.source) && this.srcToInput.has(t.source)) {
                 let inList = this.srcToInput.get(t.source);
                 inList.push(t.input);
                 this.srcToInput.set(t.source, inList);
@@ -369,7 +370,7 @@ export class PDAModel {
         }
         return true;
     }
-    
+
     makeConnected(start) {
         for (let i in start.conn) {
             let s = start.conn[i]; 

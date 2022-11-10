@@ -32,6 +32,7 @@ export class DFAModel {
         this.states = null;
         this.ts = new Map();
         this.error = null;
+        this.acceptance_result = null;
         
         /* console.log("initial: ", initial);
         console.log("accepting: ", accepting);
@@ -40,18 +41,24 @@ export class DFAModel {
         console.log("transitions: ", transitions); */
 
         // check components and alert if error
-        if (!this.checkAlphabet()) window.alert(this.error);
-        if (!this.checkStates()) window.alert(this.error);
-        if (!this.checkInitial(initial)) window.alert(this.error);
-        if (!this.checkAccepting(accepting)) window.alert(this.error);
-        if (!this.checkTransitions()) window.alert(this.error);
-
-        // make Connected for all and check
-        this.makeConnected(this.initial);
-        for (let i in this.all) {
-            let s = this.all[i];
-            if (!s.connected) {
-                console.log("State " + s.name + " is not reachable.");
+        if (!this.checkAlphabet()) {
+            window.alert(this.error);
+        } else if (!this.checkStates()) {
+            window.alert(this.error);
+        } else if (!this.checkInitial(initial)) {
+            window.alert(this.error);
+        } else if (!this.checkAccepting(accepting)) {
+            window.alert(this.error);
+        } else if (!this.checkTransitions()) {
+            window.alert(this.error);
+        } else {
+            // make Connected for all and check
+            this.makeConnected(this.initial);
+            for (let i in this.all) {
+                let s = this.all[i];
+                if (!s.connected) {
+                    console.log("State " + s.name + " is not reachable.");
+                }
             }
         }
     }
@@ -66,6 +73,7 @@ export class DFAModel {
                 let accept_state = new State("🙂");
                 let acceptance = new Transition("✔️", null, accept_state);
                 path.push(acceptance);
+                this.acceptance_result = true;
                 return path;
             }
         }
@@ -73,6 +81,7 @@ export class DFAModel {
         let fail_state = new State("🙁");
         let failure = new Transition("❌", null, fail_state);
         path.push(failure);
+        this.acceptance_result = false;
         return path;
     }
 
@@ -112,7 +121,7 @@ export class DFAModel {
 
     // Checks alphabet for repeated symbols or being empty
     checkAlphabet() {
-        if (this.alphabet.size === 0){
+        if (this.alphabet.length === 0){
             this.error = "Empty alphabet";
             return false;
         }
@@ -134,7 +143,7 @@ export class DFAModel {
 
     // Checks states for repeats or conflicts with alphabet
     checkStates() {
-        if (this.all.size === 0) {
+        if (this.all.length === 0) {
             this.error = "Empty States";
             return false;
         }
@@ -168,7 +177,7 @@ export class DFAModel {
     // Checks that accepting states are present and valid
     checkAccepting(accepting) {
         let acc_array = parseAlphabet(accepting);
-        if (acc_array.size === 0) {
+        if (acc_array.length === 0) {
             this.error = "Empty accepting states";
             return false;
         }
@@ -189,12 +198,11 @@ export class DFAModel {
     // Sets up connections to check all states are connected
     // ts is a map of Sources to a list of symbols that have been assigned a transition
     checkTransitions() {
-        if (this.transitions.size === 0) {
+        if (this.transitions.length === 0) {
             this.error = "Empty transitions";
             return false;
         }
 
-        // iterate through each transition in the array
         for (let i in this.transitions) {
             let t = this.transitions[i];
 
@@ -229,7 +237,7 @@ export class DFAModel {
                 this.ts.set(t.source, new_list);
             }
 
-            // add to the state for connection check
+            // add the dest to the source state for connection check
             if (!t.source.conn.includes(t.dest)) {
                 t.source.conn.push(t.dest);
             }
@@ -238,7 +246,7 @@ export class DFAModel {
         // check that all states have all alphabet symbols represented
         for (let i in this.all) {
             let s = this.states.get(this.all[i].name);
-            // fails if a state is missing from the transitions map
+            // fails if a state is missing from the transitions map 
             if (!this.ts.has(s)) {
                 this.error = "State " + s.name + " has no transitions";
                 return false;
@@ -272,34 +280,43 @@ export class DFAModel {
 
 // parse alphabet string input into String array
 export function parseAlphabet(input) {
+    input = input.replaceAll(" ","");
+    if (input.length == 0) return [];
+
     let alphabet_array = input.split(',');
     for (let i in alphabet_array) {
         let alpha = alphabet_array[i];
-        alphabet_array[i] = alpha.replace(" ", "");
+        alphabet_array[i] = alpha;
     }
     return alphabet_array;
 }
 
 // parse states string input into State array
 export function parseStates(input) {
+    input = input.replaceAll(" ","");
+    if (input.length == 0) return [];
+
     let input_array = input.split(',');
     let states_array = [];
     for (let i in input_array) {
         let str_state = input_array[i];
-        states_array[i] = new State(str_state.replace(" ", ""));
+        states_array[i] = new State(str_state);
     }
     return states_array;
 }
 
 // parse transition string input into Transition array
 export function parseTransition(input) {
+    input = input.replaceAll(" ","");
+    if (input.length == 0) return [];
+
     let transitions = input.split(';');
     let trans_array = [];
     for (let i in transitions) {
         let trans = transitions[i];
         let split = trans.split(',');
         for (let j in split) {
-            split[j] = split[j].replace(" ", "").replace("(", "").replace(")", "");
+            split[j] = split[j].replaceAll("(", "").replaceAll(")", "");
         }
         trans_array[i] = new Transition(split[0], split[1], split[2]);
     }
