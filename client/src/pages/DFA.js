@@ -51,7 +51,7 @@ export default class DFA extends Component {
         });
         this.outputDest = [];
         this.outputSymbols = [];
-        this.outputDest.push(output[0].source.name)
+        this.outputDest.push(output[0].source.name) 
         for (let i = 0; i < output.length; i++) {
             this.outputDest.push(output[i].symbol);
             this.outputDest.push(output[i].dest.name);
