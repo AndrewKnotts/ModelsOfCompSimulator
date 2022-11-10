@@ -107,19 +107,19 @@ export class PDAModel {
 
 
 
-        if (!this.checkInputAlphabet()) console.log("Invalid Input Alphabet");
+        if (!this.checkInputAlphabet()) window.alert("Invalid Input Alphabet");
         //console.log(this.pushdownAlphabet.size);
-        if (!this.checkPushdownAlphabet()) console.log("Invalid Pushdown alphabet: " + pushdownAlphabet);
+        if (!this.checkPushdownAlphabet()) window.alert("Invalid Pushdown alphabet: " + pushdownAlphabet);
         //console.log("here");
-        if (!this.checkInitialStack()) console.log("Invalid Initial Stack");
-        if (!this.checkStates()) console.log("Invalid states");
+        if (!this.checkInitialStack()) window.alert("Invalid Initial Stack");
+        if (!this.checkStates()) window.alert("Invalid states");
         //if (!this.checkInitialState()) console.log("Invalid initial state");
         //else {
         //   this.initialState = this.getInitialState(initialState);
         //}
-        if (!this.getInitialState(initialState)) console.log("Invalid Initial State");
-        if (!this.checkAccepting()) console.log("Invalid Accepting array");
-        if (!this.checkTransitions()) console.log("Invalid transitions");
+        if (!this.getInitialState(initialState)) window.alert("Invalid Initial State");
+        if (!this.checkAccepting()) window.alert("Invalid Accepting array");
+        if (!this.checkTransitions()) window.alert("Invalid transitions");
         //if (!this.checkDeterministic()) console.log("Non-deterministic");
         //else console.log("Deterministic");
 
@@ -178,7 +178,7 @@ export class PDAModel {
                 i--;
             }
             else if (!worked) {
-                console.log("No transition suitable");
+                window.alert("No transition suitable");
                 return false;
             }
         }
@@ -195,7 +195,7 @@ export class PDAModel {
                 }
             }
             if (!worked) {
-                console.log("non-empty stack");
+                window.alert("non-empty stack");
                 return false;
 
             }
@@ -212,7 +212,7 @@ export class PDAModel {
 
         if (endState) return path;
         else {
-            console.log("Not in end state");
+            window.alert("Not in end state");
             return false;
         }
     }

@@ -104,7 +104,7 @@ export default class PDA extends Component {
                             </div>
                             <div className='formGroup'>
                                 <label>Transitions:</label>
-                                <input type="text" value={this.state.transitionsPDA} onChange={(event) => this.handleChange(event, "transitionsPDA")} name="transitions" placeholder="ex: (q0, a, Z) -> (q0, AZ); (q0, a, A) -> (q0, AA)" />
+                                <textarea type="text" value={this.state.transitionsPDA} onChange={(event) => this.handleChange(event, "transitionsPDA")} name="transitions" placeholder="ex: (0, A, A); (1, A, B); (1, B, A); (0, B, B)" />
                             </div>
                             <div className='formGroup'>
                                 <label>Input:</label>
