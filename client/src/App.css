@@ -6,12 +6,16 @@
 
 .visualArea {
   flex-wrap: wrap;
+  border-color: transparent;
+  border-radius: 0;
+  
 }
 
 .input {
-  padding-top: 1rem;
-  background-color: #ececec;
+  padding-top: 1em;
   align-items: center;
+  box-shadow: black;
+  color: black;
 }
 
 #form {

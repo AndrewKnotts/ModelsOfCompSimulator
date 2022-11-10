@@ -1,8 +1,8 @@
 .input {
   padding-top: 1rem;
-  background-color: #ececec;
-  border-bottom: solid;
+  background-color: #f1f1f1;
   align-items: center;
+  padding-top: 15px;
 }
 
 .formGroup {
@@ -15,10 +15,14 @@ input[type="text"] {
   left: 10rem;
   width: 75%;
   flex-wrap: wrap;
+  border-color: black;
+  border-width: 1px;
+
 }
 
 input[type="button"] {
-  background-color: #39ff14;
+  background-color: #077fff;
+  color:white;
   text-decoration: none;
   cursor: pointer;
   border: solid;
@@ -28,6 +32,8 @@ input[type="button"] {
   font-size: 16px;
   cursor: pointer;
   text-align: center;
+  text-decoration-color: white;
+  border-color: transparent;
 }
 
 #form {
@@ -40,6 +46,7 @@ input[type="button"] {
 }
 
 .btnGroup {
-  transform: translateX(48%);
+  transform: translateX(1%);
   padding-bottom: 1rem;
+  size: 10;
 }
