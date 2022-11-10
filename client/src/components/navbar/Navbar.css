@@ -24,6 +24,8 @@ body {
 
 .site-title {
   font-size: 2rem;
+  color: blue;
+  margin-left: 2rem;
 }
 
 .nav ul {

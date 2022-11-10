@@ -4,9 +4,9 @@ import './Navbar.css'
 export default function Navbar() {
     return (
         <nav className="nav">
-            <Link to="/" className="site-title">
+            <h1 to="/" className="site-title">
                 Models Of Computation Simulator
-            </Link>
+            </h1>
             <ul>
                 <CustomLink to="/">DFA</CustomLink>
                 <CustomLink to="/nfa">NFA</CustomLink>

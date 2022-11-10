@@ -13,8 +13,6 @@ import { NFAModel } from './components/input/NFAModel.js';
 import State from './components/state/State';
 import Arrow from './components/arrow/arrow';
 import Navbar from './components/navbar/Navbar';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 

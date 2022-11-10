@@ -173,7 +173,7 @@ export class NFAModel {
                 this.acceptance_result = false;
                 return ret_path;
             }
-            
+
             for (let b of next) {
                 let eps_trans = b.getEpsilonTrans();
                 if (eps_trans !== 0) {
