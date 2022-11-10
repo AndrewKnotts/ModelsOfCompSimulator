@@ -1,5 +1,5 @@
 .arr {
-  width: 100px;
+  width: 125px;
   height: 5px;
   position: relative;
   background: black;
@@ -8,7 +8,7 @@
   display: inline-block;
   margin-bottom: 10px;
   top: -75px;
-  margin-right: 10px;
+  margin-right: 20px;
   flex-direction: row;
   text-align: center;
   color: black;
@@ -26,6 +26,7 @@
   border-left: 20px solid black;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
+  margin-right: 10px;
 }
 
 .h1tag {

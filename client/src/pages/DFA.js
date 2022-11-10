@@ -17,7 +17,7 @@ export default class DFA extends Component {
             startingStateDFA: localStorage.getItem('startingStateDFA'),
             acceptingStatesDFA: localStorage.getItem('acceptingStatesDFA'),
             transitionsDFA: localStorage.getItem('transitionsDFA'),
-            inputDFA: localStorage.getItem('input'),
+            inputDFA: localStorage.getItem('inputDFA'),
             modelStates: [],
             modelTransitions: []
         };
@@ -43,7 +43,6 @@ export default class DFA extends Component {
         //if (page === "DFA") {
         console.log("Test1");
         let new_model = new DFAModel(this.state.startingStateDFA, this.state.acceptingStatesDFA, this.state.statesDFA, this.state.alphabetDFA, this.state.transitionsDFA);
-        //console.log(new_model.checkInputString(this.state.input));
         let output = new_model.checkInputString(this.state.inputDFA);
         this.setState({
             modelStates: output[0].dest.name,
