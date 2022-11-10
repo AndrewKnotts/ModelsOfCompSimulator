@@ -40,11 +40,10 @@ export default class NFA extends Component {
 
     // On submit, run the correct model simulation
     handleSubmit(event) {
-        let nfa_model = new NFAModel(this.state.startingState, this.state.acceptingStates, this.state.states,
-            this.state.alphabet, this.state.transitions);
-        let output = nfa_model.checkInputString(this.state.input);
+        let nfa_model = new NFAModel(this.state.startingStateNFA, this.state.acceptingStatesNFA, this.state.statesNFA,
+            this.state.alphabetNFA, this.state.transitionsNFA);
+        let output = nfa_model.checkInputString(this.state.inputNFA);
         let sets = nfa_model.setPath;
-        //console.log(output);
 
         this.setState({
             modelStates: sets[0].name,

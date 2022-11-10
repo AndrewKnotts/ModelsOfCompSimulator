@@ -102,7 +102,7 @@ export class NFAModel {
     // once checkInputString has run, determine whether or not to accept input
     acceptString() {
         let ret_path = [];
-        console.log(this.setPath);
+        //console.log(this.setPath);
         for (let a of this.current) {
             if (a.accepting) {
                 // create acceptance visualization and add it to end of path
@@ -327,7 +327,6 @@ export class NFAModel {
 export function parseNFAStates(input) {
     input = input.replaceAll(" ", "");
     if (input.length === 0) return [];
-
     let input_array = input.split(',');
     let states_array = [];
     for (let i in input_array) {
