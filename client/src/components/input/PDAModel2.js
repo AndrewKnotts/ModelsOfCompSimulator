@@ -54,7 +54,7 @@ function parseTransitions(input) {
         for (let j in src) {
             src[j] = src[j].replace(" ", "").replace("(", "").replace(")", "");
         }
-        dest[0] = dest[0].replace(" ", "").replace("(", "");
+        dest[0] = dest[0].replace(" " , "").replace("(", "");
         dest[1] = dest[1].replace(" ", "").replace(")", "");
 
         let state1 = new State(src[0]);
@@ -62,6 +62,7 @@ function parseTransitions(input) {
 
         transArray[i] = new Transition(state1, state2, src[1], src[2], dest[1]);
     }
+    return transArray; 
 }
 
 class State { // same as DFA
@@ -104,23 +105,23 @@ class PDAModel {
         this.currentStack = null;
         this.epsTransitions = [];
 
-
-
+        
+        
         if (!this.checkInputAlphabet()) console.log("Invalid Input Alphabet");
         //console.log(this.pushdownAlphabet.size);
         if (!this.checkPushdownAlphabet()) console.log("Invalid Pushdown alphabet");
         //console.log("here");
-        if (!this.checkStates()) console.log("Invalid states");
         if (!this.checkInitialStack()) console.log("Invalid Initial Stack");
         if (!this.checkStates()) console.log("Invalid states");
         //if (!this.checkInitialState()) console.log("Invalid initial state");
         //else {
-        //   this.initialState = this.getInitialState(initialState);
+         //   this.initialState = this.getInitialState(initialState);
         //}
         if (!this.getInitialState(initialState)) console.log("Invalid Initial State");
         if (!this.checkAccepting()) console.log("Invalid Accepting array");
         if (!this.checkTransitions()) console.log("Invalid transitions");
-        if (!this.checkDeterministic()) console.log("Non-deterministic");
+        //if (!this.checkDeterministic()) console.log("Non-deterministic");
+        //else console.log("Deterministic");
 
         this.makeConnected(this.initialState);
         for (let i in this.all) {
@@ -132,7 +133,7 @@ class PDAModel {
     }
 
     getInitialState(name) {
-        if (name == null || name == "") return false;
+        if (name == null || name == "") return false; 
         for (let i in this.all) {
             let st = this.all[i];
             if (st.name === name) {
@@ -140,19 +141,18 @@ class PDAModel {
                 return true;
             }
         }
-        return false;
+        return false; 
     }
 
     checkInputString(input) {
         this.currentState = this.initialState;
         this.currentStack = this.initialStack;
         let path = []; // path is gonna have each transition object
-        for (let i = 0; i < input.length; i++) {
-            console.log("run: " + i);
-            let sym = input.substring(i, i + 1);
+        for(let i = 0; i < input.length; i++) {
+            let sym = input.substring(i, i+1);
             let worked = false;
             let epsTran = null;
-            for (let j in this.transitions) {
+            for(let j in this.transitions) {
                 let t = this.transitions[j];
                 if ((t.source === this.currentState) && (t.input === sym) && (t.stack0 === this.currentStack.substring(0, 1))) {
                     path.push(t);
@@ -162,21 +162,21 @@ class PDAModel {
                     worked = true;
                     break;
                 }
-                else if ((t.input == "eps") && (t.source == this.currentState) && (t.stack0 == this.currentStack.substring(0, 1))) {
+                else if ((t.input == "eps") && (t.source == this.currentState) && (t.stack0 == this.currentStack.substring(0,1))) {
                     epsTran = t;
                 }
-            }
+            }   
             if (!worked && epsTran != null) {
                 path.push(epsTran);
                 this.currentState = epsTran.dest;
                 if (epsTran.stack1 != "eps") this.currentStack = epsTran.stack1.concat('', this.currentStack.substring(1, this.currentStack.length));
                 else this.currentStack = this.currentStack.substring(1, this.currentStack.length);
                 i--;
-            }
-            else if (!worked) {
+            }    
+            else if (!worked){
                 console.log("No transition suitable");
-                return false;
-            }
+                return false;  
+            }   
         }
         while (this.currentStack != "") {
             let worked = false;
@@ -187,207 +187,195 @@ class PDAModel {
                     this.currentState = et.dest;
                     if (et.stack1 != "eps") this.currentStack = et.stack1.concat('', this.currentStack.substring(1, this.currentStack.length));
                     else this.currentStack = this.currentStack.substring(1, this.currentStack.length);
-                    worked = true;
+                    worked = true; 
                 }
             }
             if (!worked) {
                 console.log("non-empty stack");
-                return false;
-
+                return false; 
+        
             }
         }
 
-        let endState = false;
+        let endState = false; 
         for (let i in this.accepting) {
             let s = this.accepting[i];
             if (s.name === this.currentState.name) {
-                endState = true;
+                endState = true; 
                 break;
             }
         }
 
-        /*
-        checkDeterministic() {
-            let symPairs = new Set();
-            for (let i in this.transitions) {
-                let t = this.transitions[i]; 
-                let symPair = [t.input, t.stack0];
-                for (let x in symPairs) {
-                    let j = symPairs[x];
-                    if (t.input == j[0] && t.stack0 === j[1]) return false;
+        if (endState) return true; // return path;
+        else {
+            console.log("Not in end state");
+            return false; 
+        }
+    }
+
+    checkInputAlphabet() {
+        if (this.inputAlphabet.size === 0) return false;
+        let symbols = new Set();
+        for (let s in this.inputAlphabet) {
+            let i = this.inputAlphabet[s];
+            if (symbols.has(i)) return false;
+            symbols.add(i);
+        }
+
+        this.inputSyms = symbols;
+        return true;
+    }
+    
+    checkPushdownAlphabet() {
+        if (this.pushdownAlphabet.size == 0) return false;
+
+        let symbols = new Set();
+        for (let s in this.pushdownAlphabet) {
+            let i = this.pushdownAlphabet[s];
+            if (symbols.has(i) || this.inputSyms.has(i)) return false;
+            symbols.add(i);
+        }
+
+        this.pdSyms = symbols;
+        //console.log(this.pdSyms.size());
+        return true;
+    }
+
+    checkStates() {
+        if (this.all.size == 0) return false;
+
+        let states = new Map();
+        for (let i in this.all) {
+            let s = this.all[i];
+            if (states.has(s.name) || this.pdSyms.has(s.name) || this.inputSyms.has(s.name)) return false;
+            states.set(s.name, s);
+        }
+
+        this.states = states;
+        return true;
+    }
+
+    checkInitialState() {
+        if (this.states.has(this.initialState.name)) {
+            //this.initialState = this.states.has(initialState.name);
+            this.initialState.connected = true;
+            return true;
+        }
+        return false;
+    }
+
+    checkInitialStack() {
+        for(let i in initialStack) {
+            let sym = initialStack.substring(i, i+1);
+            if (!this.pdSyms.has(sym)) {
+                //this.initialStack = this.pdSyms.get(initialStack)
+                return false
+            }
+        }
+        
+        return true;
+    }
+
+    checkAccepting() {
+        for (let i in all) {
+            let s = all[i];
+            if (!this.states.has(s)) return false;
+            s.accepting = true;
+            this.accepting.push(s);
+        }
+        return true; 
+    
+    }
+
+    checkTransitions() {
+        if (this.transitions.size === 0) return false;
+
+        for (let i in this.transitions) {
+            let t = this.transitions[i];
+            if (t.input != "eps" && !this.inputSyms.has(t.input)) return false; // must accept empty
+            if (t.stack0 != "eps" && !this.pdSyms.has(t.stack0)) return false;
+            let st = false;
+            let end = false;
+            for (let x in this.all) {
+                let cc = this.all[x];
+                if (st && end) break;
+                if (cc.name === t.source.name) {
+                    st = true;
+                    t.source = cc;
                 }
-                symPairs.add(symPair);
+                if (cc.name === t.dest.name) {
+                    end = true;
+                    t.dest = cc;
+                }
+                
             }
-            return true; 
-        }
-        */
-
-        checkInputAlphabet() {
-            if (this.inputAlphabet.size === 0) return false;
-            let symbols = new Set();
-            for (let s in this.inputAlphabet) {
-                let i = this.inputAlphabet[s];
-                if (symbols.has(i)) return false;
-                symbols.add(i);
-            }
-
-            this.inputSyms = symbols;
-            return true;
-        }
-
-        checkPushdownAlphabet() {
-            if (this.pushdownAlphabet.size == 0) return false;
-
-            let symbols = new Set();
-            for (let s in this.pushdownAlphabet) {
-                let i = this.pushdownAlphabet[s];
-                if (symbols.has(i) || this.inputSyms.has(i)) return false;
-                symbols.add(i);
-            }
-
-            this.pdSyms = symbols;
-            //console.log(this.pdSyms.size());
-            return true;
-        }
-
-        checkStates() {
-            if (this.all.size == 0) return false;
-
-            let states = new Map();
-            for (let i in this.all) {
-                let s = this.all[i];
-                if (states.has(s.name) || this.pdSyms.has(s.name) || this.inputSyms.has(s.name)) return false;
-                states.set(s.name, s);
-            }
-
-            this.states = states;
-            return true;
-        }
-
-        checkInitialState() {
-            if (this.states.has(this.initialState.name)) {
-                //this.initialState = this.states.has(initialState.name);
-                this.initialState.connected = true;
-                return true;
-            }
-            return false;
-        }
-
-        checkInitialStack() {
-            for (let i in initialStack) {
-                let sym = initialStack.substring(i, i + 1);
-                if (!this.pdSyms.has(sym)) {
-                    //this.initialStack = this.pdSyms.get(initialStack)
-                    return false
+            if (!(st && end)) return false;
+    
+            // check new stack:
+            if (t.stack1 != "eps") {
+                for (let x in t.stack1) {
+                    let c = t.stack1.substring(x, x+1);
+                    if (!this.pdSyms.has(c)) return false; 
                 }
             }
 
-            return true;
-        }
-
-        checkAccepting() {
-            for (let i in all) {
-                let s = all[i];
-                if (!this.states.has(s)) return false;
-                s.accepting = true;
-                this.accepting.push(s);
-            }
-            return true;
-
-        }
-
-        checkTransitions() {
-            if (this.transitions.size === 0) return false;
-
-            for (let i in this.transitions) {
-                let t = this.transitions[i];
-                if (t.input != "eps" && !this.inputSyms.has(t.input)) return false; // must accept empty
-                if (t.stack0 != "eps" && !this.pdSyms.has(t.stack0)) return false;
-                let st = false;
-                let end = false;
-                for (let x in this.all) {
-                    let cc = this.all[x];
-                    if (st && end) break;
-                    if (cc.name === t.source.name) {
-                        st = true;
-                        t.source = cc;
-                    }
-                    if (cc.name === t.dest.name) {
-                        end = true;
-                        t.dest = cc;
-                    }
-
-                }
-                if (!(st && end)) return false;
-
-                // check new stack:
-                if (t.stack1 != "eps") {
-                    for (let x in t.stack1) {
-                        let c = t.stack1.substring(x, x + 1);
-                        if (!this.pdSyms.has(c)) return false;
-                    }
-                }
-
-                //t.source = this.states.get(t.source);
-                //t.dest = this.states.get(t.dest);
-
-                if (this.srcToInput.has(t.source) && this.srcToInput.get(t.source).includes(t.input)
-                    && this.srcToStack.has(t.source) && this.srcToStack.get(t.source).includes(t.stack0)) {
+            if (this.srcToInput.has(t.source) && this.srcToInput.get(t.source).includes(t.input) 
+                && this.srcToStack.has(t.source) && this.srcToStack.get(t.source).includes(t.stack0)) {
                     return false;
-                }
-                // doesn't have the stack symbol yet
-                else if (this.srcToInput.has(t.source) && this.srcToInput.get(t.source).includes(t.input)) {
-                    let symList = this.srcToInput.get(t.source);
-                    symList.push(t.input);
-                    this.srcToInput.set(t.source, symList);
-                }
-                // doesnt have the input symbol yet
-                else if (this.srcToStack.has(t.source) && this.srcToStack.get(t.source).includes(t.stack0)) {
-                    let symList = this.srcToStack.get(t.source);
-                    symList.push(t.stack0);
-                    this.srcToStack.set(t.source, symList);
-                }
-                // has the source, but neither the symbol nor the input
-                else if (this.srcToStack.has(t.source) && this.srcToInput.has(t.source)) {
-                    let inList = this.srcToInput.get(t.source);
-                    inList.push(t.input);
-                    this.srcToInput.set(t.source, inList);
-                    let stackList = this.srcToStack.get(t.source);
-                    stackList.push(t.stack0);
-                    this.srcToStack.set(t.source, inList);
-                }
-                // state has yet to be recorded as a source
-                else {
-                    let inList = new Array(t.input);
-                    let stList = new Array(t.stack0);
-                    this.srcToInput.set(t.source, inList);
-                    this.srcToStack.set(t.source, stList);
-                }
-
-                if (!t.source.conn.includes(t.dest) && t.source.name != t.dest.name) {
-                    t.source.conn.push(t.dest);
-                    t.source.connected = true;
-                    if (t.source.name === this.initialState.name) this.initialState = t.source;
-                }
-
-                // Adding to list of Transitions with eps as input
-                if (t.input === "eps") {
-                    this.epsTransitions.push(t);
-                }
             }
-            return true;
-        }
+            // doesn't have the stack symbol yet
+            else if (this.srcToInput.has(t.source) && this.srcToInput.get(t.source).includes(t.input)){
+                let symList = this.srcToInput.get(t.source);
+                symList.push(t.input);
+                this.srcToInput.set(t.source, symList);
+            }
+            // doesnt have the input symbol yet
+            else if (this.srcToStack.has(t.source) && this.srcToStack.get(t.source).includes(t.stack0)) {
+                let symList = this.srcToStack.get(t.source);
+                symList.push(t.stack0);
+                this.srcToStack.set(t.source, symList);
+            }
+            // has the source, but neither the symbol nor the input
+            else if (this.srcToStack.has(t.source) && this.srcToInput.has(t.source)){
+                let inList = this.srcToInput.get(t.source);
+                inList.push(t.input);
+                this.srcToInput.set(t.source, inList);
+                let stackList = this.srcToStack.get(t.source);
+                stackList.push(t.stack0);
+                this.srcToStack.set(t.source, inList);
+            }
+            // state has yet to be recorded as a source
+            else {
+                let inList = new Array(t.input);
+                let stList = new Array(t.stack0);
+                this.srcToInput.set(t.source, inList);
+                this.srcToStack.set(t.source, stList);
+            }
 
-        makeConnected(start) {
-            for (let i in start.conn) {
-                let s = start.conn[i];
-                if (!s.connected) {
-                    s.connected = true;
-                    this.makeConnected(s);
-                }
+            if (!t.source.conn.includes(t.dest) && t.source.name != t.dest.name) {
+                t.source.conn.push(t.dest);
+                t.source.connected = true; 
+                if (t.source.name === this.initialState.name) this.initialState = t.source;
+            }
+
+            // Adding to list of Transitions with eps as input
+            if (t.input === "eps") {
+                this.epsTransitions.push(t);
+            }
+        }
+        return true;
+    }
+    
+    makeConnected(start) {
+        for (let i in start.conn) {
+            let s = start.conn[i]; 
+            if (!s.connected) {
+                s.connected = true;
+                this.makeConnected(s);
             }
         }
     }
+}
 
 let states1 = "q0, q1";
 let startState1 = "q0";
@@ -426,13 +414,13 @@ else console.log("test2: failed");
 
 //Wrong test here
 if (AZAZ_PDA.checkInputString("abbb")) console.log("test3: correct output - passed");
-else console.log("test3: failed");
+else console.log("test3: failed"); 
 
 if (AAAAA_PDA.checkInputString("bbbbb")) console.log("test4: correct output - passed");
 else console.log("test4: failed");
 
 if (AZAZAZZZZ_PDA.checkInputString("bbb")) console.log("test5: correct output - passed");
-else console.log("test5: failed");
+else console.log("test5: failed"); 
 
 if (Z_PDA.checkInputString("ab")) console.log("test13: correct output - passed");
 else console.log("test13: failed");
@@ -468,9 +456,8 @@ else console.log("test14: failed");
 if (!A_PDA.checkInputString("a")) console.log("test15: correct output - rejected");
 else console.log("test15: failed");
 
-let test2PDA = new PDAModel(test2_states, qq0, test2_inAlphabet, test2_stAlphabet, test2_transitions, "Z", qq2);
+if (!AA_PDA.checkInputString("aaabbbb")) console.log("test17: correct output - rejected");
+else console.log("test17: failed");
 
 
 
-let transArr = parseTransitions("(q0, a, S) -> (q1, S); (q1, e, S) -> (q2, SS)");
-console.log(transArr[0].input);
