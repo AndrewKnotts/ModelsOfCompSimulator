@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Navbar from '../components/navbar/Navbar';
 import './styles.css';
-import { NFAModel } from '../components/input/NFAModel';
+import { PDAModel } from '../components/input/PDAModel';
 import State from '../components/state/State';
 import Arrow from '../components/arrow/arrow';
 
@@ -13,13 +13,13 @@ export default class PDA extends Component {
         super(props);
         // set the states to their current values in local storage
         this.state = {
-            alphabet: localStorage.getItem('alphabet'),
-            states: localStorage.getItem('states'),
-            startingState: localStorage.getItem('startingState'),
-            acceptingStates: localStorage.getItem('acceptingStates'),
-            stack: localStorage.getItem('stack'),
-            transitions: localStorage.getItem('transitions'),
-            input: localStorage.getItem('input'),
+            alphabet: localStorage.getItem('alphabet_pda'),
+            states: localStorage.getItem('states_pda'),
+            startingState: localStorage.getItem('startingState_pda'),
+            acceptingStates: localStorage.getItem('acceptingStates_pda'),
+            stack: localStorage.getItem('stack_pda'),
+            transitions: localStorage.getItem('transitions_pda'),
+            input: localStorage.getItem('input_pda'),
             modelStates: [],
             modelTransitions: []
         };
@@ -111,36 +111,36 @@ export default class PDA extends Component {
                         <form onSubmit={this.handleSubmit} className="input" id="form" >
                             <div className='formGroup'>
                                 <label>Alphabet:</label>
-                                <input type="text" value={this.state.alphabet} onChange={(event) => this.handleChange(event, "alphabet")} name="alphabet" placeholder='ex: a,b,c,d,e' />
+                                <input type="text" value={this.state.alphabet} onChange={(event) => this.handleChange(event, "alphabet_pda")} name="alphabet" placeholder='ex: a,b,c,d,e' />
 
                             </div>
                             <div className='formGroup'>
                                 <label>States:</label>
-                                <input type="text" value={this.state.states} onChange={(event) => this.handleChange(event, "states")} name="states" placeholder='ex: A, B, C' />
+                                <input type="text" value={this.state.states} onChange={(event) => this.handleChange(event, "states_pda")} name="states" placeholder='ex: A, B, C' />
                             </div>
                             <div className='formGroup'>
                                 <label>Starting State:</label>
-                                <input type="text" value={this.state.startingState} onChange={(event) => this.handleChange(event, "startingState")} name="startingState" placeholder='ex: A' />
+                                <input type="text" value={this.state.startingState} onChange={(event) => this.handleChange(event, "startingState_pda")} name="startingState" placeholder='ex: A' />
                             </div>
                             <div className='formGroup'>
                                 <label>Accepting States:</label>
-                                <input type="text" value={this.state.acceptingStates} onChange={(event) => this.handleChange(event, "acceptingStates")} name="acceptingStates" placeholder="ex: C, B" />
+                                <input type="text" value={this.state.acceptingStates} onChange={(event) => this.handleChange(event, "acceptingStates_pda")} name="acceptingStates" placeholder="ex: C, B" />
                             </div>
                             <div className='formGroup'>
                                 <label>Pushdown Alphabet:</label>
-                                <input type="text" value={this.state.pushdownAlphabet} onChange={(event) => this.handleChange(event, "pushdownAlphabet")} name="pushdownAlphabet" placeholder="ex: 1,2,3" />
+                                <input type="text" value={this.state.pushdownAlphabet} onChange={(event) => this.handleChange(event, "pushdownAlphabet_pda")} name="pushdownAlphabet" placeholder="ex: 1,2,3" />
                             </div>
                             <div className='formGroup'>
                                 <label>Stack:</label>
-                                <input type="text" value={this.state.stack} onChange={(event) => this.handleChange(event, "stack")} name="stack" placeholder="ex: stack" />
+                                <input type="text" value={this.state.stack} onChange={(event) => this.handleChange(event, "stack_pda")} name="stack" placeholder="ex: stack" />
                             </div>
                             <div className='formGroup'>
                                 <label>Transitions:</label>
-                                <input type="text" value={this.state.transitions} onChange={(event) => this.handleChange(event, "transitions")} name="transitions" placeholder="ex: (a, A, B); (b, B, C)" />
+                                <input type="text" value={this.state.transitions} onChange={(event) => this.handleChange(event, "transitions_pda")} name="transitions" placeholder="ex: (a, A, B); (b, B, C)" />
                             </div>
                             <div className='formGroup'>
                                 <label>Input:</label>
-                                <input type="text" value={this.state.input} onChange={(event) => this.handleChange(event, "input")} name="input" placeholder="ex: abcde" />
+                                <input type="text" value={this.state.input} onChange={(event) => this.handleChange(event, "input_pda")} name="input" placeholder="ex: abcde" />
                             </div>
                             <div className='btnGroup'>
                                 <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />

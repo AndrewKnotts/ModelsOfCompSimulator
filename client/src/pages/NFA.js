@@ -13,12 +13,12 @@ export default class NFA extends Component {
         super(props);
         // set the states to their current values in local storage
         this.state = {
-            alphabet: localStorage.getItem('alphabet'),
-            states: localStorage.getItem('states'),
-            startingState: localStorage.getItem('startingState'),
-            acceptingStates: localStorage.getItem('acceptingStates'),
-            transitions: localStorage.getItem('transitions'),
-            input: localStorage.getItem('input'),
+            alphabet: localStorage.getItem('alphabet_nfa'),
+            states: localStorage.getItem('states_nfa'),
+            startingState: localStorage.getItem('startingState_nfa'),
+            acceptingStates: localStorage.getItem('acceptingStates_nfa'),
+            transitions: localStorage.getItem('transitions_nfa'),
+            input: localStorage.getItem('input_nfa'),
             modelStates: [],
             modelTransitions: []
         };
@@ -72,28 +72,28 @@ export default class NFA extends Component {
                         <form onSubmit={this.handleSubmit} className="input" id="form" >
                             <div className='formGroup'>
                                 <label>Alphabet:</label>
-                                <input type="text" value={this.state.alphabet} onChange={(event) => this.handleChange(event, "alphabet")} name="alphabet" placeholder='ex: a,b,c,d,e' />
+                                <input type="text" value={this.state.alphabet} onChange={(event) => this.handleChange(event, "alphabet_nfa")} name="alphabet" placeholder='ex: a,b,c,d,e' />
 
                             </div>
                             <div className='formGroup'>
                                 <label>States:</label>
-                                <input type="text" value={this.state.states} onChange={(event) => this.handleChange(event, "states")} name="states" placeholder='ex: A, B, C' />
+                                <input type="text" value={this.state.states} onChange={(event) => this.handleChange(event, "states_nfa")} name="states" placeholder='ex: A, B, C' />
                             </div>
                             <div className='formGroup'>
                                 <label>Starting State:</label>
-                                <input type="text" value={this.state.startingState} onChange={(event) => this.handleChange(event, "startingState")} name="startingState" placeholder='ex: A' />
+                                <input type="text" value={this.state.startingState} onChange={(event) => this.handleChange(event, "startingState_nfa")} name="startingState" placeholder='ex: A' />
                             </div>
                             <div className='formGroup'>
                                 <label>Accepting States:</label>
-                                <input type="text" value={this.state.acceptingStates} onChange={(event) => this.handleChange(event, "acceptingStates")} name="acceptingStates" placeholder="ex: C, B" />
+                                <input type="text" value={this.state.acceptingStates} onChange={(event) => this.handleChange(event, "acceptingStates_nfa")} name="acceptingStates" placeholder="ex: C, B" />
                             </div>
                             <div className='formGroup'>
                                 <label>Transitions:</label>
-                                <input type="text" value={this.state.transitions} onChange={(event) => this.handleChange(event, "transitions")} name="transitions" placeholder="ex: (a, A, B); (b, B, C)" />
+                                <input type="text" value={this.state.transitions} onChange={(event) => this.handleChange(event, "transitions_nfa")} name="transitions" placeholder="ex: (a, A, B); (b, B, C)" />
                             </div>
                             <div className='formGroup'>
                                 <label>Input:</label>
-                                <input type="text" value={this.state.input} onChange={(event) => this.handleChange(event, "input")} name="input" placeholder="ex: abcde" />
+                                <input type="text" value={this.state.input} onChange={(event) => this.handleChange(event, "input_nfa")} name="input" placeholder="ex: abcde" />
                             </div>
                             <div className='btnGroup'>
                                 <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
