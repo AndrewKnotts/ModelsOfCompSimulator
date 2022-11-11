@@ -5,8 +5,8 @@ import logo1 from '../../images/logo1.png';
 export default function Navbar() {
     return (
         <nav className="nav">
-            <img src={logo1} className="img"/>
-            <h1 to="/" className="site-title">
+            <img src={logo1} className="img" />
+            <h1 className="site-title">
                 Models Of Computation Simulator
             </h1>
             <ul>

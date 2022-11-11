@@ -2,8 +2,10 @@
   padding-top: 1rem;
   background-color: #f1f1f1;
   align-items: center;
-  padding-top: 15px;
-  padding-bottom: 1px;
+  padding-bottom: 10px;
+  flex: auto;
+  flex-direction: column;
+  padding-bottom: 1rem;
 }
 
 .formGroup {
@@ -46,17 +48,7 @@ textarea {
   flex-wrap: wrap;
   flex-direction: row;
   border: 1px solid black;
-}
-
-textarea {
-  clear: both;
-  float: right;
-  left: 10rem;
-  width: 75%;
-  height: 50%;
-  flex-wrap: wrap;
-  flex-direction: row;
-  border: 1px solid black;
+  overflow: break-word;
 }
 
 #form {

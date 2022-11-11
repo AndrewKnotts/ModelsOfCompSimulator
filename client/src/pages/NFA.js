@@ -52,11 +52,21 @@ export default class NFA extends Component {
 
         this.outputDest = [];
         this.outputSymbols = [];
+        console.log(sets);
         for (let i = 0; i < sets.length; i++) {
+            let temp = Array.from(sets[i])
+            console.log(temp);
             let set = [];
-            sets[i].forEach(state => set.push(state.name))
+            temp.forEach((state, index) => {
+                set.push(state.name)
+                if (index != temp.length - 1) {
+                    set.push("|")
+                }
+            })
+
             this.outputDest.push(set);
             this.outputDest.push("");
+            console.log(set);
         }
         this.outputDest.push(output[0].right.name)
 
@@ -107,7 +117,7 @@ export default class NFA extends Component {
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
                         if (index % 2 == 0)
-                            return <State symbol={txt}></State>
+                            return <State page="nfa" stext='nfaTxt' symbol={txt}></State>
                         return <Arrow symbol={txt} />
                     })}
                 </div>

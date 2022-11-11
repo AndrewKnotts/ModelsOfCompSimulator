@@ -106,7 +106,7 @@ export default class DFA extends Component {
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
                         if (index % 2 == 0)
-                            return <State symbol={txt}></State>
+                            return <State page='circle-res' stext='circle-txt' symbol={txt}></State>
                         return <Arrow symbol={txt} />
                     })}
                 </div>
