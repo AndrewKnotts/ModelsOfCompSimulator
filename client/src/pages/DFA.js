@@ -92,13 +92,17 @@ export default class DFA extends Component {
                                 <label>Input:</label>
                                 <input type="text" value={this.state.inputDFA} onChange={(event) => this.handleChange(event, "inputDFA")} name="input" placeholder="ex: 10101" />
                             </div>
-                            <div className='btnGroup'>
-                                <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
-                            </div>
+
                         </form>
+
                     </div>
 
                 </div>
+
+                <div className='btnGroup'>
+                    <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
+                </div>
+
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
                         if (index % 2 == 0)

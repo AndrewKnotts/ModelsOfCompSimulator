@@ -3,6 +3,7 @@
   background-color: #f1f1f1;
   align-items: center;
   padding-top: 15px;
+  padding-bottom: 1px;
 }
 
 .formGroup {
@@ -22,7 +23,7 @@ input[type="text"] {
 
 input[type="button"] {
   background-color: #077fff;
-  color:white;
+  color: white;
   text-decoration: none;
   cursor: pointer;
   border: solid;
@@ -68,7 +69,7 @@ textarea {
 }
 
 .btnGroup {
-  transform: translateX(1%);
+  transform: translateX(0%);
   padding-bottom: 1rem;
-  size: 10;
+  width: 100%;
 }

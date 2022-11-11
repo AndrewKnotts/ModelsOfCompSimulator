@@ -95,13 +95,15 @@ export default class NFA extends Component {
                                 <label>Input:</label>
                                 <input type="text" value={this.state.inputNFA} onChange={(event) => this.handleChange(event, "inputNFA")} name="input_nfa" placeholder="ex: abcde" />
                             </div>
-                            <div className='btnGroup'>
-                                <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
-                            </div>
                         </form>
                     </div>
 
                 </div>
+
+                <div className='btnGroup'>
+                    <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
+                </div>
+
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
                         if (index % 2 == 0)

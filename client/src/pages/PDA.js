@@ -110,13 +110,15 @@ export default class PDA extends Component {
                                 <label>Input:</label>
                                 <input type="text" value={this.state.inputPDA} onChange={(event) => this.handleChange(event, "inputPDA")} name="input" placeholder="ex: abcde" />
                             </div>
-                            <div className='btnGroup'>
-                                <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
-                            </div>
                         </form>
                     </div>
 
                 </div>
+
+                <div className='btnGroup'>
+                    <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
+                </div>
+
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
                         if (index % 2 == 0)
