@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Navbar from '../components/navbar/Navbar';
 import './styles.css';
 import { PDAModel } from '../components/input/PDAModel';
 import State from '../components/state/State';
@@ -22,28 +21,16 @@ export default class PDA extends Component {
             transitionsPDA: localStorage.getItem('transitionsPDA'),
             inputPDA: localStorage.getItem('inputPDA'),
             modelStates: [],
-            modelTransitions: [] //alphabet, states, starting state, acceptingStates, stack, transitions, input, modelStates, modelTransitions
+            modelTransitions: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    _showMessage = (bool) => {
-        this.setState({
-            showMessage: bool
-        })
     }
 
     // Update the states as keys are pressed
     handleChange(evt, field) {
         this.setState({ [field]: evt.target.value });
         localStorage.setItem([field], evt.target.value);
-        /*alphabet = this.state.alphabet;
-        states = this.state.states;
-        startingState = this.state.startingState;
-        acceptingStates = this.state.acceptingStates;
-        transitions = this.state.transitions;
-        input = this.state.input;*/
     }
 
     // On submit, run the correct model simulation
@@ -55,7 +42,6 @@ export default class PDA extends Component {
             modelStates: output[0].dest.name,
             modelTransitions: output[0].input
         });
-        //ε
         this.outputDest = [];
         this.outputInputSymbols = [];
         this.outputDest.push(output[0].source.name);
@@ -63,7 +49,7 @@ export default class PDA extends Component {
             let inputSym = (output[i].input === "eps" ? "ε" : output[i].input);
             let stack0Sym = (output[i].stack0 === "eps" ? "ε" : output[i].stack0);
             let stack1Sym = (output[i].stack1 === "eps" ? "ε" : output[i].stack1);
-            this.outputDest.push(inputSym + ", " + stack0Sym + " | " + stack1Sym);//output[i].input);
+            this.outputDest.push(inputSym + ", " + stack0Sym + " | " + stack1Sym);
             this.outputDest.push(output[i].dest.name);
         }
         console.log(this.outputDest, this.outputInputSymbols);
@@ -91,17 +77,23 @@ export default class PDA extends Component {
             acceptingStatesPDA: "",
             transitionsPDA: "",
             inputPDA: ""
-        })
+        });
+        localStorage.setItem("inputAlphabetPDA", "");
+        localStorage.setItem("pushdownAlphabetPDA", "");
+        localStorage.setItem("statesPDA", "");
+        localStorage.setItem("startingStatePDA", "");
+        localStorage.setItem("startingStackPDA", "");
+        localStorage.setItem("acceptingStatesPDA", "");
+        localStorage.setItem("transitionsPDA", "");
+        localStorage.setItem("inputPDA", "");
+        window.location.reload(true);
     }
 
-    Upload = (evt, field) => {
-        //const [files, setFiles] = useState("");
+    Upload = (evt) => {
 
-        //const handleChange = e => {
         const fileReader = new FileReader();
         fileReader.readAsText(evt.target.files[0], "UTF-8");
         fileReader.onload = (event) => {
-            //console.log(event.target.result);
             let myObj = JSON.parse(event.target.result);
             console.log(myObj);
             this.setState({
@@ -114,6 +106,14 @@ export default class PDA extends Component {
                 transitionsPDA: myObj.transitionsPDA,
                 inputPDA: myObj.inputPDA,
             });
+            localStorage.setItem("inputAlphabetPDA", myObj.inputAlphabetPDA);
+            localStorage.setItem("pushdownAlphabetPDA", myObj.pushdownAlphabetPDA);
+            localStorage.setItem("statesPDA", myObj.statesPDA);
+            localStorage.setItem("startingStatePDA", myObj.startingStatePDA);
+            localStorage.setItem("startingStackPDA", myObj.startingStackPDA);
+            localStorage.setItem("acceptingStatesPDA", myObj.acceptingStatesPDA);
+            localStorage.setItem("transitionsPDA", myObj.transitionsPDA);
+            localStorage.setItem("inputPDA", myObj.inputPDA);
         }
     }
 
@@ -159,27 +159,21 @@ export default class PDA extends Component {
                             </div>
                         </form>
                     </div>
-
                 </div>
-
                 <div className='btnGroup'>
                     <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
                     <input onClick={this.clearInputs} type="button" value="Clear" />
                     <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Save Inputs" />
                     <input onChange={this.Upload} type="file" />
                 </div>
-
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
-                        if (index % 2 == 0)
+                        if (index % 2 === 0)
                             return <State page='circle-res' stext='circle-txt' symbol={txt}></State>
                         return <Arrow symbol={txt} />
                     })}
                 </div>
-
             </>
-
         )
-
     }
 }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Navbar from '../components/navbar/Navbar';
 import './styles.css';
 import { NFAModel } from '../components/input/NFAModel';
 import State from '../components/state/State';
@@ -24,12 +23,6 @@ export default class NFA extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    _showMessage = (bool) => {
-        this.setState({
-            showMessage: bool
-        })
     }
 
     // Update the states as keys are pressed
@@ -59,7 +52,7 @@ export default class NFA extends Component {
             let set = [];
             temp.forEach((state, index) => {
                 set.push(state.name)
-                if (index != temp.length - 1) {
+                if (index !== temp.length - 1) {
                     set.push("|")
                 }
             })
@@ -91,17 +84,20 @@ export default class NFA extends Component {
             acceptingStatesNFA: "",
             transitionsNFA: "",
             inputNFA: ""
-        })
+        });
+        localStorage.setItem("alphabetNFA", "");
+        localStorage.setItem("statesNFA", "");
+        localStorage.setItem("startingStateNFA", "");
+        localStorage.setItem("acceptingStatesNFA", "");
+        localStorage.setItem("transitionsNFA", "");
+        localStorage.setItem("inputNFA", "");
+        window.location.reload(true);
     }
 
-    Upload = (evt, field) => {
-        //const [files, setFiles] = useState("");
-
-        //const handleChange = e => {
+    Upload = (evt) => {
         const fileReader = new FileReader();
         fileReader.readAsText(evt.target.files[0], "UTF-8");
         fileReader.onload = (event) => {
-            //console.log(event.target.result);
             let myObj = JSON.parse(event.target.result);
             console.log(myObj);
             this.setState({
@@ -112,6 +108,12 @@ export default class NFA extends Component {
                 transitionsNFA: myObj.transitionsNFA,
                 inputNFA: myObj.inputNFA,
             });
+            localStorage.setItem("alphabetNFA", myObj.alphabetNFA);
+            localStorage.setItem("statesNFA", myObj.statesNFA);
+            localStorage.setItem("startingStateNFA", myObj.startingStateNFA);
+            localStorage.setItem("acceptingStatesNFA", myObj.acceptingStatesNFA);
+            localStorage.setItem("transitionsNFA", myObj.transitionsNFA);
+            localStorage.setItem("inputNFA", myObj.inputNFA);
         }
     }
 
@@ -150,27 +152,21 @@ export default class NFA extends Component {
                             </div>
                         </form>
                     </div>
-
                 </div>
-
                 <div className='btnGroup'>
                     <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
                     <input onClick={this.clearInputs} type="button" value="Clear" />
                     <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Save Inputs" />
                     <input onChange={this.Upload} type="file" />
                 </div>
-
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
-                        if (index % 2 == 0)
+                        if (index % 2 === 0)
                             return <State page="nfa" stext='nfaTxt' symbol={txt}></State>
                         return <Arrow symbol={txt} />
                     })}
                 </div>
-
             </>
-
         )
-
     }
 }
