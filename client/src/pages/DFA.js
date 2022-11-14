@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import './styles.css';
 import { DFAModel } from '../components/input/DFAModel';
 import State from '../components/state/State';
@@ -18,8 +18,8 @@ export default class DFA extends Component {
             acceptingStatesDFA: localStorage.getItem('acceptingStatesDFA'),
             transitionsDFA: localStorage.getItem('transitionsDFA'),
             inputDFA: localStorage.getItem('inputDFA'),
-            modelStates: [],
-            modelTransitions: []
+            //modelStates: [],
+            //modelTransitions: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -57,6 +57,49 @@ export default class DFA extends Component {
         }
         console.log(this.outputDest, this.outputSymbols);
 
+    }
+
+    handleSaveToPC = (jsonData) => {
+        const fileName = prompt('Enter a name for the file.');
+        const fileData = JSON.stringify(jsonData);
+        const blob = new Blob([fileData], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${fileName}.json`;
+        link.href = url;
+        link.click();
+    }
+
+    clearInputs = () => {
+        this.setState({
+            alphabetDFA: "",
+            statesDFA: "",
+            startingStateDFA: "",
+            acceptingStatesDFA: "",
+            transitionsDFA: "",
+            inputDFA: ""
+        })
+    }
+
+    Upload = (evt, field) => {
+        //const [files, setFiles] = useState("");
+
+        //const handleChange = e => {
+        const fileReader = new FileReader();
+        fileReader.readAsText(evt.target.files[0], "UTF-8");
+        fileReader.onload = (event) => {
+            //console.log(event.target.result);
+            let myObj = JSON.parse(event.target.result);
+            console.log(myObj);
+            this.setState({
+                alphabetDFA: myObj.alphabetDFA,
+                statesDFA: myObj.statesDFA,
+                startingStateDFA: myObj.startingStateDFA,
+                acceptingStatesDFA: myObj.acceptingStatesDFA,
+                transitionsDFA: myObj.transitionsDFA,
+                inputDFA: myObj.inputDFA,
+            });
+        }
     }
 
     render() {
@@ -101,6 +144,9 @@ export default class DFA extends Component {
 
                 <div className='btnGroup'>
                     <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
+                    <input onClick={this.clearInputs} type="button" value="Clear" />
+                    <input onClick={() => this.handleSaveToPC(this.state)} type="button" value="Save Inputs" />
+                    <input onChange={this.Upload} type="file" />
                 </div>
 
                 <div className='visualArea'>

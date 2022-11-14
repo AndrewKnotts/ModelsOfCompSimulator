@@ -72,6 +72,49 @@ export default class NFA extends Component {
 
     }
 
+    handleSaveToPC = (jsonData) => {
+        const fileName = prompt('Enter a name for the file.');
+        const fileData = JSON.stringify(jsonData);
+        const blob = new Blob([fileData], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${fileName}.json`;
+        link.href = url;
+        link.click();
+    }
+
+    clearInputs = () => {
+        this.setState({
+            alphabetNFA: "",
+            statesNFA: "",
+            startingStateNFA: "",
+            acceptingStatesNFA: "",
+            transitionsNFA: "",
+            inputNFA: ""
+        })
+    }
+
+    Upload = (evt, field) => {
+        //const [files, setFiles] = useState("");
+
+        //const handleChange = e => {
+        const fileReader = new FileReader();
+        fileReader.readAsText(evt.target.files[0], "UTF-8");
+        fileReader.onload = (event) => {
+            //console.log(event.target.result);
+            let myObj = JSON.parse(event.target.result);
+            console.log(myObj);
+            this.setState({
+                alphabetNFA: myObj.alphabetNFA,
+                statesNFA: myObj.statesNFA,
+                startingStateNFA: myObj.startingStateNFA,
+                acceptingStatesNFA: myObj.acceptingStatesNFA,
+                transitionsNFA: myObj.transitionsNFA,
+                inputNFA: myObj.inputNFA,
+            });
+        }
+    }
+
     render() {
 
         return (
@@ -112,6 +155,9 @@ export default class NFA extends Component {
 
                 <div className='btnGroup'>
                     <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
+                    <input onClick={this.clearInputs} type="button" value="Clear" />
+                    <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Save Inputs" />
+                    <input onChange={this.Upload} type="file" />
                 </div>
 
                 <div className='visualArea'>

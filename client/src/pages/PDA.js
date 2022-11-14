@@ -70,6 +70,53 @@ export default class PDA extends Component {
 
     }
 
+    handleSaveToPC = (jsonData) => {
+        const fileName = prompt('Enter a name for the file.');
+        const fileData = JSON.stringify(jsonData);
+        const blob = new Blob([fileData], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${fileName}.json`;
+        link.href = url;
+        link.click();
+    }
+
+    clearInputs = () => {
+        this.setState({
+            inputAlphabetPDA: "",
+            pushdownAlphabetPDA: "",
+            statesPDA: "",
+            startingStatePDA: "",
+            startingStackPDA: "",
+            acceptingStatesPDA: "",
+            transitionsPDA: "",
+            inputPDA: ""
+        })
+    }
+
+    Upload = (evt, field) => {
+        //const [files, setFiles] = useState("");
+
+        //const handleChange = e => {
+        const fileReader = new FileReader();
+        fileReader.readAsText(evt.target.files[0], "UTF-8");
+        fileReader.onload = (event) => {
+            //console.log(event.target.result);
+            let myObj = JSON.parse(event.target.result);
+            console.log(myObj);
+            this.setState({
+                inputAlphabetPDA: myObj.inputAlphabetPDA,
+                pushdownAlphabetPDA: myObj.pushdownAlphabetPDA,
+                statesPDA: myObj.statesPDA,
+                startingStatePDA: myObj.startingStatePDA,
+                startingStackPDA: myObj.startingStackPDA,
+                acceptingStatesPDA: myObj.acceptingStatesPDA,
+                transitionsPDA: myObj.transitionsPDA,
+                inputPDA: myObj.inputPDA,
+            });
+        }
+    }
+
     render() {
 
         return (
@@ -117,6 +164,9 @@ export default class PDA extends Component {
 
                 <div className='btnGroup'>
                     <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
+                    <input onClick={this.clearInputs} type="button" value="Clear" />
+                    <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Save Inputs" />
+                    <input onChange={this.Upload} type="file" />
                 </div>
 
                 <div className='visualArea'>
