@@ -67,5 +67,5 @@ textarea {
   padding-bottom: 1rem;
   width: 100%;
   flex-direction: row;
-  flex: 1;
+  flex-wrap: wrap;
 }

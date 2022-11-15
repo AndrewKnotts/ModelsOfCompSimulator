@@ -46,6 +46,7 @@ export default class NFA extends Component {
         this.outputDest = [];
         this.outputSymbols = [];
         console.log(sets);
+        let inputIndex = 0
         for (let i = 0; i < sets.length; i++) {
             let temp = Array.from(sets[i])
             console.log(temp);
@@ -58,10 +59,20 @@ export default class NFA extends Component {
             })
 
             this.outputDest.push(set);
-            this.outputDest.push("");
-            console.log(set);
+            //this.outputDest.push("");
+            if (inputIndex < this.state.inputNFA.length) {
+                this.outputDest.push(this.state.inputNFA[inputIndex]);
+                inputIndex += 1;
+            } else {
+                this.outputDest.push("ε");
+            }
+
         }
-        this.outputDest.push(output[0].right.name)
+        this.outputDest.push(output[0].right.name);
+        console.log(this.outputDest);
+        this.outputDest.pop();
+        this.outputDest.pop();
+
 
     }
 
