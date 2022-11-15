@@ -1,29 +1,35 @@
 .arr {
-  width: 100px;
-  height: 40px;
+  width: 125px;
+  height: 5px;
   position: relative;
   background: black;
   justify-content: flex-end;
   align-items: center;
-  color: white;
   display: inline-block;
   margin-bottom: 10px;
   top: -75px;
-  margin-right: 10px;
+  margin-right: 20px;
   flex-direction: row;
   text-align: center;
+  color: black;
   margin-top: 10px;
   font-size: 150%;
-  line-height: 150%;
+  line-height: 0px;
 }
 .arr:before {
   content: "";
   position: absolute;
   right: -20px;
-  bottom: 0;
+  bottom: -7.5px;
   width: 0;
   height: 0;
   border-left: 20px solid black;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  margin-right: 10px;
+}
+
+.h1tag {
+  margin-top: -25px;
+  font-size: large;
 }

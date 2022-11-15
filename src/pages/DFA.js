@@ -12,23 +12,17 @@ export default class DFA extends Component {
         super(props);
         // set the states to their current values in local storage
         this.state = {
-            alphabet: localStorage.getItem('alphabet'),
-            states: localStorage.getItem('states'),
-            startingState: localStorage.getItem('startingState'),
-            acceptingStates: localStorage.getItem('acceptingStates'),
-            transitions: localStorage.getItem('transitions'),
-            input: localStorage.getItem('input'),
+            alphabetDFA: localStorage.getItem('alphabetDFA'),
+            statesDFA: localStorage.getItem('statesDFA'),
+            startingStateDFA: localStorage.getItem('startingStateDFA'),
+            acceptingStatesDFA: localStorage.getItem('acceptingStatesDFA'),
+            transitionsDFA: localStorage.getItem('transitionsDFA'),
+            inputDFA: localStorage.getItem('inputDFA'),
             modelStates: [],
             modelTransitions: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    _showMessage = (bool) => {
-        this.setState({
-            showMessage: bool
-        })
     }
 
     // Update the states as keys are pressed
@@ -39,12 +33,9 @@ export default class DFA extends Component {
 
     // On submit, run the correct model simulation
     handleSubmit(event) {
-
-        //if (page === "DFA") {
         console.log("Test1");
-        let new_model = new DFAModel(this.state.startingState, this.state.acceptingStates, this.state.states, this.state.alphabet, this.state.transitions);
-        //console.log(new_model.checkInputString(this.state.input));
-        let output = new_model.checkInputString(this.state.input);
+        let new_model = new DFAModel(this.state.startingStateDFA, this.state.acceptingStatesDFA, this.state.statesDFA, this.state.alphabetDFA, this.state.transitionsDFA);
+        let output = new_model.checkInputString(this.state.inputDFA);
         this.setState({
             modelStates: output[0].dest.name,
             modelTransitions: output[0].symbol
@@ -57,7 +48,58 @@ export default class DFA extends Component {
             this.outputDest.push(output[i].dest.name);
         }
         console.log(this.outputDest, this.outputSymbols);
+    }
 
+    handleSaveToPC = (jsonData) => {
+        const fileName = prompt('Enter a name for the file.');
+        const fileData = JSON.stringify(jsonData);
+        const blob = new Blob([fileData], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${fileName}.json`;
+        link.href = url;
+        link.click();
+    }
+
+    clearInputs = () => {
+        this.setState({
+            alphabetDFA: "",
+            statesDFA: "",
+            startingStateDFA: "",
+            acceptingStatesDFA: "",
+            transitionsDFA: "",
+            inputDFA: ""
+        });
+        localStorage.setItem("alphabetDFA", "");
+        localStorage.setItem("statesDFA", "");
+        localStorage.setItem("startingStateDFA", "");
+        localStorage.setItem("acceptingStatesDFA", "");
+        localStorage.setItem("transitionsDFA", "");
+        localStorage.setItem("inputDFA", "");
+        window.location.reload(true);
+    }
+
+    Upload = (evt) => {
+        const fileReader = new FileReader();
+        fileReader.readAsText(evt.target.files[0], "UTF-8");
+        fileReader.onload = (event) => {
+            let myObj = JSON.parse(event.target.result);
+            console.log(myObj);
+            this.setState({
+                alphabetDFA: myObj.alphabetDFA,
+                statesDFA: myObj.statesDFA,
+                startingStateDFA: myObj.startingStateDFA,
+                acceptingStatesDFA: myObj.acceptingStatesDFA,
+                transitionsDFA: myObj.transitionsDFA,
+                inputDFA: myObj.inputDFA,
+            });
+            localStorage.setItem("alphabetDFA", myObj.alphabetDFA);
+            localStorage.setItem("statesDFA", myObj.statesDFA);
+            localStorage.setItem("startingStateDFA", myObj.startingStateDFA);
+            localStorage.setItem("acceptingStatesDFA", myObj.acceptingStatesDFA);
+            localStorage.setItem("transitionsDFA", myObj.transitionsDFA);
+            localStorage.setItem("inputDFA", myObj.inputDFA);
+        }
     }
 
     render() {
@@ -70,47 +112,45 @@ export default class DFA extends Component {
                         <form onSubmit={this.handleSubmit} className="input" id="form" >
                             <div className='formGroup'>
                                 <label>Alphabet:</label>
-                                <input type="text" value={this.state.alphabet} onChange={(event) => this.handleChange(event, "alphabet")} name="alphabet" placeholder='ex: a,b,c,d,e' />
-
+                                <input type="text" value={this.state.alphabetDFA} onChange={(event) => this.handleChange(event, "alphabetDFA")} name="alphabet" placeholder='ex: 0, 1' />
                             </div>
                             <div className='formGroup'>
                                 <label>States:</label>
-                                <input type="text" value={this.state.states} onChange={(event) => this.handleChange(event, "states")} name="states" placeholder='ex: A, B, C' />
+                                <input type="text" value={this.state.statesDFA} onChange={(event) => this.handleChange(event, "statesDFA")} name="states" placeholder='ex: A, B' />
                             </div>
                             <div className='formGroup'>
                                 <label>Starting State:</label>
-                                <input type="text" value={this.state.startingState} onChange={(event) => this.handleChange(event, "startingState")} name="startingState" placeholder='ex: A' />
+                                <input type="text" value={this.state.startingStateDFA} onChange={(event) => this.handleChange(event, "startingStateDFA")} name="startingState" placeholder='ex: A' />
                             </div>
                             <div className='formGroup'>
                                 <label>Accepting States:</label>
-                                <input type="text" value={this.state.acceptingStates} onChange={(event) => this.handleChange(event, "acceptingStates")} name="acceptingStates" placeholder="ex: C, B" />
+                                <input type="text" value={this.state.acceptingStatesDFA} onChange={(event) => this.handleChange(event, "acceptingStatesDFA")} name="acceptingStates" placeholder="ex: B" />
                             </div>
                             <div className='formGroup'>
                                 <label>Transitions:</label>
-                                <input type="text" value={this.state.transitions} onChange={(event) => this.handleChange(event, "transitions")} name="transitions" placeholder="ex: (a, A, B); (b, B, C)" />
+                                <textarea type="text" value={this.state.transitionsDFA} onChange={(event) => this.handleChange(event, "transitionsDFA")} name="transitions" placeholder="ex: (0, A, A); (1, A, B); (1, B, A); (0, B, B)" />
                             </div>
-                            <div className='formGroup'>
+                            <div className='formGroup' name="input">
                                 <label>Input:</label>
-                                <input type="text" value={this.state.input} onChange={(event) => this.handleChange(event, "input")} name="input" placeholder="ex: abcde" />
-                            </div>
-                            <div className='btnGroup'>
-                                <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
+                                <input type="text" value={this.state.inputDFA} onChange={(event) => this.handleChange(event, "inputDFA")} name="input" placeholder="ex: 10101" />
                             </div>
                         </form>
                     </div>
-
+                </div>
+                <div className='btnGroup'>
+                    <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
+                    <input onClick={this.clearInputs} type="button" value="Clear" />
+                    <input onClick={() => this.handleSaveToPC(this.state)} type="button" value="Save Inputs" />
+                    <input onChange={this.Upload} type="file" />
                 </div>
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
-                        if (index % 2 == 0)
-                            return <State symbol={txt}></State>
+                        if (index % 2 === 0)
+                            return <State page='circle-res' stext='circle-txt' symbol={txt}></State>
                         return <Arrow symbol={txt} />
                     })}
                 </div>
-
             </>
-
         )
-
     }
 }

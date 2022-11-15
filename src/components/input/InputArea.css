@@ -1,12 +1,16 @@
 .input {
   padding-top: 1rem;
-  background-color: #ececec;
-  border-bottom: solid;
+  background-color: #f1f1f1;
   align-items: center;
+  padding-bottom: 10px;
+  flex: auto;
+  flex-direction: column;
+  padding-bottom: 1rem;
 }
 
 .formGroup {
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
+  overflow: break-word;
 }
 
 input[type="text"] {
@@ -15,19 +19,39 @@ input[type="text"] {
   left: 10rem;
   width: 75%;
   flex-wrap: wrap;
+  flex-direction: row;
+  border: 1px solid black;
 }
 
-input[type="button"] {
-  background-color: #39ff14;
+input[type="Button"] {
+  flex: 1;
+  flex-direction: row;
+  background-color: #077fff;
+  color: white;
   text-decoration: none;
   cursor: pointer;
   border: solid;
   width: 9.5%;
-  display: block;
+  display: inline-block;
   padding: 14px, 28px;
   font-size: 16px;
   cursor: pointer;
   text-align: center;
+  text-decoration-color: white;
+  border-color: transparent;
+  border-right: solid;
+}
+
+textarea {
+  clear: both;
+  float: right;
+  left: 10rem;
+  width: 75%;
+  height: 50%;
+  flex-wrap: wrap;
+  flex-direction: row;
+  border: 1px solid black;
+  overflow: break-word;
 }
 
 #form {
@@ -40,6 +64,8 @@ input[type="button"] {
 }
 
 .btnGroup {
-  transform: translateX(48%);
   padding-bottom: 1rem;
+  width: 100%;
+  flex-direction: row;
+  flex: 1;
 }
