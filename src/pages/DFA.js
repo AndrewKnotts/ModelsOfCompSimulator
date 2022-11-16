@@ -34,8 +34,8 @@ export default class DFA extends Component {
     // On submit, run the correct model simulation
     handleSubmit(event) {
         console.log("Test1");
-        let new_model = new DFAModel(this.state.startingStateDFA, this.state.acceptingStatesDFA, this.state.statesDFA, this.state.alphabetDFA, this.state.transitionsDFA);
-        let output = new_model.checkInputString(this.state.inputDFA);
+        let newModel = new DFAModel(this.state.startingStateDFA, this.state.acceptingStatesDFA, this.state.statesDFA, this.state.alphabetDFA, this.state.transitionsDFA);
+        let output = newModel.checkInputString(this.state.inputDFA);
         this.setState({
             modelStates: output[0].dest.name,
             modelTransitions: output[0].symbol

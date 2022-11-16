@@ -34,10 +34,10 @@ export default class Turing extends Component {
     handleSubmit(event) {
         console.log("Turing Test");
         console.log(this.state.inputTM);
-        let new_model = new TuringMachine(this.state.statesTM, this.state.alphabetTM, this.state.transitionsTM, this.state.startingStateTM, 
+        let newModel = new TuringMachine(this.state.statesTM, this.state.alphabetTM, this.state.transitionsTM, this.state.startingStateTM, 
             this.state.haltingStatesTM, this.state.acceptingStatesTM, this.state.blankSymbolTM);
-        let output = new_model.simulateTape(this.state.inputTM);
-        let tapes = new_model.tape_history;
+        let output = newModel.simulateTape(this.state.inputTM);
+        let tapes = newModel.tapeHistory;
         /*this.setState({
             modelStates: 
             modelTransitions:

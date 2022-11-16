@@ -6,6 +6,7 @@ export class TuringState {
         this.name = name;
         this.halting = halting;
         this.accepting = accepting;
+        // transitions is a Map from the transition's symbol to the TuringTransition
         this.transitions = transitions;
     }
 
@@ -25,28 +26,30 @@ export class TuringState {
 }
 
 export class TuringTransition {
-    constructor(state, symbol, next_state ,write, move) {
+    constructor(state, symbol, nextState, write, move) {
         this.state = state;
         this.symbol = symbol;
-        this.next_state = next_state;
+        this.nextState = nextState;
         this.write = write;
         this.move = move;
     }
 }
 
 export class TuringMachine {
-    constructor(states, alphabet, transitions, start_state, halt_states, accepting_states, blank_sym) {
+    constructor(states, alphabet, transitions, startState, haltStates, acceptingStates, blankSym) {
         this.states = parseTuringStates(states);
         this.alphabet = parseAlphabet(alphabet);
         this.transitions = parseTuringTransitions(transitions);
         this.initial = null;
-        this.current = null;
-        this.halting = new Set();
-        this.start_index = 0;
-        this.blank_sym = blank_sym;
+        this.blankSym = blankSym;
+        // startIndex is the start point in the input string
+        this.startIndex = 0;
         this.tape = null;
-        this.tape_history = [];
+        // tapeHistory is an array of arrays of the tape's contents at each step
+        this.tapeHistory = [];
+        this.current = null;
         this.halted = false;
+        // error is used to store error message strings
         this.error = null;
 
         // check components and alert if error
@@ -54,11 +57,11 @@ export class TuringMachine {
             window.alert(this.error);
         } else if (!this.checkStates()) {
             window.alert(this.error);
-        } else if (!this.checkInitial(start_state)) {
+        } else if (!this.checkInitial(startState)) {
             window.alert(this.error);
-        } else if (!this.checkHalting(halt_states)) {
+        } else if (!this.checkHalting(haltStates)) {
             window.alert(this.error);
-        } else if (!this.checkAccepting(accepting_states)) {
+        } else if (!this.checkAccepting(acceptingStates)) {
             window.alert(this.error);
         } else if (!this.checkTransitions()) {
             window.alert(this.error);
@@ -68,13 +71,17 @@ export class TuringMachine {
     // create and run tape
     simulateTape(input) {
         if (input === "") {
-            this.tape = new Tape([this.blank_sym], this.blank_sym, this.start_index);
+            // if given empty input string, create a blank tape
+            this.tape = new Tape([this.blankSym], this.blankSym, this.startIndex);
         } else {
-            let input_arr = input.split("");
-            this.tape = new Tape(input_arr, this.blank_sym, this.start_index); 
+            // turn input into array of characters and create tape from it
+            let inputArr = input.split("");
+            this.tape = new Tape(inputArr, this.blankSym, this.startIndex); 
         }
-        this.tape_history.push(this.tape.printTape());
+        this.tapeHistory.push(this.tape.printTape());
+
         while (!this.halted) {
+            // until halted, attempt oneStep() until it halts or fails to find a transition
             if (this.oneStep() === false) {
                 return false;
             }
@@ -83,35 +90,42 @@ export class TuringMachine {
     }
 
     oneStep() {
-        // read
+        // read transition from current state/symbol
         let ts = this.current.getTransition(this.tape.getCurrentValue());
         if (ts !== false) {
-            // write
+            // write new symbol on tape
             this.tape.overwrite(ts.write);
-            // move
+
+            // move tape head
             if (ts.move === ">") {
                 this.tape.shiftRight();
             } else if (ts.move === "<") {
                 this.tape.shiftLeft();
             }
-            this.current = ts.next_state;
+            
+            // update to next state and halt if necessary
+            this.current = ts.nextState;
             if (this.current.halting === true) {
                 this.halted = true;
             }
-            this.tape_history.push(this.tape.printTape());
+            // add to tapeHistory
+            this.tapeHistory.push(this.tape.printTape());
+            return true;
         } else {
-            this.tape_history.push(this.tape.printTape());
+            // add to tapeHistory and return false for failure
+            this.tapeHistory.push(this.tape.printTape());
             return false;
         }
     }
 
-    // check alphabet
+    // check alphabet for empty input or duplicates
     checkAlphabet() {
         if (this.alphabet.length === 0) {
             this.error = "Empty alphabet";
             return false;
         }
 
+        // Add eadch character to set, checking for duplicates
         let symbols = new Set();
         for (let i in this.alphabet) {
             let s = this.alphabet[i];
@@ -121,18 +135,21 @@ export class TuringMachine {
             }
             symbols.add(s);
         }
-        symbols.add(this.blank_sym);
+
+        // Add blankSym at the end to allow for transitions to write blankSym
+        symbols.add(this.blankSym);
         this.alphabet = symbols;
         return true;
     }
 
-    // check states
+    // check states for empty input or conflicts
     checkStates() {
         if (this.states.length === 0) {
             this.error = "Empty States";
             return false;
         }
 
+        // Create map of state name to TuringState object
         let states = new Map();
         for (let s of this.states) {
             if (states.has(s.name) || this.alphabet.has(s.name)) {
@@ -146,7 +163,7 @@ export class TuringMachine {
         return true;
     }
 
-    // check initial state
+    // check that initial state is valid and assign current/initial to the TuringState object
     checkInitial(initial) {
         if (this.states.has(initial)) {
             this.initial = this.states.get(initial);
@@ -157,39 +174,40 @@ export class TuringMachine {
         return false;
     }
 
-    // check halting states
+    // check halting states are valid TuringStates and set the halting flag to true for each
     checkHalting(halting) {
-        let halt_array = parseAlphabet(halting);
-        if (halt_array.length === 0) {
+        let haltArray = parseAlphabet(halting);
+        if (haltArray.length === 0) {
             this.error = "Empty halting states";
             return false;
         }
 
-        for (let h_name of halt_array) {
-            if (!this.states.has(h_name)) {
-                this.error = "Halting state " + h_name + " does not exist";
+        for (let hName of haltArray) {
+            if (!this.states.has(hName)) {
+                this.error = "Halting state " + hName + " does not exist";
                 return false;
             }
-            this.states.get(h_name).halting = true;
-            this.halting.add(this.states.get(h_name));
+            this.states.get(hName).halting = true;
         }
         return true;
     }
 
+    // check acc. states are valid TuringStates and are halting, set accepting flag to true for each
     checkAccepting(accepting) {
-        let acc_array = parseAlphabet(accepting);
-        if (acc_array.length === 0) {
+        let accArray = parseAlphabet(accepting);
+        if (accArray.length === 0) {
             this.error = "Empty accepting states";
             return false;
         }
 
-        for (let acc_name of acc_array) {
-            if (!this.states.has(acc_name)) {
-                this.error = "Accepting state " + acc_name + " does not exist";
+        for (let accName of accArray) {
+            if (!this.states.has(accName)) {
+                this.error = "Accepting state " + accName + " does not exist";
                 return false;
             } else {
-                let s = this.states.get(acc_name);
+                let s = this.states.get(accName);
                 if (s.halting === false) {
+                    this.error = "Accepting state " + accName + " does not halt";
                     return false;
                 }
                 s.accepting = true;
@@ -199,43 +217,46 @@ export class TuringMachine {
         return true;
     }
 
-    // check transitions
+    // check transitions for valid source/sym, next/write/move
     checkTransitions() {
         if (this.transitions.length === 0) {
             this.error = "Empty transitions";
             return false;
         }
 
+        // check that all transitions are valid
         for (let ts of this.transitions) {
             if (!this.states.has(ts.state)) {
-                this.error = "Invalid state in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.next_state + 
+                this.error = "Invalid state in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState + 
                     ", " + ts.write + ", " + ts.move + ")";
                 return false;
             }
             if (!this.alphabet.has(ts.symbol)) {
-                this.error = "Invalid symbol in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.next_state + 
+                this.error = "Invalid symbol in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState + 
                     ", " + ts.write + ", " + ts.move + ")";
                 return false;
             }
-            if (!this.states.has(ts.next_state)) {
-                this.error = "Invalid next state in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.next_state + 
+            if (!this.states.has(ts.nextState)) {
+                this.error = "Invalid next state in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState + 
                     ", " + ts.write + ", " + ts.move + ")";
                 return false;
             }
             if (!this.alphabet.has(ts.write)) {
-                this.error = "Invalid write in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.next_state + 
+                this.error = "Invalid write in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState + 
                     ", " + ts.write + ", " + ts.move + ")";
                 return false;
             }
             if (!(ts.move === ">" || ts.move === "<" || ts.move === "|")) {
-                this.error = "Invalid move in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.next_state + 
+                this.error = "Invalid move in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState + 
                     ", " + ts.write + ", " + ts.move + ")";
                 return false;
             }
 
+            // reassign ts's states from name to TuringState object
             ts.state = this.states.get(ts.state);
-            ts.next_state = this.states.get(ts.next_state);
+            ts.nextState = this.states.get(ts.nextState);
 
+            // check for duplicates
             if (ts.state.addTransition(ts) === false) {
                 this.error = "Duplicate transition: (" + ts.state + ", " + ts.symbol + ")";
                 return false;
@@ -246,33 +267,34 @@ export class TuringMachine {
     }
 }
 
+// parse states string input into TuringState array
 export function parseTuringStates(input) {
     input = input.replaceAll(" ", "");
     if (input.length === 0) return [];
 
-    let input_array = input.split(',');
-    let states_array = [];
-    for (let i in input_array) {
-        let str_state = input_array[i];
-        states_array[i] = new TuringState(str_state);
+    let inputArray = input.split(',');
+    let statesArray = [];
+    for (let strState of inputArray) {
+        statesArray.push(new TuringState(strState));
     }
-    return states_array;
+    return statesArray;
 }
 
 // (State, Sym) -> (State, Write, Move); (State, Sym) -> (State, Write, Move)
+// parse transition string input into TuringTransition array
 export function parseTuringTransitions(input) {
     input = input.replaceAll(" ", "");
     if (input.length === 0) return [];
 
     let transitions = input.split(';');
-    let trans_array = [];
+    let transArray = [];
     for (let trans of transitions) {
         let split = trans.split("->");
         let current = split[0].replaceAll("(", "").replaceAll(")", "");
         current = current.split(",");
         let output = split[1].replaceAll("(", "").replaceAll(")", "");
         output = output.split(",");
-        trans_array.push(new TuringTransition(current[0], current[1], output[0], output[1], output[2]));
+        transArray.push(new TuringTransition(current[0], current[1], output[0], output[1], output[2]));
     }
-    return trans_array;
+    return transArray;
 }

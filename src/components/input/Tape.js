@@ -1,3 +1,4 @@
+// TapeNode encapsulates value and reference to previous and next TapeNodes in a Tape
 export class TapeNode {
     constructor(value, prev = null, next = null) {
         this.value = value;
@@ -6,9 +7,10 @@ export class TapeNode {
     }
 }
  
+// Tape is similar to a LinkedList, tracks head and tail, blank is used to fill in additional nodes as needed
 export class Tape {
-    constructor(input = [], blank_sym = "_", start_index = 0) {
-        this.blank = blank_sym;
+    constructor(input = [], blankSym = "_", startIndex = 0) {
+        this.blank = blankSym;
         this.head = new TapeNode(input[0]);
         this.tail = this.head;
         input.shift();
@@ -17,22 +19,22 @@ export class Tape {
             this.insertTail(sym);
         }
  
-        this.current = this.getIndex(start_index);
+        this.current = this.getIndex(startIndex);
     }
  
     size() {
-        let count = 1;
         let node = this.head;
+        let count = 1;
         while (node.next != null) {
             count++;
             node = node.next;
         }
         return count;
     }
- 
+
     getIndex(index) {
-        let count = 0;
         let node = this.head;
+        let count = 0;
         while (count !== index) {
             node = node.next;
             count = count + 1;
@@ -52,6 +54,7 @@ export class Tape {
         this.tail = node;
     }
  
+    // shift the tape one node to the left, inserts a new blank node as a head if needed
     shiftLeft() {
         if (this.current === this.head) {
             this.insertHead(this.blank);
@@ -60,7 +63,8 @@ export class Tape {
         } 
         this.current = this.current.prev;
     }
- 
+
+    // shift the tape one node to the right, inserts a new blank node as a tail if needed
     shiftRight() {
         if (this.current === this.tail) {
             this.insertTail(this.blank);
@@ -72,18 +76,20 @@ export class Tape {
         return this.current.value;
     }
 
+    // replace the value of the current node with sym
     overwrite(sym) {
         this.current.value = sym;
     }
 
+    // returns array of all nodes' values in order
     printTape() {
-        let tape_arr = [];
+        let tapeArr = [];
         let node = this.head;
         while (node !== null) {
-            tape_arr.push(node.value);
+            tapeArr.push(node.value);
             node = node.next;
         }
-        //console.log(tape_arr);
-        return tape_arr;
+        //console.log(tapeArr);
+        return tapeArr;
     }
 }

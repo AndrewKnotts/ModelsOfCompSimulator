@@ -36,8 +36,8 @@ export default class PDA extends Component {
     // On submit, run the correct model simulation
     handleSubmit(event) {
         console.log("PDA Test");
-        let new_model = new PDAModel(this.state.statesPDA, this.state.startingStatePDA, this.state.inputAlphabetPDA, this.state.pushdownAlphabetPDA, this.state.transitionsPDA, this.state.startingStackPDA, this.state.acceptingStatesPDA)
-        let output = new_model.checkInputString(this.state.inputPDA);
+        let newModel = new PDAModel(this.state.statesPDA, this.state.startingStatePDA, this.state.inputAlphabetPDA, this.state.pushdownAlphabetPDA, this.state.transitionsPDA, this.state.startingStackPDA, this.state.acceptingStatesPDA)
+        let output = newModel.checkInputString(this.state.inputPDA);
         this.setState({
             modelStates: output[0].dest.name,
             modelTransitions: output[0].input

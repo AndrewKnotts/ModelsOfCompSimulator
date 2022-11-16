@@ -80,29 +80,29 @@ it('tests TM model 1', () => {
     jest.spyOn(window, 'alert').mockImplementation(() => {});
     let states = "A,B,H";
     let alphabet = "0,1";
-    let start_state = "A";
-    let halt_states = "H";
-    let accepting_states = "H";
+    let startState = "A";
+    let haltStates = "H";
+    let acceptingStates = "H";
     let transitions = "(A, 1)->(B, 1, <);(A,0)->(B,1,>); (B,0)->(A,1, <); (B, 1)->(H,1,>)"
-    let test = new TuringMachine(states, alphabet, transitions, start_state, halt_states, accepting_states, "0");
+    let test = new TuringMachine(states, alphabet, transitions, startState, haltStates, acceptingStates, "0");
     expect(test.error).toEqual(null);
     expect(test.simulateTape("0000000000")).toEqual(true);
-    console.log(test.tape_history);
+    console.log(test.tapeHistory);
 })
 
 it('tests TM model 2 101', () => {
     jest.spyOn(window, 'alert').mockImplementation(() => {});
     let states = "s0, 1o, 1i, 2o, 2i, 3, 4, A, R";
     let alphabet = "0,1";
-    let start_state = "s0";
-    let halt_states = "A, R";
-    let accepting_states = "A";
+    let startState = "s0";
+    let haltStates = "A, R";
+    let acceptingStates = "A";
     let transitions = "(s0, 0) -> (1o, _, >); (s0, 1) -> (1i, _, >); (s0, _) -> (A, _, |); (1o, _) -> (2o, _, <);" +
         "(1o, 0) -> (1o, 0, >); (1o, 1) -> (1o, 1, >);(1i, _) -> (2i, _, <);(1i, 0) -> (1i, 0, >);(1i, 1) -> (1i, 1, >);" +
         "(2o, 0) -> (3, _, <); (2o, _) -> (A, _, |); (2o, 1) -> (R, _, |); (2i, 1) -> (3, _, <); (2i, _) -> (A, _, |);" +
         "(2i, 0) -> (R, 0, |); (3, _) -> (A, _, |); (3, 0) -> (4, 0, <); (3, 1) -> (4, 1, <); (4, 0) -> (4, 0, <);" +
         "(4, 1) -> (4, 1, <); (4, _) -> (s0, _, >)";
-    let test = new TuringMachine(states, alphabet, transitions, start_state, halt_states, accepting_states, "_");
+    let test = new TuringMachine(states, alphabet, transitions, startState, haltStates, acceptingStates, "_");
     expect(test.error).toEqual(null);
     expect(test.simulateTape("101")).toEqual(true);
 })
@@ -111,15 +111,15 @@ it('tests TM model 2 1010', () => {
     jest.spyOn(window, 'alert').mockImplementation(() => {});
     let states = "s0, 1o, 1i, 2o, 2i, 3, 4, A, R";
     let alphabet = "0,1";
-    let start_state = "s0";
-    let halt_states = "A, R";
-    let accepting_states = "A";
+    let startState = "s0";
+    let haltStates = "A, R";
+    let acceptingStates = "A";
     let transitions = "(s0, 0) -> (1o, _, >); (s0, 1) -> (1i, _, >); (s0, _) -> (A, _, |); (1o, _) -> (2o, _, <);" +
         "(1o, 0) -> (1o, 0, >); (1o, 1) -> (1o, 1, >);(1i, _) -> (2i, _, <);(1i, 0) -> (1i, 0, >);(1i, 1) -> (1i, 1, >);" +
         "(2o, 0) -> (3, _, <); (2o, _) -> (A, _, |); (2o, 1) -> (R, _, |); (2i, 1) -> (3, _, <); (2i, _) -> (A, _, |);" +
         "(2i, 0) -> (R, 0, |); (3, _) -> (A, _, |); (3, 0) -> (4, 0, <); (3, 1) -> (4, 1, <); (4, 0) -> (4, 0, <);" +
         "(4, 1) -> (4, 1, <); (4, _) -> (s0, _, >)";
-    let test = new TuringMachine(states, alphabet, transitions, start_state, halt_states, accepting_states, "_");
+    let test = new TuringMachine(states, alphabet, transitions, startState, haltStates, acceptingStates, "_");
     expect(test.error).toEqual(null);
     expect(test.simulateTape("1010")).toEqual(false);
 })
