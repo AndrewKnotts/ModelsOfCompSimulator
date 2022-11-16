@@ -53,15 +53,11 @@ export class Tape {
     }
  
     shiftLeft() {
-        // ONLY IF INFINITE TO LEFT IS PERMITTED
-        /*
-        if (this.current == this.head) {
-            this.insertHead(this.blank);
-        }
-        */
         if (this.current === this.head) {
-            return false;
-        }
+            this.insertHead(this.blank);
+            // if one way:
+            //return false;
+        } 
         this.current = this.current.prev;
     }
  
@@ -74,5 +70,20 @@ export class Tape {
  
     getCurrentValue() {
         return this.current.value;
+    }
+
+    overwrite(sym) {
+        this.current.value = sym;
+    }
+
+    printTape() {
+        let tape_arr = [];
+        let node = this.head;
+        while (node !== null) {
+            tape_arr.push(node.value);
+            node = node.next;
+        }
+        //console.log(tape_arr);
+        return tape_arr;
     }
 }
