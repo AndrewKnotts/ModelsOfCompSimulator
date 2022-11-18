@@ -1,4 +1,7 @@
-import { parseAlphabet, parseTransition } from "./DFAModel";
+import {
+    parseAlphabet,
+    parseTransition
+} from "./DFAModel";
 
 export class Pair {
     constructor(left, right) {
@@ -19,6 +22,7 @@ export class NFAState {
         this.connected = false;
         this.conn = [];
         this.transitions = [];
+        this.destOf = [];
     }
 
     addTrans(symbol, dest) {
@@ -52,6 +56,22 @@ export class NFAState {
         }
         return ret_list;
     }
+
+    addDestOf(state, symbol) {
+        let newPair = new Pair(state, symbol);
+        this.destOf.push(newPair);
+    }
+
+    getSym(src) {
+        let syms = [];
+        for (let i in this.destOf) {
+            let p = this.destOf[i];
+            if (p.left === src) {
+                syms.push(p.right);
+            }
+        }
+        return syms;
+    }
 }
 
 export class NFAModel {
@@ -69,6 +89,7 @@ export class NFAModel {
         this.setPath = [];
         this.input = null;
         this.acceptance_result = null;
+        this.backwardPath = [];
 
         console.log("initial: ", initial);
         console.log("accepting: ", accepting);
@@ -106,16 +127,20 @@ export class NFAModel {
         for (let a of this.current) {
             if (a.accepting) {
                 // create acceptance visualization and add it to end of path
+                this.backtrack(a);
+                this.backwardPath.push(new Pair(this.initial, ""));
+                ret_path = [...this.backwardPath].reverse();
                 let accept_state = new NFAState("🙂");
-                let acceptance = new Pair("✔️", accept_state);
+                let acceptance = new Pair(accept_state, "✔️");
                 ret_path.push(acceptance);
                 this.acceptance_result = true;
                 return ret_path;
             }
         }
         // if not accepting, create fail visualization and add it to end of path
+        ret_path.push(new Pair(this.initial, ""));
         let fail_state = new NFAState("🙁");
-        let failure = new Pair("❌", fail_state);
+        let failure = new Pair(fail_state, "❌");
         ret_path.push(failure);
         this.acceptance_result = false;
         return ret_path;
@@ -140,7 +165,7 @@ export class NFAModel {
                 if (next_eps.length !== 0) {
                     for (let trans of next_eps) {
                         next.add(trans.right);
-                    } 
+                    }
                 }
             }
             next.add(this.initial);
@@ -154,12 +179,19 @@ export class NFAModel {
             input = input.substring(1);
             let next = new Set();
 
+            let passing = new Set();
+
             for (let a of this.current) {
                 let sym_trans = a.getSymbolTrans(str);
+                let eps_trans = a.getEpsilonTrans();
                 if (sym_trans.length !== 0) {
                     for (let trans of sym_trans) {
                         next.add(trans.right);
+                        passing.add(a);
                     }
+                }
+                if (eps_trans.length !== 0) {
+                    passing.add(a);
                 }
             }
 
@@ -179,10 +211,17 @@ export class NFAModel {
                 if (eps_trans !== 0) {
                     for (let trans of eps_trans) {
                         next.add(trans.right);
+                        passing.add(b);
                     }
                 }
-            } 
-            
+            }
+
+            for (let stt of this.current) {
+                if (!passing.has(stt)) {
+                    this.current.delete(stt);
+                }
+            }
+
             this.setPath.push(this.current);
             this.current = next;
         }
@@ -302,6 +341,7 @@ export class NFAModel {
                 }
             }
             src_state.addTrans(t.symbol, t.dest);
+            t.dest.addDestOf(src_state, t.symbol);
 
             // Add the dest State to source.conn for connection check
             if (!t.source.conn.includes(t.dest)) {
@@ -320,6 +360,50 @@ export class NFAModel {
                 this.makeConnected(s);
             }
         }
+    }
+
+    // start at back of array and go back picking options from the previous set that have transitions that go to the current state chosen
+    backtrack(accState) {
+        let inp = this.input.split("");
+        inp.reverse();
+        let currState = accState;
+        let revPath = [...this.setPath].reverse();
+        let epsSet = new Set();
+
+        for (let i = 1; i < revPath.length; i++) {
+            console.log("loop " + i);
+            let chr = inp[0];
+            console.log(inp);
+            for (let src of revPath[i]) {
+                //console.log(src.name);
+                if (currState.getSym(src).includes(chr)) {
+                    console.log("HERE!");
+                    epsSet = new Set();
+                    let currPair = new Pair(currState, chr);
+                    this.backwardPath.push(currPair);
+                    //console.log("source: " + src.name);
+                    console.log("Sym name: " + src.name);
+                    currState = src;
+                    inp.shift();
+                    //console.log("LENGTH: " + inp.length);
+                    break;
+                } else if (currState.getSym(src).includes("eps")) {
+                    console.log("THERE");
+                    if (epsSet.has(currState)) {
+                        continue;
+                    } else {
+                        epsSet.add(currState);
+                    }
+                    let currPair = new Pair(currState, "ε");
+                    this.backwardPath.push(currPair);
+                    console.log("Eps name: " + src.name);
+                    currState = src;
+                    i = i - 1;
+                    break;
+                }
+            }
+            // currState holds the starting state
+        }    
     }
 }
 

@@ -6,7 +6,6 @@ import Arrow from '../components/arrow/arrow';
 
 export default class DFA extends Component {
     outputDest = [];
-    outputSymbols = [];
 
     constructor(props) {
         super(props);
@@ -41,13 +40,12 @@ export default class DFA extends Component {
             modelTransitions: output[0].symbol
         });
         this.outputDest = [];
-        this.outputSymbols = [];
         this.outputDest.push(output[0].source.name)
         for (let i = 0; i < output.length; i++) {
             this.outputDest.push(output[i].symbol);
             this.outputDest.push(output[i].dest.name);
         }
-        console.log(this.outputDest, this.outputSymbols);
+        console.log(this.outputDest);
     }
 
     handleSaveToPC = (jsonData) => {

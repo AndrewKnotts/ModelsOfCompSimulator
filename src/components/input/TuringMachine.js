@@ -1,5 +1,5 @@
 import { Tape } from "./Tape";
-import { parseAlphabet } from "./DFAModel";
+import { parseAlphabet, Transition } from "./DFAModel";
 
 export class TuringState {
     constructor(name, halting = false, accepting = false, transitions = new Map()) {
@@ -47,6 +47,8 @@ export class TuringMachine {
         this.tape = null;
         // tapeHistory is an array of arrays of the tape's contents at each step
         this.tapeHistory = [];
+        // tsHistory is an array of transitions undergone
+        this.tsHistory = [];
         this.current = null;
         this.halted = false;
         // error is used to store error message strings
@@ -79,6 +81,7 @@ export class TuringMachine {
             this.tape = new Tape(inputArr, this.blankSym, this.startIndex); 
         }
         this.tapeHistory.push(this.tape.printTape());
+        this.tsHistory.push(new TuringTransition("", "", this.initial, "", ""));
 
         while (!this.halted) {
             // until halted, attempt oneStep() until it halts or fails to find a transition
@@ -92,6 +95,7 @@ export class TuringMachine {
     oneStep() {
         // read transition from current state/symbol
         let ts = this.current.getTransition(this.tape.getCurrentValue());
+        this.tsHistory.push(ts);
         if (ts !== false) {
             // write new symbol on tape
             this.tape.overwrite(ts.write);

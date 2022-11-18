@@ -59,3 +59,72 @@
   flex-wrap: wrap;
   flex-direction: row;
 }
+
+.tapeCell {
+  width: 10%;
+  border-radius: 0%;
+  background: white;
+  line-height: 0;
+  position: relative;
+  display: inline-block;
+  border: black solid;
+  margin-top: 25px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.tapeCell::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.tapeText {
+  position: absolute;
+  bottom: 50%;
+  width: 100%;
+  text-align: center;
+  font-family: arial, sans-serif;
+  font-weight: bold;
+  font-size: small;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.activeTapeCell {
+  width: 10%;
+  border-radius: 0%;
+  background: lightgreen;
+  line-height: 0;
+  position: relative;
+  display: inline-block;
+  border: black solid;
+  margin-top: 25px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.activeTapeCell::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.failedTapeCell {
+  width: 10%;
+  border-radius: 0%;
+  background: lightcoral;
+  line-height: 0;
+  position: relative;
+  display: inline-block;
+  border: black solid;
+  margin-top: 25px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.failedTapeCell::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}

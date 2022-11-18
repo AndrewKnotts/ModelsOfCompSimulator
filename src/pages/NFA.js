@@ -31,6 +31,27 @@ export default class NFA extends Component {
         localStorage.setItem([field], evt.target.value);
     }
 
+    handleSubmit(event) {;
+        let newModel = new NFAModel(this.state.startingStateNFA, this.state.acceptingStatesNFA, this.state.statesNFA, this.state.alphabetNFA, this.state.transitionsNFA);
+        let output = newModel.checkInputString(this.state.inputNFA);
+        console.log(output);
+        this.setState({
+            modelStates: output[0].left.name,
+            modelTransitions: output[0].right
+        });
+        this.outputDest = [];
+        this.outputSymbols = [];
+        this.outputDest.push(output[0].left.name)
+        for (let i = 1; i < output.length; i++) {
+            this.outputDest.push(output[i].right);
+            this.outputDest.push(output[i].left.name);
+        }
+        console.log(this.outputDest, this.outputSymbols);
+    }
+
+    /* 
+    STATE-SET VERSION
+    
     // On submit, run the correct model simulation
     handleSubmit(event) {
         let nfaModel = new NFAModel(this.state.startingStateNFA, this.state.acceptingStatesNFA, this.state.statesNFA,
@@ -63,7 +84,7 @@ export default class NFA extends Component {
         }
         this.outputDest.push(output[0].right.name)
 
-    }
+    } */
 
     handleSaveToPC = (jsonData) => {
         const fileName = prompt('Enter a name for the file.');
@@ -162,7 +183,8 @@ export default class NFA extends Component {
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
                         if (index % 2 === 0)
-                            return <State page="nfa" stext='nfaTxt' symbol={txt}></State>
+                            //return <State page="nfa" stext='nfaTxt' symbol={txt}></State>
+                            return <State page="circle-res" stext="circle-txt" symbol={txt}></State>
                         return <Arrow symbol={txt} />
                     })}
                 </div>

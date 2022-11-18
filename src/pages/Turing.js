@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import './styles.css';
 import { TuringMachine } from '../components/input/TuringMachine';
+import State from '../components/state/State';
 
 export default class Turing extends Component {
-    outputDest = [];
-    outputInputSymbols = [];
+    outputTape = [];
 
     constructor(props) {
         super(props);
@@ -19,7 +19,9 @@ export default class Turing extends Component {
             transitionsTM: localStorage.getItem('transitionsTM'),
             inputTM: localStorage.getItem('inputTM'),
             modelStates: [],
-            modelTransitions: []
+            modelTransitions: [],
+            outputTape: [],
+            result: 0
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -36,14 +38,55 @@ export default class Turing extends Component {
         console.log(this.state.inputTM);
         let newModel = new TuringMachine(this.state.statesTM, this.state.alphabetTM, this.state.transitionsTM, this.state.startingStateTM, 
             this.state.haltingStatesTM, this.state.acceptingStatesTM, this.state.blankSymbolTM);
-        let output = newModel.simulateTape(this.state.inputTM);
-        let tapes = newModel.tapeHistory;
-        /*this.setState({
-            modelStates: 
-            modelTransitions:
-        }) */
-        console.log(output);
-        console.log(tapes);
+        
+        this.acceptance = newModel.simulateTape(this.state.inputTM);
+        this.tapes = newModel.tapeHistory;
+        this.trans = newModel.tsHistory;
+        this.readIndex = newModel.startIndex;
+        this.currentState = newModel.initial.name;
+        this.tapeIndex = 1;
+        
+        this.setState({
+            modelStates: 0,
+            modelTransitions: 0,
+            result: 0,
+            outputTape: [...this.tapes[0]]
+        }); 
+    }
+
+    nextTape() { 
+        console.log(this.currentState);
+        if (this.tapeIndex >= this.tapes.length) {
+            // if at the end of the tape history, indicate whether accepted/rejected
+            if (this.acceptance === true) {
+                this.setState({
+                    result: 1
+                });
+            } else {
+                this.setState({
+                    result: 2
+                });
+            }
+        } else {
+            // else update state to next tape, and state/readIndex by checking corresponding transition
+            this.setState({
+                outputTape: [...this.tapes[this.tapeIndex]]
+            });
+            let currentTrans = this.trans[this.tapeIndex];
+            this.currentState = currentTrans.nextState.name;
+            if (currentTrans.move === ">") {
+                this.readIndex += 1;
+            } else if (currentTrans.move === "<") {
+                if (this.readIndex !== 0) {
+                    this.readIndex -= 1;
+                }
+            }
+            this.tapeIndex += 1;
+        }
+    }
+
+    delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
     }
 
     handleSaveToPC = (jsonData) => {
@@ -152,9 +195,24 @@ export default class Turing extends Component {
                 </div>
                 <div className='btnGroup'>
                     <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
+                    <input onClick={(event) => this.nextTape()} type="button" value="Step" />
                     <input onClick={this.clearInputs} type="button" value="Clear" />
                     <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Save Inputs" />
                     <input onChange={this.Upload} type="file" />
+                </div>
+                <div className='visualArea'>
+                    {this.state.outputTape.map((txt, index) => {
+                        if (this.state.result === 1) {
+                            return <State page='activeTapeCell' stext='tapeText' symbol={txt}></State>
+                        }
+                        if (this.state.result === 2) {
+                            return <State page='failedTapeCell' stext='tapeText' symbol={txt}></State>
+                        }
+                        if (index === this.readIndex) {
+                            return <State page='activeTapeCell' stext='tapeText' symbol={txt}></State>
+                        }
+                        return <State page='tapeCell' stext='tapeText' symbol={txt}></State>
+                    })}
                 </div>
             </>
         )
