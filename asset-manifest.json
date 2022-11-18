@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/ModelsOfCompSimulator/static/css/main.cb67702d.css",
-    "main.js": "/ModelsOfCompSimulator/static/js/main.0321333c.js",
+    "main.css": "/ModelsOfCompSimulator/static/css/main.4232d231.css",
+    "main.js": "/ModelsOfCompSimulator/static/js/main.cc1fd034.js",
     "static/js/787.b427cdbf.chunk.js": "/ModelsOfCompSimulator/static/js/787.b427cdbf.chunk.js",
     "index.html": "/ModelsOfCompSimulator/index.html",
-    "main.cb67702d.css.map": "/ModelsOfCompSimulator/static/css/main.cb67702d.css.map",
-    "main.0321333c.js.map": "/ModelsOfCompSimulator/static/js/main.0321333c.js.map",
+    "main.4232d231.css.map": "/ModelsOfCompSimulator/static/css/main.4232d231.css.map",
+    "main.cc1fd034.js.map": "/ModelsOfCompSimulator/static/js/main.cc1fd034.js.map",
     "787.b427cdbf.chunk.js.map": "/ModelsOfCompSimulator/static/js/787.b427cdbf.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.cb67702d.css",
-    "static/js/main.0321333c.js"
+    "static/css/main.4232d231.css",
+    "static/js/main.cc1fd034.js"
   ]
 }
