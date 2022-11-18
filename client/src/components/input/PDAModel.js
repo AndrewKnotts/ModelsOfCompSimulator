@@ -104,6 +104,8 @@ export class PDAModel {
         this.currentState = null;
         this.currentStack = null;
         this.epsTransitions = [];
+        this.acceptance_result = null; 
+        this.error = null; 
 
 
 
@@ -143,6 +145,7 @@ export class PDAModel {
                 return true;
             }
         }
+        this.error = "Invalid initial state";
         return false;
     }
 
@@ -179,6 +182,7 @@ export class PDAModel {
             }
             else if (!worked) {
                 window.alert("No transition suitable");
+                this.acceptance_result = false; 
                 return false;
             }
         }
@@ -196,6 +200,7 @@ export class PDAModel {
             }
             if (!worked) {
                 window.alert("non-empty stack");
+                this.acceptance_result = false; 
                 return false;
 
             }
@@ -210,9 +215,13 @@ export class PDAModel {
             }
         }
 
-        if (endState) return path;
+        if (endState) {
+            this.acceptance_result = true; 
+            return path;
+        }
         else {
             window.alert("Not in end state");
+            this.acceptance_result = false; 
             return false;
         }
     }
@@ -231,12 +240,18 @@ export class PDAModel {
     }
 
     checkPushdownAlphabet() {
-        if (this.pushdownAlphabet.size == 0) return false;
+        if (this.pushdownAlphabet.size == 0) {
+            this.error = "invalid pushdown alphabet";
+            return false;
+        }
 
         let symbols = new Set();
         for (let s in this.pushdownAlphabet) {
             let i = this.pushdownAlphabet[s];
-            if (symbols.has(i) || this.inputSyms.has(i)) return false;
+            if (symbols.has(i) || this.inputSyms.has(i)) {
+                this.error = "invalid pushdown alphabet";
+                return false;
+            } 
             symbols.add(i);
         }
 
@@ -246,12 +261,18 @@ export class PDAModel {
     }
 
     checkStates() {
-        if (this.all.size == 0) return false;
+        if (this.all.size == 0) {
+            this.error = "invalid states";
+            return false;
+        }
 
         let states = new Map();
         for (let i in this.all) {
             let s = this.all[i];
-            if (states != null && (states.has(s.name) || this.pdSyms.has(s.name) || this.inputSyms.has(s.name))) return false;
+            if (states != null && (states.has(s.name) || this.pdSyms.has(s.name) || this.inputSyms.has(s.name))) {
+                this.error = "invalid states";
+                return false;
+            }
             states.set(s.name, s);
         }
 
@@ -265,6 +286,7 @@ export class PDAModel {
             this.initialState.connected = true;
             return true;
         }
+        this.error = "invalid initial state";
         return false;
     }
 
@@ -274,7 +296,8 @@ export class PDAModel {
             let sym = initialStack.substring(i, i + 1);
             if (!this.pdSyms.has(sym)) {
                 //this.initialStack = this.pdSyms.get(initialStack)
-                return false
+                this.error = "invalid initial stack";
+                return false;
             }
         }
 
@@ -284,7 +307,10 @@ export class PDAModel {
     checkAccepting() {
         for (let i in all) {
             let s = all[i];
-            if (!this.states.has(s)) return false;
+            if (!this.states.has(s)) {
+                this.error = "invalid accepting states";
+                return false;
+            }
             s.accepting = true;
             this.accepting.push(s);
         }
@@ -293,7 +319,10 @@ export class PDAModel {
     }
 
     checkTransitions() {
-        if (this.transitions.size === 0) return false;
+        if (this.transitions.size === 0) {
+            this.error = "invalid transitions";
+            return false;
+        }
 
         for (let i in this.transitions) {
             let t = this.transitions[i];
@@ -314,18 +343,25 @@ export class PDAModel {
                 }
 
             }
-            if (!(st && end)) return false;
+            if (!(st && end)) {
+                this.error = "invalid transitions";
+                return false;
+            }
 
             // check new stack:
             if (t.stack1 != "eps") {
                 for (let x in t.stack1) {
                     let c = t.stack1.substring(x, x + 1);
-                    if (!this.pdSyms.has(c)) return false;
+                    if (!this.pdSyms.has(c)) {
+                        this.error = "invalid transitions";
+                        return false;
+                    }
                 }
             }
 
             if (this.srcToInput.has(t.source) && this.srcToInput.get(t.source).includes(t.input)
                 && this.srcToStack.has(t.source) && this.srcToStack.get(t.source).includes(t.stack0)) {
+                this.error = "invalid transitions";
                 return false;
             }
             // doesn't have the stack symbol yet

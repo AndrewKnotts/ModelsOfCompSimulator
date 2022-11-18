@@ -19,6 +19,7 @@ export class NFAState {
         this.connected = false;
         this.conn = [];
         this.transitions = [];
+        this.destOf = [];
     }
 
     addTrans(symbol, dest) {
@@ -51,6 +52,22 @@ export class NFAState {
             }
         }
         return ret_list;
+    }
+
+    addDestOf(state, symbol) {
+        let newPair = new Pair(state, symbol);
+        this.destOf.push(newPair);
+    }
+
+    getSym(src) {
+        let syms = [];
+        for (let i in this.destOf) {
+            let p = this.destOf[i];
+            if (p.left === src) {
+                syms.push(p.right);
+            }
+        }
+        return syms; 
     }
 }
 
@@ -110,6 +127,8 @@ export class NFAModel {
                 let acceptance = new Pair("✔️", accept_state);
                 ret_path.push(acceptance);
                 this.acceptance_result = true;
+                this.backtrack(a);
+                console.log(this.backwardPath);
                 return ret_path;
             }
         }
@@ -154,12 +173,19 @@ export class NFAModel {
             input = input.substring(1);
             let next = new Set();
 
+            let passing = new Set();
+
             for (let a of this.current) {
                 let sym_trans = a.getSymbolTrans(str);
+                let eps_trans = a.getEpsilonTrans();
                 if (sym_trans.length !== 0) {
                     for (let trans of sym_trans) {
                         next.add(trans.right);
+                        passing.add(a);
                     }
+                }
+                if (eps_trans.length !== 0) {
+                    passing.add(a);
                 }
             }
 
@@ -179,10 +205,17 @@ export class NFAModel {
                 if (eps_trans !== 0) {
                     for (let trans of eps_trans) {
                         next.add(trans.right);
+                        passing.add(b);
                     }
                 }
             } 
             
+            for (let stt of this.current) {
+                if (!passing.has(stt)) {
+                    this.current.delete(stt);
+                }
+            }
+
             this.setPath.push(this.current);
             this.current = next;
         }
@@ -302,6 +335,7 @@ export class NFAModel {
                 }
             }
             src_state.addTrans(t.symbol, t.dest);
+            t.dest.addDestOf(src_state, t.symbol);
 
             // Add the dest State to source.conn for connection check
             if (!t.source.conn.includes(t.dest)) {
@@ -320,6 +354,43 @@ export class NFAModel {
                 this.makeConnected(s);
             }
         }
+    }
+
+    // start at back of array and go back picking options from the previous set that have transitions that go to the current state chosen
+    backtrack(accState) {
+        this.backwardPath = [];
+        let inp = this.input.split("");
+        let currState = accState;
+        let revPath = this.setPath.reverse();
+        //this.setPath.reverse();
+        for (let i=1; i < revPath.length; i++) {
+            console.log("loop " + i);
+            let chr = inp[0];
+            let currSet = revPath[i];
+            let x = 0;
+            for (let src of revPath[i]) {
+                console.log(src.name);
+                if (currState.getSym(src).includes(chr)) {
+                    console.log("HERE!");
+                    let currPair = new Pair(currState, chr);
+                    this.backwardPath.push(currPair);
+                    //console.log("source: " + src.name);
+                    currState = src;
+                    inp.pop();
+                    //console.log("LENGTH: " + inp.length);
+                    break;
+                }
+                else if (currState.getSym(src).includes("eps")) {
+                    console.log("THERE");
+                    let currPair = new Pair(currState, "ε");
+                    this.backwardPath.push(currPair);
+                    currState = src;
+                    break;
+                }
+            }
+            // currState holds the starting state
+        }
+        
     }
 }
 

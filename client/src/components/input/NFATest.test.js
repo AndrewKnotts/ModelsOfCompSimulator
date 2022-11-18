@@ -2,7 +2,7 @@ import { NFAModel } from "./NFAModel";
 
 it('test works', () => {
     expect(1+2).toEqual(3);
-  });
+});
 
 it('rejects model with empty alphabet', () => {
     jest.spyOn(window, 'alert').mockImplementation(() => {});
