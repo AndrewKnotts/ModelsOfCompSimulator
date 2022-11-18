@@ -5,13 +5,7 @@ import DFA from './pages/DFA';
 import NFA from './pages/NFA';
 import PDA from './pages/PDA';
 import InputArea from './components/input/InputArea';
-//import Graph from './components/graph/Graph';
 import { Component } from 'react';
-import { page } from './components/navbar/Navbar';
-import { DFAModel, Transition } from './components/input/DFAModel.js';
-import { NFAModel } from './components/input/NFAModel.js';
-import State from './components/state/State';
-import Arrow from './components/arrow/arrow';
 import Navbar from './components/navbar/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -34,10 +28,5 @@ export default class App extends Component {
     );
   }
 }
-
-function Home() {
-  return <h1>Home page</h1>;
-}
-//          
 
 
