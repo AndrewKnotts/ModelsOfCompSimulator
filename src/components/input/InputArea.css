@@ -35,7 +35,6 @@ input[type="Button"] {
   border: solid;
   width: fit-content;
   display: inline-block;
-  padding: 14px, 28px;
   font-size: 16px;
   cursor: pointer;
   text-align: center;
@@ -68,4 +67,5 @@ textarea {
 .btnGroup {
   padding-bottom: 1rem;
   width: 100%;
+  justify-content: space-between;
 }
