@@ -3,8 +3,8 @@ import './Navbar.css'
 import logo1 from '../../images/logo1.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const Navbar = props => {
 
-export default function Navbar() {
     return (
         <nav className="nav">
             <img src={logo1} alt="logo" className="img" />
@@ -17,9 +17,10 @@ export default function Navbar() {
                     <CustomLink to="/nfa">NFA</CustomLink>
                     <CustomLink to="/pda">PDA</CustomLink>
                     <CustomLink to="/turing">Turing Machine</CustomLink>
+
                 </ul>
-            </div>
-        </nav>
+            </div >
+        </nav >
     )
 }
 
@@ -38,3 +39,5 @@ function CustomLink({ to, children, ...props }) {
 
 var page = "";
 export { page };
+
+export default Navbar;

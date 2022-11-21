@@ -29,10 +29,6 @@ body {
   height: auto;
 }
 
-.site-title {
-  font-size: 2rem;
-}
-
 .nav ul {
   padding-right: 0rem;
   padding-top: 0.75rem;
@@ -41,9 +37,6 @@ body {
   list-style: none;
   display: flex;
   gap: 3rem;
-  display: flex;
-  flex-wrap: wrap;
-  word-wrap: break-word;
 }
 
 .nav a {

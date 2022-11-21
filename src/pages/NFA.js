@@ -3,6 +3,7 @@ import './styles.css';
 import { NFAModel } from '../components/input/NFAModel';
 import State from '../components/state/State';
 import Arrow from '../components/arrow/arrow';
+import Popup from '../components/popup/Popup';
 
 export default class NFA extends Component {
     outputDest = [];
@@ -19,7 +20,8 @@ export default class NFA extends Component {
             transitionsNFA: localStorage.getItem('transitionsNFA'),
             inputNFA: localStorage.getItem('inputNFA'),
             modelStates: [],
-            modelTransitions: []
+            modelTransitions: [],
+            isOpen: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -142,12 +144,39 @@ export default class NFA extends Component {
         }
     }
 
+    togglePopup = () => {
+        this.setState({
+            isOpen: !this.state.isOpen
+        })
+    }
+
     render() {
 
         return (
             <>
                 <div className='contain'>
-                    <h1>NFA</h1>
+                    <div className='banner'>
+                        <h1>NFA</h1>
+                        <input
+                            className='help'
+                            type="button"
+                            value="Help"
+                            onClick={this.togglePopup}
+                        />
+                        {this.state.isOpen && <Popup
+                            content={<>
+                                <b>NFA Instructions</b>
+                                <ol>
+                                    <li>Input the necessary information into the text boxes.</li>
+                                    <li>Press "Run" to compile the inputs.</li>
+                                    <li>Press "Clear" to clear your inputs.</li>
+                                    <li>Press "Download Inputs" to save your custom inputs to your device.</li>
+                                    <li>Press "Choose File" to upload previously saved input files.</li>
+                                </ol>
+                            </>}
+                            handleClose={this.togglePopup}
+                        />}
+                    </div>
                     <div className='inputArea'>
                         <form onSubmit={this.handleSubmit} className="input" id="form" >
                             <div className='formGroup'>
@@ -179,9 +208,9 @@ export default class NFA extends Component {
                     </div>
                 </div>
                 <div className='btnGroup'>
-                    <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
-                    <input onClick={this.clearInputs} type="button" value="Clear" />
-                    <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Download Inputs" />
+                    <input className='b' onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
+                    <input className='b' onClick={this.clearInputs} type="button" value="Clear" />
+                    <input className='b' onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Download Inputs" />
                     <input onChange={this.Upload} type="file" />
                 </div>
                 <div className='visualArea'>

@@ -23,7 +23,7 @@ input[type="text"] {
   border: 1px solid black;
 }
 
-input[type="Button"] {
+.b {
   flex: 1;
   flex-direction: row;
   background-color: #077fff;
