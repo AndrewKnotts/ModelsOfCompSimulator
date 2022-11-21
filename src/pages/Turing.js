@@ -177,7 +177,7 @@ export default class Turing extends Component {
                                 <b>Turing Machine Instructions</b>
                                 <ol>
                                     <li>Input the necessary information into the text boxes.</li>
-                                    <li>Press "Run" to compile the inputs.</li>
+                                    <li>Press "Run" to compile the information.</li>
                                     <li>Continue to press "Step" to walk through the tape until the simulation completes.</li>
                                     <li>Press "Clear" to clear your inputs.</li>
                                     <li>Press "Download Inputs" to save your custom inputs to your device.</li>

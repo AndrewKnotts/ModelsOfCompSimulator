@@ -168,7 +168,7 @@ export default class NFA extends Component {
                                 <b>NFA Instructions</b>
                                 <ol>
                                     <li>Input the necessary information into the text boxes.</li>
-                                    <li>Press "Run" to compile the inputs.</li>
+                                    <li>Press "Run" to compile the information.</li>
                                     <li>Press "Clear" to clear your inputs.</li>
                                     <li>Press "Download Inputs" to save your custom inputs to your device.</li>
                                     <li>Press "Choose File" to upload previously saved input files.</li>
