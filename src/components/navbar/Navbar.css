@@ -11,7 +11,7 @@ body {
   color: rgb(15, 127, 255);
   padding-left: 0px;
   padding-bottom: 1rem;
-  padding-top: 1rem;
+  padding-top: 2rem;
 }
 
 .nav {
@@ -65,7 +65,7 @@ body {
 
 img {
   width: 65px;
-  height: 65px;
+  height: 70px;
   padding-left: 15px;
-  padding-top: 1rem;
+  padding-top: 1.5rem;
 }

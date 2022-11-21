@@ -15,7 +15,7 @@ export default class Turing extends Component {
             statesTM: localStorage.getItem('statesTM'),
             startingStateTM: localStorage.getItem('startingStateTM'),
             haltingStatesTM: localStorage.getItem('haltingStatesTM'),
-            acceptingStatesTM: localStorage.getItem('acceptingStatesTM'), 
+            acceptingStatesTM: localStorage.getItem('acceptingStatesTM'),
             transitionsTM: localStorage.getItem('transitionsTM'),
             inputTM: localStorage.getItem('inputTM'),
             modelStates: [],
@@ -36,25 +36,25 @@ export default class Turing extends Component {
     handleSubmit(event) {
         console.log("Turing Test");
         console.log(this.state.inputTM);
-        let newModel = new TuringMachine(this.state.statesTM, this.state.alphabetTM, this.state.transitionsTM, this.state.startingStateTM, 
+        let newModel = new TuringMachine(this.state.statesTM, this.state.alphabetTM, this.state.transitionsTM, this.state.startingStateTM,
             this.state.haltingStatesTM, this.state.acceptingStatesTM, this.state.blankSymbolTM);
-        
+
         this.acceptance = newModel.simulateTape(this.state.inputTM);
         this.tapes = newModel.tapeHistory;
         this.trans = newModel.tsHistory;
         this.readIndex = newModel.startIndex;
         this.currentState = newModel.initial.name;
         this.tapeIndex = 1;
-        
+
         this.setState({
             modelStates: 0,
             modelTransitions: 0,
             result: 0,
             outputTape: [...this.tapes[0]]
-        }); 
+        });
     }
 
-    nextTape() { 
+    nextTape() {
         console.log(this.currentState);
         if (this.tapeIndex >= this.tapes.length) {
             // if at the end of the tape history, indicate whether accepted/rejected
@@ -90,9 +90,12 @@ export default class Turing extends Component {
     }
 
     handleSaveToPC = (jsonData) => {
-        const fileName = prompt('Enter a name for the file.');
+        var fileName = prompt('Enter a name for the file.');
+        if (fileName === null) {
+            return;
+        }
         const fileData = JSON.stringify(jsonData);
-        const blob = new Blob([fileData], { type: "text/plain"});
+        const blob = new Blob([fileData], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.download = `${fileName}.json`;
@@ -113,7 +116,7 @@ export default class Turing extends Component {
         });
         localStorage.setItem('alphabetTM', "");
         localStorage.setItem('blankSymbolTM', "");
-        localStorage.setItem('statesTM', "");  
+        localStorage.setItem('statesTM', "");
         localStorage.setItem('startingStateTM', "");
         localStorage.setItem('haltingStatesTM', "");
         localStorage.setItem('acceptingStatesTM', "");
@@ -140,7 +143,7 @@ export default class Turing extends Component {
             });
             localStorage.setItem('alphabetTM', myObj.alphabetTM);
             localStorage.setItem('blankSymbolTM', myObj.blankSymbolTM);
-            localStorage.setItem('statesTM', myObj.statesTM,);  
+            localStorage.setItem('statesTM', myObj.statesTM,);
             localStorage.setItem('startingStateTM', myObj.startingStateTM);
             localStorage.setItem('haltingStatesTM', myObj.haltingStatesTM);
             localStorage.setItem('acceptingStatesTM', myObj.acceptingStatesTM);
@@ -197,22 +200,31 @@ export default class Turing extends Component {
                     <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
                     <input onClick={(event) => this.nextTape()} type="button" value="Step" />
                     <input onClick={this.clearInputs} type="button" value="Clear" />
-                    <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Save Inputs" />
+                    <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Download Inputs" />
                     <input onChange={this.Upload} type="file" />
                 </div>
                 <div className='visualArea'>
-                    {this.state.outputTape.map((txt, index) => {
-                        if (this.state.result === 1) {
-                            return <State page='activeTapeCell' stext='tapeText' symbol={txt}></State>
+                    <div>
+                        {this.state.outputTape.map((txt, index) => {
+                            if (this.state.result === 1) {
+                                return <State page='activeTapeCell' stext='tapeText' symbol={txt}></State>
+                            }
+                            if (this.state.result === 2) {
+                                return <State page='failedTapeCell' stext='tapeText' symbol={txt}></State>
+                            }
+                            if (index === this.readIndex) {
+                                return <State page='activeTapeCell' stext='tapeText' symbol={txt}></State>
+                            }
+                            return <State page='tapeCell' stext='tapeText' symbol={txt}></State>
+                        })}
+                    </div>
+                    <div>
+                        {this.currentState !== undefined &&
+                            <h2>
+                                {"Current State: " + this.currentState}
+                            </h2>
                         }
-                        if (this.state.result === 2) {
-                            return <State page='failedTapeCell' stext='tapeText' symbol={txt}></State>
-                        }
-                        if (index === this.readIndex) {
-                            return <State page='activeTapeCell' stext='tapeText' symbol={txt}></State>
-                        }
-                        return <State page='tapeCell' stext='tapeText' symbol={txt}></State>
-                    })}
+                    </div>
                 </div>
             </>
         )

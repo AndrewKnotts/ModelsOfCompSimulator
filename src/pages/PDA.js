@@ -7,6 +7,7 @@ import Arrow from '../components/arrow/arrow';
 export default class PDA extends Component {
     outputDest = [];
     outputInputSymbols = [];
+    stackOutput = [];
 
     constructor(props) {
         super(props);
@@ -51,13 +52,17 @@ export default class PDA extends Component {
             let stack1Sym = (output[i].stack1 === "eps" ? "ε" : output[i].stack1);
             this.outputDest.push(inputSym + ", " + stack0Sym + " | " + stack1Sym);
             this.outputDest.push(output[i].dest.name);
+            this.stackOutput.push(stack0Sym + " | " + stack1Sym);
         }
-        console.log(this.outputDest, this.outputInputSymbols);
+        console.log(this.stackOutput);
 
     }
 
     handleSaveToPC = (jsonData) => {
-        const fileName = prompt('Enter a name for the file.');
+        var fileName = prompt('Enter a name for the file.');
+        if (fileName === null) {
+            return;
+        }
         const fileData = JSON.stringify(jsonData);
         const blob = new Blob([fileData], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
@@ -163,13 +168,17 @@ export default class PDA extends Component {
                 <div className='btnGroup'>
                     <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
                     <input onClick={this.clearInputs} type="button" value="Clear" />
-                    <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Save Inputs" />
+                    <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Download Inputs" />
                     <input onChange={this.Upload} type="file" />
                 </div>
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
                         if (index % 2 === 0)
-                            return <State page='circle-res' stext='circle-txt' symbol={txt}></State>
+                            return (
+                                <>
+                                    <State page='circle-res' stext='circle-txt' symbol={txt} />
+                                </>
+                            )
                         return <Arrow symbol={txt} />
                     })}
                 </div>

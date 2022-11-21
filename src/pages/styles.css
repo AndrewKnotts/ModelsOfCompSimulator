@@ -33,7 +33,10 @@ h1 {
 
 .visualArea {
   flex-wrap: wrap;
+  display: inline-flexbox;
   border-color: transparent;
+  width: fit-content;
+  position: relative;
 }
 
 .contain {

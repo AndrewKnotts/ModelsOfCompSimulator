@@ -31,7 +31,8 @@ export default class NFA extends Component {
         localStorage.setItem([field], evt.target.value);
     }
 
-    handleSubmit(event) {;
+    handleSubmit(event) {
+        ;
         let newModel = new NFAModel(this.state.startingStateNFA, this.state.acceptingStatesNFA, this.state.statesNFA, this.state.alphabetNFA, this.state.transitionsNFA);
         let output = newModel.checkInputString(this.state.inputNFA);
         console.log(output);
@@ -87,7 +88,10 @@ export default class NFA extends Component {
     } */
 
     handleSaveToPC = (jsonData) => {
-        const fileName = prompt('Enter a name for the file.');
+        var fileName = prompt('Enter a name for the file.');
+        if (fileName === null) {
+            return;
+        }
         const fileData = JSON.stringify(jsonData);
         const blob = new Blob([fileData], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
@@ -177,7 +181,7 @@ export default class NFA extends Component {
                 <div className='btnGroup'>
                     <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
                     <input onClick={this.clearInputs} type="button" value="Clear" />
-                    <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Save Inputs" />
+                    <input onClick={(event) => this.handleSaveToPC(this.state)} type="button" value="Download Inputs" />
                     <input onChange={this.Upload} type="file" />
                 </div>
                 <div className='visualArea'>

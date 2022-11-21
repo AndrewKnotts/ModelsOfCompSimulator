@@ -49,7 +49,10 @@ export default class DFA extends Component {
     }
 
     handleSaveToPC = (jsonData) => {
-        const fileName = prompt('Enter a name for the file.');
+        var fileName = prompt('Enter a name for the file.');
+        if (fileName === null) {
+            return;
+        }
         const fileData = JSON.stringify(jsonData);
         const blob = new Blob([fileData], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
@@ -138,13 +141,13 @@ export default class DFA extends Component {
                 <div className='btnGroup'>
                     <input onClick={(event) => this.handleSubmit(event)} type="button" value="Run" />
                     <input onClick={this.clearInputs} type="button" value="Clear" />
-                    <input onClick={() => this.handleSaveToPC(this.state)} type="button" value="Save Inputs" />
+                    <input onClick={() => this.handleSaveToPC(this.state)} type="button" value="Download Inputs" />
                     <input onChange={this.Upload} type="file" />
                 </div>
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
                         if (index % 2 === 0)
-                            return <State page='circle-res' stext='circle-txt' symbol={txt}></State>
+                            return <State page='circle-res' stext='circle-txt' symbol={txt} wait={1000}></State>
                         return <Arrow symbol={txt} />
                     })}
                 </div>
