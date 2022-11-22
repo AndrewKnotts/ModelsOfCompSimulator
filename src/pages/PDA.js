@@ -39,23 +39,27 @@ export default class PDA extends Component {
     // On submit, run the correct model simulation
     handleSubmit(event) {
         console.log("PDA Test");
-        let newModel = new PDAModel(this.state.statesPDA, this.state.startingStatePDA, this.state.inputAlphabetPDA, this.state.pushdownAlphabetPDA, this.state.transitionsPDA, this.state.startingStackPDA, this.state.acceptingStatesPDA)
-        let output = newModel.checkInputString(this.state.inputPDA);
+        let new_model = new PDAModel(this.state.statesPDA, this.state.startingStatePDA, this.state.inputAlphabetPDA, this.state.pushdownAlphabetPDA, this.state.transitionsPDA, this.state.startingStackPDA, this.state.acceptingStatesPDA)
+        let output = new_model.checkInputString(this.state.inputPDA);
+        let outputStack = new_model.stackTrace;
         this.setState({
             modelStates: output[0].dest.name,
             modelTransitions: output[0].input
         });
         this.outputDest = [];
         this.outputInputSymbols = [];
+        this.outputStack = []
         this.outputDest.push(output[0].source.name);
         for (let i = 0; i < output.length; i++) {
+            this.outputDest.push(outputStack[i]);
             let inputSym = (output[i].input === "eps" ? "ε" : output[i].input);
             let stack0Sym = (output[i].stack0 === "eps" ? "ε" : output[i].stack0);
             let stack1Sym = (output[i].stack1 === "eps" ? "ε" : output[i].stack1);
             this.outputDest.push(inputSym + ", " + stack0Sym + " | " + stack1Sym);
             this.outputDest.push(output[i].dest.name);
-            this.stackOutput.push(stack0Sym + " | " + stack1Sym);
+            //this.stackOutput.push(stack0Sym + " | " + stack1Sym);
         }
+        this.outputDest.push(new_model.currentStack);
         console.log(this.stackOutput);
 
     }
@@ -202,12 +206,14 @@ export default class PDA extends Component {
                 </div>
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
-                        if (index % 2 === 0)
+                        if (index % 3 === 0)
                             return (
                                 <>
                                     <State page='circle-res' stext='circle-txt' symbol={txt} />
                                 </>
                             )
+                        else if ((index - 1) % 3 === 0)
+                            return <State page="stack-res" stext='circle-txt' symbol={txt}></State>
                         return <Arrow symbol={txt} />
                     })}
                 </div>
