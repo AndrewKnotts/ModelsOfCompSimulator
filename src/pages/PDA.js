@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import './styles.css';
 import { PDAModel } from '../components/input/PDAModel';
 import State from '../components/state/State';
-import Stack from '../components/stackBox/Stack';
 import Arrow from '../components/arrow/arrow';
 import { toHaveAccessibleDescription } from '@testing-library/jest-dom/dist/matchers';
 
@@ -49,7 +48,7 @@ export default class PDA extends Component {
         this.outputInputSymbols = [];
         this.outputStack = [];
         this.outputDest.push(output[0].source.name);
-        
+
         for (let i = 0; i < output.length; i++) {
             this.outputDest.push(outputStack[i]);
             let inputSym = (output[i].input === "eps" ? "ε" : output[i].input);
@@ -179,7 +178,7 @@ export default class PDA extends Component {
                         if (index % 3 === 0)
                             return <State page='circle-res' stext='circle-txt' symbol={txt}></State>
                         else if ((index - 1) % 3 === 0)
-                            return <Stack page='circle-res' stext='circle-txt' symbol={txt}></Stack>
+                            return <State page="stack-res" stext='circle-txt' symbol={txt}></State>
                         return <Arrow symbol={txt} />
                     })}
                 </div>

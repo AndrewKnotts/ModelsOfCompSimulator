@@ -59,3 +59,24 @@
   flex-wrap: wrap;
   flex-direction: row;
 }
+
+.stack-res {
+  width: 10rem;
+  height: 8rem;
+  background: white;
+  line-height: 0;
+  position: relative;
+  display: inline-block;
+  border: black solid;
+  margin-top: 15px;
+  margin-left: 0px;
+  margin-right: 10px;
+  font-size: 150%;
+  padding-bottom: 0;
+}
+
+.stack-res::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
