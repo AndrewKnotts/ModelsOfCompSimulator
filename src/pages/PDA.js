@@ -213,7 +213,7 @@ export default class PDA extends Component {
                                 </>
                             )
                         else if ((index - 1) % 3 === 0)
-                            return <State page="stack-res" stext='circle-txt' symbol={txt}></State>
+                            return <State page="stack-res" stext='stack-txt' symbol={txt}></State>
                         return <Arrow symbol={txt} />
                     })}
                 </div>

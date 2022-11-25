@@ -133,19 +133,30 @@
   width: 10rem;
   height: 8rem;
   background: white;
-  line-height: 0;
   position: relative;
   display: inline-block;
   border: black solid;
   margin-top: 15px;
   margin-left: 0px;
   margin-right: 10px;
-  font-size: 150%;
-  padding-bottom: 0;
+  font-size: 2vmin;
+  padding-bottom: 1;
+  overflow-wrap: break-word;
 }
 
 .stack-res::after {
   content: "";
   display: block;
   padding-bottom: 100%;
+}
+
+.stack-txt {
+  position: absolute;
+  bottom: 40%;
+  width: 100%;
+  text-align: center;
+  font-family: arial, sans-serif;
+  font-weight: bold;
+  flex-wrap: wrap;
+  flex-direction: column;
 }

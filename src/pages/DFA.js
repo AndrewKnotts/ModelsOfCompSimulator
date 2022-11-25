@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import './styles.css';
 import { DFAModel } from '../components/input/DFAModel';
-import State from '../components/state/State';
 import Arrow from '../components/arrow/arrow';
 import Popup from '../components/popup/Popup';
+import State from '../components/state/State';
 
 export default class DFA extends Component {
     outputDest = [];
@@ -176,11 +176,16 @@ export default class DFA extends Component {
                 <div className='visualArea'>
                     {this.outputDest.map((txt, index) => {
                         if (index % 2 === 0)
-                            return <State page='circle-res' stext='circle-txt' symbol={txt} wait={1000}></State>
-                        return <Arrow symbol={txt} />
+                            return (
+                                <State page='circle-res' stext='circle-txt' symbol={txt}></State>
+                            )
+                        return (
+                            <Arrow symbol={txt} />
+                        )
                     })}
                 </div>
             </>
         )
     }
+
 }
