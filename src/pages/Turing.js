@@ -235,13 +235,16 @@ export default class Turing extends Component {
                     <div>
                         {this.state.outputTape.map((txt, index) => {
                             if (this.state.result === 1) {
-                                return <State page='activeTapeCell' stext='tapeText' symbol={txt}></State>
+                                return <State page='activeTapeCellVerified' stext='tapeText' symbol={txt}>
+                                </State>
                             }
                             if (this.state.result === 2) {
                                 return <State page='failedTapeCell' stext='tapeText' symbol={txt}></State>
                             }
                             if (index === this.readIndex) {
-                                return <State page='activeTapeCell' stext='tapeText' symbol={txt}></State>
+                                return <State page='activeTapeCell' stext='tapeText' symbol={txt}>
+                                </State>
+
                             }
                             return <State page='tapeCell' stext='tapeText' symbol={txt}></State>
                         })}
