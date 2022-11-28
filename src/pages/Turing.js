@@ -36,15 +36,17 @@ export default class Turing extends Component {
     }
 
     handleSubmit(event) {
-        console.log("Turing Test");
-        console.log(this.state.inputTM);
         let newModel = new TuringMachine(this.state.statesTM, this.state.alphabetTM, this.state.transitionsTM, this.state.startingStateTM,
             this.state.haltingStatesTM, this.state.acceptingStatesTM, this.state.blankSymbolTM);
 
         this.acceptance = newModel.simulateTape(this.state.inputTM);
         this.tapes = newModel.tapeHistory;
         this.trans = newModel.tsHistory;
+        this.display = newModel.display;
         this.readIndex = newModel.startIndex;
+        if (this.display === 1) {
+            this.readIndex = 4;
+        }
         this.currentState = newModel.initial.name;
         this.tapeIndex = 1;
 
@@ -57,7 +59,6 @@ export default class Turing extends Component {
     }
 
     nextTape() {
-        console.log(this.currentState);
         if (this.tapeIndex >= this.tapes.length) {
             // if at the end of the tape history, indicate whether accepted/rejected
             if (this.acceptance === true) {
@@ -82,6 +83,9 @@ export default class Turing extends Component {
                 if (this.readIndex !== 0) {
                     this.readIndex -= 1;
                 }
+            }
+            if (this.display === 1) {
+                this.readIndex = 4;
             }
             this.tapeIndex += 1;
         }

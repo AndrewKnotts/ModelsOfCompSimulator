@@ -89,15 +89,13 @@ export class DFAModel {
         // Check if the current state is an accepting state, create accept vis. and add to path
         if (this.current.accepting === true) {
             let acceptState = new State("🙂");
-            let acceptance = new Transition("✔️", null, acceptState);
-            path.push(acceptance);
+            path.push(new Transition("✔️", null, acceptState));
             this.acceptanceResult = true;
             return path;
         } 
         // if not accepting, create fail visualization and add it to end of path
         let failState = new State("🙁");
-        let failure = new Transition("❌", null, failState);
-        path.push(failure);
+        path.push(new Transition("❌", null, failState));
         this.acceptanceResult = false;
         return path;
     }
@@ -262,7 +260,7 @@ export function parseAlphabet(input) {
     return alphabetArray;
 }
 
-// parse states string input into State array
+// parse states string input into (DFA) State array
 export function parseStates(input) {
     input = input.replaceAll(" ","");
     if (input.length === 0) return [];

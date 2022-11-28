@@ -58,7 +58,7 @@ export class Tape {
     shiftLeft() {
         if (this.current === this.head) {
             this.insertHead(this.blank);
-            // if one way:
+            // if using a one way tape:
             //return false;
         } 
         this.current = this.current.prev;
@@ -89,7 +89,29 @@ export class Tape {
             tapeArr.push(node.value);
             node = node.next;
         }
-        //console.log(tapeArr);
+        return tapeArr;
+    }
+
+    // returns array of node values with the current node at center and padding # of nodes each side
+    printCenteredTape(padding) {
+        let leftNode = this.current;
+        let rightNode = this.current;
+        let tapeArr = [this.current.value];
+        for (let i = 0; i < padding; i++) {
+            if (rightNode.next !== null) {
+                tapeArr.push(rightNode.next.value);
+                rightNode = rightNode.next;
+            } else {
+                tapeArr.push(this.blank);
+            }
+
+            if (leftNode.prev !== null) {
+                tapeArr.unshift(rightNode.prev.value);
+                leftNode = leftNode.prev;
+            } else {
+                tapeArr.unshift(this.blank);
+            }
+        }
         return tapeArr;
     }
 }
