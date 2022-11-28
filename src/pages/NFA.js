@@ -34,10 +34,8 @@ export default class NFA extends Component {
     }
 
     handleSubmit(event) {
-        ;
         let newModel = new NFAModel(this.state.startingStateNFA, this.state.acceptingStatesNFA, this.state.statesNFA, this.state.alphabetNFA, this.state.transitionsNFA);
         let output = newModel.checkInputString(this.state.inputNFA);
-        console.log(output);
         this.setState({
             modelStates: output[0].left.name,
             modelTransitions: output[0].right
@@ -49,7 +47,6 @@ export default class NFA extends Component {
             this.outputDest.push(output[i].right);
             this.outputDest.push(output[i].left.name);
         }
-        console.log(this.outputDest, this.outputSymbols);
     }
 
     /* 
@@ -69,10 +66,8 @@ export default class NFA extends Component {
 
         this.outputDest = [];
         this.outputSymbols = [];
-        console.log(sets);
         for (let i = 0; i < sets.length; i++) {
             let temp = Array.from(sets[i])
-            console.log(temp);
             let set = [];
             temp.forEach((state, index) => {
                 set.push(state.name)
@@ -83,7 +78,6 @@ export default class NFA extends Component {
 
             this.outputDest.push(set);
             this.outputDest.push("");
-            console.log(set);
         }
         this.outputDest.push(output[0].right.name)
 
@@ -181,28 +175,28 @@ export default class NFA extends Component {
                         <form onSubmit={this.handleSubmit} className="input" id="form" >
                             <div className='formGroup'>
                                 <label>Alphabet:</label>
-                                <input type="text" value={this.state.alphabetNFA} onChange={(event) => this.handleChange(event, "alphabetNFA")} name="alphabet_nfa" placeholder='ex: a,b,c,d,e' />
+                                <input type="text" value={this.state.alphabetNFA} onChange={(event) => this.handleChange(event, "alphabetNFA")} name="alphabet_nfa" placeholder='ex: a, b' />
 
                             </div>
                             <div className='formGroup'>
                                 <label>States:</label>
-                                <input type="text" value={this.state.statesNFA} onChange={(event) => this.handleChange(event, "statesNFA")} name="states_nfa" placeholder='ex: A, B, C' />
+                                <input type="text" value={this.state.statesNFA} onChange={(event) => this.handleChange(event, "statesNFA")} name="states_nfa" placeholder='ex: s0, s1, s2, s3' />
                             </div>
                             <div className='formGroup'>
                                 <label>Starting State:</label>
-                                <input type="text" value={this.state.startingStateNFA} onChange={(event) => this.handleChange(event, "startingStateNFA")} name="startingState_nfa" placeholder='ex: A' />
+                                <input type="text" value={this.state.startingStateNFA} onChange={(event) => this.handleChange(event, "startingStateNFA")} name="startingState_nfa" placeholder='ex: s0' />
                             </div>
                             <div className='formGroup'>
                                 <label>Accepting States:</label>
-                                <input type="text" value={this.state.acceptingStatesNFA} onChange={(event) => this.handleChange(event, "acceptingStatesNFA")} name="acceptingStates_nfa" placeholder="ex: C, B" />
+                                <input type="text" value={this.state.acceptingStatesNFA} onChange={(event) => this.handleChange(event, "acceptingStatesNFA")} name="acceptingStates_nfa" placeholder="ex: s3" />
                             </div>
                             <div className='formGroup'>
                                 <label>Transitions:</label>
-                                <textarea type="text" value={this.state.transitionsNFA} onChange={(event) => this.handleChange(event, "transitionsNFA")} name="transitions_nfa" placeholder="ex: (0, A, A); (1, A, B); (1, B, A); (0, B, B)" />
+                                <textarea type="text" value={this.state.transitionsNFA} onChange={(event) => this.handleChange(event, "transitionsNFA")} name="transitions_nfa" placeholder="ex: (a,s0,s1); (a,s0,s2); (b,s1,s1); (eps,s1,s2); (b,s2,s2); (a,s2,s3)" />
                             </div>
                             <div className='formGroup'>
                                 <label>Input:</label>
-                                <input type="text" value={this.state.inputNFA} onChange={(event) => this.handleChange(event, "inputNFA")} name="input_nfa" placeholder="ex: abcde" />
+                                <input type="text" value={this.state.inputNFA} onChange={(event) => this.handleChange(event, "inputNFA")} name="input_nfa" placeholder="ex: abbba" />
                             </div>
                         </form>
                     </div>

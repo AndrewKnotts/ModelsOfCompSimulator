@@ -100,6 +100,7 @@ export class PDAModel {
         this.currentStack = null;
         this.epsTransitions = [];
         this.stackTrace = [];
+        this.acceptanceResult = null;
 
         if (!this.checkInputAlphabet()) window.alert("Invalid Input Alphabet");
         if (!this.checkPushdownAlphabet()) window.alert("Invalid Pushdown alphabet: " + pushdownAlphabet);
@@ -135,6 +136,7 @@ export class PDAModel {
     checkInputString(input) {
         this.currentState = this.initialState;
         this.currentStack = this.initialStack;
+        this.acceptanceResult = false;
         let path = []; // path is gonna have each transition object
 
         for (let i = 0; i < input.length; i++) {
@@ -199,7 +201,10 @@ export class PDAModel {
             }
         }
 
-        if (endState) return path;
+        if (endState) {
+            this.acceptanceResult = true;
+            return path;
+        }
         else {
             window.alert("Not in end state");
             return false;
