@@ -23,7 +23,8 @@ export default class Turing extends Component {
             modelTransitions: [],
             outputTape: [],
             result: 0,
-            isOpen: false
+            isOpen: false,
+            centered: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -37,14 +38,14 @@ export default class Turing extends Component {
 
     handleSubmit(event) {
         let newModel = new TuringMachine(this.state.statesTM, this.state.alphabetTM, this.state.transitionsTM, this.state.startingStateTM,
-            this.state.haltingStatesTM, this.state.acceptingStatesTM, this.state.blankSymbolTM);
+            this.state.haltingStatesTM, this.state.acceptingStatesTM, this.state.blankSymbolTM, this.state.centered);
 
         this.acceptance = newModel.simulateTape(this.state.inputTM);
         this.tapes = newModel.tapeHistory;
         this.trans = newModel.tsHistory;
         this.display = newModel.display;
-        this.readIndex = newModel.startIndex;
-        if (this.display === 1) {
+        this.readIndex = 0;
+        if (this.display === true) {
             this.readIndex = 4;
         }
         this.currentState = newModel.initial.name;
@@ -84,7 +85,7 @@ export default class Turing extends Component {
                     this.readIndex -= 1;
                 }
             }
-            if (this.display === 1) {
+            if (this.display === true) {
                 this.readIndex = 4;
             }
             this.tapeIndex += 1;
@@ -164,6 +165,12 @@ export default class Turing extends Component {
         })
     }
 
+    handleCheck = () => {
+        this.setState({
+            centered: !this.state.centered
+        })
+    }
+
     render() {
         return (
             <>
@@ -224,6 +231,12 @@ export default class Turing extends Component {
                             <div className='formGroup'>
                                 <label>Input:</label>
                                 <input type="text" value={this.state.inputTM} onChange={(event) => this.handleChange(event, "inputTM")} name="input" placeholder="ex: abcde" />
+                            </div>
+                            <div>
+                                <label className="checkbox" for="centerTape">
+                                    Center Tape:
+                                </label>
+                                <input className="checkbox" id="centerTape" type="checkbox" onChange={this.handleCheck} />
                             </div>
                         </form>
                     </div>

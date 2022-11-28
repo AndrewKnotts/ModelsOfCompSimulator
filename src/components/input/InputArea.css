@@ -69,3 +69,7 @@ textarea {
   width: 100%;
   justify-content: space-between;
 }
+
+.checkbox {
+  padding-right: 1rem;
+}

@@ -1,11 +1,4 @@
-var inputAlphabet = ""
-var pushdownAlphabet = ""
 var states = ""
-var transitions = ""
-var stack = ""
-var initialState = ""
-var final = ""
-var model = ""
 var initialStack = "" // leftmost char will be top of stack
 var all = ""
 
@@ -122,7 +115,7 @@ export class PDAModel {
     }
 
     getInitialState(name) {
-        if (name == null || name == "") return false;
+        if (name === null || name === "") return false;
         for (let i in this.all) {
             let st = this.all[i];
             if (st.name === name) {
@@ -150,12 +143,12 @@ export class PDAModel {
                 if ((t.source === this.currentState) && (t.input === sym) && (currStackChar === this.currentStack.substring(0, 1))) {
                     path.push(t);
                     this.currentState = t.dest;
-                    if (t.stack1 != "eps") this.currentStack = t.stack1.concat('', this.currentStack.substring(1, this.currentStack.length));
+                    if (t.stack1 !== "eps") this.currentStack = t.stack1.concat('', this.currentStack.substring(1, this.currentStack.length));
                     else this.currentStack = this.currentStack.substring(1, this.currentStack.length);
                     worked = true;
                     break;
                 }
-                else if ((t.input == "eps") && (t.source == this.currentState) && (t.stack0 == this.currentStack.substring(0, 1))) {
+                else if ((t.input === "eps") && (t.source === this.currentState) && (t.stack0 === this.currentStack.substring(0, 1))) {
                     epsTran = t;
                 }
             }
