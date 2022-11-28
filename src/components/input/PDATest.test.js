@@ -14,7 +14,7 @@ it('rejects model with empty input alphabet', () => {
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid input alphabet");
+    expect(window.alert).toBeCalledWith("Invalid transitions");
 });
 
 it('rejects model with empty pushdown alphabet', () => {
@@ -27,7 +27,7 @@ it('rejects model with empty pushdown alphabet', () => {
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("Invalid pushdown alphabet");
+    expect(window.alert).toBeCalledWith("Invalid transitions");
 });
 
 it('rejects model with empty states', () => {
@@ -40,7 +40,8 @@ it('rejects model with empty states', () => {
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid states");
+    expect(window.alert).toBeCalledWith("Invalid Initial State");
+    expect(window.alert).toBeCalledWith("Invalid transitions");
 });
 
 it('rejects model with empty transitions', () => {
@@ -53,7 +54,7 @@ it('rejects model with empty transitions', () => {
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid transitions");
+    expect(window.alert).toBeCalledWith("Invalid transitions");
 });
 
 it('rejects model with no start state', () => {
@@ -183,7 +184,7 @@ it('rejects model with transitions that include nonexistent input symbol', () =>
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid transitions");
+    expect(window.alert).toBeCalledWith("Invalid transitions");
 });
 
 it('rejects model with transitions that include nonexistent pushdown symbols', () => {

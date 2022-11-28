@@ -42,8 +42,10 @@ function parsePushdownAlphabet(input) {
 function parseTransitions(input) {
     let transitions = input.split(';');
     let transArray = [];
+
     for (let i in transitions) {
         let pair = transitions[i].split(" -> ");
+        if (pair.size < 1) return [];
         let src = pair[0].split(','); //(q0, a, Z)
         let dest = pair[1].split(','); // (q1, A)
 
@@ -83,6 +85,9 @@ export class Transition { // (source, input, stack0) -> (dest, stack1)
         return this.dest;
     }
 }
+
+let sadFace = new State("😡");
+let failTran = new Transition(null, sadFace, "", "❌", "❌");
 
 export class PDAModel {
     constructor(all_states, initialState, inputAlphabet, pushdownAlphabet, transitions, initialStack, accepting) {
@@ -168,7 +173,12 @@ export class PDAModel {
             }
             else if (!worked) { // otherwise will fail as there is no fitting transition
                 window.alert("No transition suitable");
-                return false;
+                let failt = failTran;
+                failt.src = this.currentState;
+                failt.input = sym;
+                path.push(failt);
+                return path; 
+                //return false;
             }
         }
         while (this.currentStack != "") { // this loop uses epsilon transitions until the stack is empty or it fails to do so
@@ -186,6 +196,10 @@ export class PDAModel {
             }
             if (!worked) {
                 window.alert("non-empty stack");
+                let failt = failTran;
+                failt.src = this.currentState;
+                failt.input = "ε";
+                path.push(failt);
                 return false;
 
             }
@@ -207,6 +221,10 @@ export class PDAModel {
         }
         else {
             window.alert("Not in end state");
+            let failt = failTran;
+            failt.src = this.currentState;
+            failt.input = "ε";
+            path.push(failt);
             return false;
         }
     }
