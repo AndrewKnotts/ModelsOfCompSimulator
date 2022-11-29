@@ -106,7 +106,7 @@ export class Tape {
             }
 
             if (leftNode.prev !== null) {
-                tapeArr.unshift(rightNode.prev.value);
+                tapeArr.unshift(leftNode.prev.value);
                 leftNode = leftNode.prev;
             } else {
                 tapeArr.unshift(this.blank);
