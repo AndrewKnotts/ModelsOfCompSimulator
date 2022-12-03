@@ -42,7 +42,7 @@ function parsePushdownAlphabet(input) {
 function parseTransitions(input) {
     let transitions = input.split(';');
     let transArray = [];
-
+    if (input === "") return [];
     for (let i in transitions) {
         let pair = transitions[i].split(" -> ");
         if (pair.size < 1) return [];
@@ -266,6 +266,7 @@ export class PDAModel {
     }
 
     checkInitialState() {
+        if (this.initialState === "") return false; 
         if (this.states.has(this.initialState.name)) {
             this.initialState.connected = true;
             return true;
@@ -297,7 +298,7 @@ export class PDAModel {
     }
 
     checkTransitions() {
-        if (this.transitions.size === 0) return false;
+        if (this.transitions.size === 0 || this.transitions === []) return false;
 
         for (let i in this.transitions) {
             let t = this.transitions[i];

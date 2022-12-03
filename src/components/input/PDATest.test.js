@@ -80,7 +80,7 @@ it('rejects model with no accepting states', () => {
     let startStack = "Z";
     let accepting= "";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid start state");
+    expect(window.alert).toBeCalledWith("Invalid Accepting array");
 });
 
 it('rejects model with invalid start stack', () => {
@@ -93,7 +93,7 @@ it('rejects model with invalid start stack', () => {
     let startStack = "Q";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid start stack");
+    expect(window.alert).toBeCalledWith("Invalid Initial Stack");
 });
 
 it('rejects model with no non-existent startState', () => {
@@ -119,7 +119,7 @@ it('rejects model with invalid accepting state', () => {
     let startStack = "Z";
     let accepting= "q2";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid accepting states");
+    expect(window.alert).toBeCalledWith("Invalid Accepting array");
 });
 
 it('rejects model with pushdown and input symbols sharing names', () => {
@@ -145,7 +145,7 @@ it('rejects model with states and input symbols sharing names', () => {
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid states");
+    expect(window.alert).toBeCalledWith("Invalid states");
 });
 
 it('rejects model with states and pushdown symbols sharing names', () => {
@@ -158,7 +158,7 @@ it('rejects model with states and pushdown symbols sharing names', () => {
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid states");
+    expect(window.alert).toBeCalledWith("Invalid states");
 });
 
 it('rejects model with transitions that include nonexistent states', () => {
@@ -171,7 +171,7 @@ it('rejects model with transitions that include nonexistent states', () => {
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid states");
+    expect(window.alert).toBeCalledWith("Invalid transitions");
 });
 
 it('rejects model with transitions that include nonexistent input symbol', () => {
@@ -197,7 +197,7 @@ it('rejects model with transitions that include nonexistent pushdown symbols', (
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid start state");
+    expect(window.alert).toBeCalledWith("Invalid transitions");
 });
 
 //Reject input strings:
@@ -212,7 +212,7 @@ it('rejects model with test string "aabbba"', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("aabbba");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 it('rejects model with test string "aabbba"', () => {
@@ -226,7 +226,7 @@ it('rejects model with test string "aabbba"', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("aabbba");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 it('rejects model with test string "aabbba"', () => {
@@ -240,7 +240,7 @@ it('rejects model with test string "aabbba"', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("aabbba");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 it('rejects model with test string ""', () => {
@@ -254,7 +254,7 @@ it('rejects model with test string ""', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 it('rejects model with test string ""', () => {
@@ -268,7 +268,7 @@ it('rejects model with test string ""', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 it('rejects model with test string ""', () => {
@@ -282,7 +282,7 @@ it('rejects model with test string ""', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 it('rejects model with test string ""', () => {
@@ -296,7 +296,7 @@ it('rejects model with test string ""', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 it('rejects model with test string "a"', () => {
@@ -310,7 +310,7 @@ it('rejects model with test string "a"', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("a");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 it('rejects model with test string ""', () => {
@@ -324,7 +324,7 @@ it('rejects model with test string ""', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 it('rejects model with test string ""', () => {
@@ -338,7 +338,7 @@ it('rejects model with test string ""', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("aaabbb");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 it('rejects model with test string "a"', () => {
@@ -352,7 +352,7 @@ it('rejects model with test string "a"', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("a");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 it('rejects model with test string "a"', () => {
@@ -380,7 +380,7 @@ it('rejects model with test string "aaabbbb"', () => {
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
     test.checkInputString("aaabbbb");
-    expect(test.acceptance_result).toBe(true);
+    expect(test.acceptance_result).toBe(false);
 });
 
 // Accept
@@ -436,7 +436,7 @@ it('accepts model with test string "bbbbb"', () => {
     let startStack = "AAAAA";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    test.checkInputString("aaabbb");
+    test.checkInputString("bbbbb");
     expect(test.acceptance_result).toBe(true);
 });
 
@@ -450,7 +450,7 @@ it('accepts model with test string "bbb"', () => {
     let startStack = "AZAZAZZZZ";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    test.checkInputString("aaabbb");
+    test.checkInputString("bbb");
     expect(test.acceptance_result).toBe(true);
 });
 
@@ -464,7 +464,7 @@ it('accepts model with test string "ab"', () => {
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    test.checkInputString("aaabbb");
+    test.checkInputString("ab");
     expect(test.acceptance_result).toBe(true);
 });
 
@@ -478,7 +478,7 @@ it('accepts model with test string "aaabbbb"', () => {
     let startStack = "A";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    test.checkInputString("aaabbb");
+    test.checkInputString("aaabbbb");
     expect(test.acceptance_result).toBe(true);
 });
 
@@ -492,6 +492,6 @@ it('accepts simple model with test string "aba"', () => {
     let startStack = "A";
     let accepting= "q0";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    test.checkInputString("aaabbb");
+    test.checkInputString("aba");
     expect(test.acceptance_result).toBe(true);
 });
