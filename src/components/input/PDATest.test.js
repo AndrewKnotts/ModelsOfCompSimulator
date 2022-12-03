@@ -67,7 +67,7 @@ it('rejects model with no start state', () => {
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid start state");
+    expect(window.alert).toBeCalledWith("Invalid Initial State");
 });
 
 it('rejects model with no accepting states', () => {
@@ -80,7 +80,7 @@ it('rejects model with no accepting states', () => {
     let startStack = "Z";
     let accepting= "";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("Invalid Accepting array");
+    expect(window.alert).toBeCalledWith("invalid set of states");
 });
 
 it('rejects model with invalid start stack', () => {
@@ -96,7 +96,7 @@ it('rejects model with invalid start stack', () => {
     expect(window.alert).toBeCalledWith("Invalid Initial Stack");
 });
 
-it('rejects model with no non-existent startState', () => {
+it('rejects model with non-existent startState', () => {
     jest.spyOn(window, 'alert').mockImplementation(() => {});
     let states = "q0, q1";
     let startState = "q2";
@@ -106,7 +106,7 @@ it('rejects model with no non-existent startState', () => {
     let startStack = "Z";
     let accepting= "q1";
     let test = new PDAModel(states, startState, inputAlphabet, pushdownAlphabet, transitions, startStack, accepting);
-    expect(window.alert).toBeCalledWith("invalid start state");
+    expect(window.alert).toBeCalledWith("Invalid Initial State");
 });
 
 it('rejects model with invalid accepting state', () => {
