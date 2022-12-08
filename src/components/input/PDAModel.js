@@ -5,6 +5,10 @@ var all = ""
 function parseStates(input) {
     let input_array = input.split(',');
     let states_array = [];
+    if (input == null || input === "") {
+        window.alert("invalid set of states");
+        return [];
+    }
     for (let i in input_array) {
         let str_state = input_array[i];
         states_array[i] = new State(str_state.replace(" ", ""));
@@ -35,7 +39,10 @@ function parsePushdownAlphabet(input) {
 function parseTransitions(input) {
     let transitions = input.split(';');
     let transArray = [];
-
+    if (input === "") {
+        window.alert("Invalid transitions");
+        return [];
+    }
     for (let i in transitions) {
         let pair = transitions[i].split(" -> ");
         if (pair.size < 1) return [];
@@ -170,6 +177,7 @@ export class PDAModel {
                 failt.src = this.currentState;
                 failt.input = sym;
                 path.push(failt);
+                this.acceptance_result = false;
                 return path; 
                 //return false;
             }
@@ -193,6 +201,7 @@ export class PDAModel {
                 failt.src = this.currentState;
                 failt.input = "ε";
                 path.push(failt);
+                this.acceptance_result = false;
                 return false;
 
             }
@@ -209,7 +218,7 @@ export class PDAModel {
         }
 
         if (endState) {
-            this.acceptanceResult = true;
+            this.acceptance_result = true;
             return path;
         }
         else {
@@ -218,6 +227,7 @@ export class PDAModel {
             failt.src = this.currentState;
             failt.input = "ε";
             path.push(failt);
+            this.acceptance_result = false;
             return false;
         }
     }
@@ -264,6 +274,7 @@ export class PDAModel {
     }
 
     checkInitialState() {
+        if (this.initialState === "") return false; 
         if (this.states.has(this.initialState.name)) {
             this.initialState.connected = true;
             return true;
@@ -273,7 +284,7 @@ export class PDAModel {
 
     checkInitialStack() {
         console.log(this.initialStack);
-        for (let i in initialStack) {
+        for (let i in this.initialStack) {
             let sym = initialStack.substring(i, i + 1);
             if (!this.pdSyms.has(sym)) {
                 return false
@@ -295,7 +306,7 @@ export class PDAModel {
     }
 
     checkTransitions() {
-        if (this.transitions.size === 0) return false;
+        if (this.transitions.size === 0 || this.transitions === []) return false;
 
         for (let i in this.transitions) {
             let t = this.transitions[i];
@@ -362,7 +373,7 @@ export class PDAModel {
             if (!t.source.conn.includes(t.dest) && t.source.name != t.dest.name) {
                 t.source.conn.push(t.dest);
                 t.source.connected = true;
-                if (t.source.name === this.initialState.name) this.initialState = t.source;
+                if (this.initialState != null && t.source.name === this.initialState.name) this.initialState = t.source;
             }
 
             // Adding to list of Transitions with eps as input
