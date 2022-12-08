@@ -2,8 +2,7 @@
 A simulator for different models of computation.
 
 # Project Structure
-This project was built using React on top of JavaScript. Within our file structure, you can see that there is a folder titled `src` that contains 
-all of our working files. Within `src` exists two important folders: `pages` and `components`. 
+This project was built using React on top of JavaScript. It operates simply as a web application, and there is no need for a database backend. Within our file structure, you can see that there is a folder titled `src` that contains all of our working files. Within `src` exists two important folders: `pages` and `components`. 
 
 The `pages` folder contains information specific to each model type (DFA, NFA, PDA, Turing Machine). While there is some overlap, it is important that 
 these remain separate so that corresponding user inputs are handled correctly.
