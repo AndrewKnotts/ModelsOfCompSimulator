@@ -1,5 +1,5 @@
 # ModelsOfCompSimulator
-A simulator for different models of computation.
+A simulator for different models of computation: specifically DFA, NFA, PDA, and Turing Machine models.
 
 # Project Structure
 This project was built using React on top of JavaScript. It operates simply as a web application, and there is no need for a database backend. Within our file structure, you can see that there is a folder titled `src` that contains all of our working files. Within `src` exists two important folders: `pages` and `components`. 
