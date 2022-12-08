@@ -21,7 +21,8 @@ These components are crucial to building different aspects of our webpage.
 
 4. Run “npm start”.
 
-And voila! You have the web application running on your local devide!
+And voila! You have the web application running on your local device!
+To run the unit tests, run "npm start".
 
 # Deployment
 1. In the package.json file, make sure you have a homepage field. Ex: "homepage": "https://myusername.github.io/my-app",
