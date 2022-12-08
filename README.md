@@ -22,6 +22,7 @@ These components are crucial to building different aspects of our webpage.
 4. Run “npm start”.
 
 And voila! You have the web application running on your local device!
+
 To run the unit tests, run "npm start".
 
 # Deployment
