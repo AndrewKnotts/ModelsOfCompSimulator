@@ -72,7 +72,6 @@ it('gets index', () => {
 it('builds TM model', () => {
     jest.spyOn(window, 'alert').mockImplementation(() => {});
     let test = new TuringMachine("A,B,H", "0,1", "(A, 0) -> (B, 1, >); (B, 0) -> (B, 0, <)", "A", "H", "H", 0);
-    //console.log(test.states);
     expect(test.error).toEqual(null);
 })
  
@@ -87,7 +86,6 @@ it('tests TM model 1', () => {
     let test = new TuringMachine(states, alphabet, transitions, startState, haltStates, acceptingStates, "0");
     expect(test.error).toEqual(null);
     expect(test.simulateTape("0000000000")).toEqual(true);
-    console.log(test.tapeHistory);
 })
 
 it('tests TM model 2 101', () => {

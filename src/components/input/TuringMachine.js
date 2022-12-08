@@ -1,5 +1,5 @@
 import { Tape } from "./Tape";
-import { parseAlphabet, Transition } from "./DFAModel";
+import { parseAlphabet } from "./DFAModel";
 
 export class TuringState {
     constructor(name, halting = false, accepting = false, transitions = new Map()) {
@@ -36,14 +36,12 @@ export class TuringTransition {
 }
 
 export class TuringMachine {
-    constructor(states, alphabet, transitions, startState, haltStates, acceptingStates, blankSym) {
+    constructor(states, alphabet, transitions, startState, haltStates, acceptingStates, blankSym, centered) {
         this.states = parseTuringStates(states);
         this.alphabet = parseAlphabet(alphabet);
         this.transitions = parseTuringTransitions(transitions);
         this.initial = null;
         this.blankSym = blankSym;
-        // startIndex is the start point in the input string
-        this.startIndex = 0;
         this.tape = null;
         // tapeHistory is an array of arrays of the tape's contents at each step
         this.tapeHistory = [];
@@ -53,6 +51,8 @@ export class TuringMachine {
         this.halted = false;
         // error is used to store error message strings
         this.error = null;
+        // setting to move indicator (0) or move tape (1) in display
+        this.display = centered;
 
         // check components and alert if error
         if (!this.checkAlphabet()) {
@@ -73,18 +73,17 @@ export class TuringMachine {
     // create and run tape
     simulateTape(input) {
         if (input === "") {
-            // if given empty input string, create a blank tape
-            this.tape = new Tape([this.blankSym], this.blankSym, this.startIndex);
+            this.tape = new Tape([this.blankSym], this.blankSym, 0);
         } else {
-            // turn input into array of characters and create tape from it
             let inputArr = input.split("");
-            this.tape = new Tape(inputArr, this.blankSym, this.startIndex); 
+            this.tape = new Tape(inputArr, this.blankSym, 0);
         }
-        this.tapeHistory.push(this.tape.printTape());
+        if (this.display === false) this.tapeHistory.push(this.tape.printTape());
+        if (this.display === true) this.tapeHistory.push(this.tape.printCenteredTape(4));
         this.tsHistory.push(new TuringTransition("", "", this.initial, "", ""));
 
+        // run tape until halted or step fails
         while (!this.halted) {
-            // until halted, attempt oneStep() until it halts or fails to find a transition
             if (this.oneStep() === false) {
                 return false;
             }
@@ -106,18 +105,20 @@ export class TuringMachine {
             } else if (ts.move === "<") {
                 this.tape.shiftLeft();
             }
-            
+
             // update to next state and halt if necessary
             this.current = ts.nextState;
             if (this.current.halting === true) {
                 this.halted = true;
             }
-            // add to tapeHistory
-            this.tapeHistory.push(this.tape.printTape());
+            // add to tapeHistory with right setting
+            if (this.display === false) this.tapeHistory.push(this.tape.printTape());
+            if (this.display === true) this.tapeHistory.push(this.tape.printCenteredTape(4));
             return true;
         } else {
-            // add to tapeHistory and return false for failure
-            this.tapeHistory.push(this.tape.printTape());
+            // fail
+            if (this.display === false) this.tapeHistory.push(this.tape.printTape());
+            if (this.display === true) this.tapeHistory.push(this.tape.printCenteredTape(4));
             return false;
         }
     }
@@ -129,7 +130,6 @@ export class TuringMachine {
             return false;
         }
 
-        // Add eadch character to set, checking for duplicates
         let symbols = new Set();
         for (let i in this.alphabet) {
             let s = this.alphabet[i];
@@ -216,7 +216,7 @@ export class TuringMachine {
                 }
                 s.accepting = true;
             }
-            
+
         }
         return true;
     }
@@ -231,27 +231,27 @@ export class TuringMachine {
         // check that all transitions are valid
         for (let ts of this.transitions) {
             if (!this.states.has(ts.state)) {
-                this.error = "Invalid state in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState + 
+                this.error = "Invalid state in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState +
                     ", " + ts.write + ", " + ts.move + ")";
                 return false;
             }
             if (!this.alphabet.has(ts.symbol)) {
-                this.error = "Invalid symbol in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState + 
+                this.error = "Invalid symbol in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState +
                     ", " + ts.write + ", " + ts.move + ")";
                 return false;
             }
             if (!this.states.has(ts.nextState)) {
-                this.error = "Invalid next state in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState + 
+                this.error = "Invalid next state in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState +
                     ", " + ts.write + ", " + ts.move + ")";
                 return false;
             }
             if (!this.alphabet.has(ts.write)) {
-                this.error = "Invalid write in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState + 
+                this.error = "Invalid write in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState +
                     ", " + ts.write + ", " + ts.move + ")";
                 return false;
             }
             if (!(ts.move === ">" || ts.move === "<" || ts.move === "|")) {
-                this.error = "Invalid move in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState + 
+                this.error = "Invalid move in transition: (" + ts.state + ", " + ts.symbol + ") -> (" + ts.nextState +
                     ", " + ts.write + ", " + ts.move + ")";
                 return false;
             }
@@ -265,7 +265,6 @@ export class TuringMachine {
                 this.error = "Duplicate transition: (" + ts.state + ", " + ts.symbol + ")";
                 return false;
             }
-            // check that all symbol/state combos are accounted for?
         }
         return true;
     }

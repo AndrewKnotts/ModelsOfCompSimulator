@@ -23,7 +23,8 @@ export default class Turing extends Component {
             modelTransitions: [],
             outputTape: [],
             result: 0,
-            isOpen: false
+            isOpen: false,
+            centered: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -36,15 +37,17 @@ export default class Turing extends Component {
     }
 
     handleSubmit(event) {
-        console.log("Turing Test");
-        console.log(this.state.inputTM);
         let newModel = new TuringMachine(this.state.statesTM, this.state.alphabetTM, this.state.transitionsTM, this.state.startingStateTM,
-            this.state.haltingStatesTM, this.state.acceptingStatesTM, this.state.blankSymbolTM);
+            this.state.haltingStatesTM, this.state.acceptingStatesTM, this.state.blankSymbolTM, this.state.centered);
 
         this.acceptance = newModel.simulateTape(this.state.inputTM);
         this.tapes = newModel.tapeHistory;
         this.trans = newModel.tsHistory;
-        this.readIndex = newModel.startIndex;
+        this.display = newModel.display;
+        this.readIndex = 0;
+        if (this.display === true) {
+            this.readIndex = 4;
+        }
         this.currentState = newModel.initial.name;
         this.tapeIndex = 1;
 
@@ -57,7 +60,6 @@ export default class Turing extends Component {
     }
 
     nextTape() {
-        console.log(this.currentState);
         if (this.tapeIndex >= this.tapes.length) {
             // if at the end of the tape history, indicate whether accepted/rejected
             if (this.acceptance === true) {
@@ -82,6 +84,9 @@ export default class Turing extends Component {
                 if (this.readIndex !== 0) {
                     this.readIndex -= 1;
                 }
+            }
+            if (this.display === true) {
+                this.readIndex = 4;
             }
             this.tapeIndex += 1;
         }
@@ -160,6 +165,12 @@ export default class Turing extends Component {
         })
     }
 
+    handleCheck = () => {
+        this.setState({
+            centered: !this.state.centered
+        })
+    }
+
     render() {
         return (
             <>
@@ -221,6 +232,12 @@ export default class Turing extends Component {
                                 <label>Input:</label>
                                 <input type="text" value={this.state.inputTM} onChange={(event) => this.handleChange(event, "inputTM")} name="input" placeholder="ex: abcde" />
                             </div>
+                            <div>
+                                <label className="checkbox" for="centerTape">
+                                    Center Tape:
+                                </label>
+                                <input className="checkbox" id="centerTape" type="checkbox" onChange={this.handleCheck} />
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -235,13 +252,16 @@ export default class Turing extends Component {
                     <div>
                         {this.state.outputTape.map((txt, index) => {
                             if (this.state.result === 1) {
-                                return <State page='activeTapeCell' stext='tapeText' symbol={txt}></State>
+                                return <State page='activeTapeCellVerified' stext='tapeText' symbol={txt}>
+                                </State>
                             }
                             if (this.state.result === 2) {
                                 return <State page='failedTapeCell' stext='tapeText' symbol={txt}></State>
                             }
                             if (index === this.readIndex) {
-                                return <State page='activeTapeCell' stext='tapeText' symbol={txt}></State>
+                                return <State page='activeTapeCell' stext='tapeText' symbol={txt}>
+                                </State>
+
                             }
                             return <State page='tapeCell' stext='tapeText' symbol={txt}></State>
                         })}

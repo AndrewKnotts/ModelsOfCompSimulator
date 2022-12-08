@@ -33,7 +33,7 @@ export default class DFA extends Component {
     }
 
     // On submit, run the correct model simulation
-    handleSubmit(event) {
+    handleSubmit() {
         console.log("Test1");
         let newModel = new DFAModel(this.state.startingStateDFA, this.state.acceptingStatesDFA, this.state.statesDFA, this.state.alphabetDFA, this.state.transitionsDFA);
         let output = newModel.checkInputString(this.state.inputDFA);
@@ -177,10 +177,10 @@ export default class DFA extends Component {
                     {this.outputDest.map((txt, index) => {
                         if (index % 2 === 0)
                             return (
-                                <State page='circle-res' stext='circle-txt' symbol={txt}></State>
+                                <State page='circle-res' stext='circle-txt' symbol={txt} key={index}></State>
                             )
                         return (
-                            <Arrow symbol={txt} />
+                            <Arrow symbol={txt} key={index} />
                         )
                     })}
                 </div>
