@@ -36,7 +36,7 @@ export class TuringTransition {
 }
 
 export class TuringMachine {
-    constructor(states, alphabet, transitions, startState, haltStates, acceptingStates, blankSym, centered) {
+    constructor(states, alphabet, transitions, startState, haltStates, acceptingStates, blankSym, centered=0) {
         this.states = parseTuringStates(states);
         this.alphabet = parseAlphabet(alphabet);
         this.transitions = parseTuringTransitions(transitions);
@@ -76,6 +76,11 @@ export class TuringMachine {
             this.tape = new Tape([this.blankSym], this.blankSym, 0);
         } else {
             let inputArr = input.split("");
+            for (let char of inputArr) {
+                if (!this.alphabet.has(char)) {
+                    window.alert("Character '" + char + "' is invalid")
+                }
+            }
             this.tape = new Tape(inputArr, this.blankSym, 0);
         }
         if (this.display === false) this.tapeHistory.push(this.tape.printTape());
@@ -131,8 +136,7 @@ export class TuringMachine {
         }
 
         let symbols = new Set();
-        for (let i in this.alphabet) {
-            let s = this.alphabet[i];
+        for (let s of this.alphabet) {
             if (symbols.has(s)) {
                 this.error = "Duplicate in alphabet: " + s;
                 return false;
@@ -149,7 +153,7 @@ export class TuringMachine {
     // check states for empty input or conflicts
     checkStates() {
         if (this.states.length === 0) {
-            this.error = "Empty States";
+            this.error = "Empty states";
             return false;
         }
 
@@ -292,6 +296,7 @@ export function parseTuringTransitions(input) {
     let transitions = input.split(';');
     let transArray = [];
     for (let trans of transitions) {
+        if (trans.length === 0) break;
         let split = trans.split("->");
         let current = split[0].replaceAll("(", "").replaceAll(")", "");
         current = current.split(",");

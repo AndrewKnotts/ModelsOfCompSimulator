@@ -107,8 +107,7 @@ export class NFAModel {
             window.alert(this.error);
         } else {
             this.makeConnected(this.initial);
-            for (let i in this.all) {
-                let s = this.all[i];
+            for (let s of this.states.values()) {
                 if (!s.connected) {
                     console.log("State " + s.name + " is not reachable.");
                 }

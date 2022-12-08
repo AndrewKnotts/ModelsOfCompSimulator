@@ -134,6 +134,7 @@ export default class DFA extends Component {
                                     <li>Press "Download Inputs" to save your custom inputs to your device.</li>
                                     <li>Press "Choose File" to upload previously saved input files.</li>
                                 </ol>
+                                <p>Transition Format: (input symbol, current state, destination state)</p>
                             </>}
                             handleClose={this.togglePopup}
                         />}

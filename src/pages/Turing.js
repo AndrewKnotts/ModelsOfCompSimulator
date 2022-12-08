@@ -194,6 +194,8 @@ export default class Turing extends Component {
                                     <li>Press "Download Inputs" to save your custom inputs to your device.</li>
                                     <li>Press "Choose File" to upload previously saved input files.</li>
                                 </ol>
+                                <p>Transition Format: (current state, read symbol) -&gt; (destination state, write symbol, move direction)</p>
+                                <p>The symbols for movement are &gt; for right, &lt; for left, or "|" for remaining stationary.</p>
                             </>}
                             handleClose={this.togglePopup}
                         />}

@@ -49,8 +49,7 @@ export class DFAModel {
         } else {
             // make Connected for all and check that all states are reachable
             this.makeConnected(this.initial);
-            for (let i in this.all) {
-                let s = this.all[i];
+            for (let s of this.states.values()) {
                 if (!s.connected) {
                     console.log("State " + s.name + " is not reachable.");
                 }
@@ -281,6 +280,7 @@ export function parseTransition(input) {
     let transitions = input.split(';');
     let transArray = [];
     for (let trans of transitions) {
+        if (trans.length === 0) break;
         let split = trans.split(',');
         for (let j in split) {
             split[j] = split[j].replaceAll("(", "").replaceAll(")", "");

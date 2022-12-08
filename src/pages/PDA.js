@@ -157,6 +157,7 @@ export default class PDA extends Component {
                                     <li>Press "Download Inputs" to save your custom inputs to your device.</li>
                                     <li>Press "Choose File" to upload previously saved input files.</li>
                                 </ol>
+                                <p>Transition Format: (current state, input symbol, stack symbol) -&gt; (destination state, push symbol)</p>
                             </>}
                             handleClose={this.togglePopup}
                         />}
@@ -165,11 +166,11 @@ export default class PDA extends Component {
                         <form onSubmit={this.handleSubmit} className="input" id="form" >
                             <div className='formGroup'>
                                 <label>Input Alphabet:</label>
-                                <input type="text" value={this.state.inputAlphabetPDA} onChange={(event) => this.handleChange(event, "inputAlphabetPDA")} name="inputAlphabet" placeholder='ex: a,b,c,d,e' />
+                                <input type="text" value={this.state.inputAlphabetPDA} onChange={(event) => this.handleChange(event, "inputAlphabetPDA")} name="inputAlphabet" placeholder='ex: a,b' />
                             </div>
                             <div className='formGroup'>
                                 <label>Pushdown Alphabet:</label>
-                                <input type="text" value={this.state.pushdownAlphabetPDA} onChange={(event) => this.handleChange(event, "pushdownAlphabetPDA")} name="pushdownAlphabet" placeholder='ex: A,Z,F,N' />
+                                <input type="text" value={this.state.pushdownAlphabetPDA} onChange={(event) => this.handleChange(event, "pushdownAlphabetPDA")} name="pushdownAlphabet" placeholder='ex: A,Z' />
                             </div>
                             <div className='formGroup'>
                                 <label>States:</label>
@@ -185,15 +186,15 @@ export default class PDA extends Component {
                             </div>
                             <div className='formGroup'>
                                 <label>Initial Stack:</label>
-                                <input type="text" value={this.state.startingStackPDA} onChange={(event) => this.handleChange(event, "startingStackPDA")} name="startingStack" placeholder="ex: ZZAZ" />
+                                <input type="text" value={this.state.startingStackPDA} onChange={(event) => this.handleChange(event, "startingStackPDA")} name="startingStack" placeholder="ex: A" />
                             </div>
                             <div className='formGroup'>
                                 <label>Transitions:</label>
-                                <textarea type="text" value={this.state.transitionsPDA} onChange={(event) => this.handleChange(event, "transitionsPDA")} name="transitions" placeholder="ex: (0, A, A); (1, A, B); (1, B, A); (0, B, B)" />
+                                <textarea type="text" value={this.state.transitionsPDA} onChange={(event) => this.handleChange(event, "transitionsPDA")} name="transitions" placeholder="ex: (q0, a, Z) -> (q0, AZ); (q0, a, A) -> (q0, AA); (q0, b, A) -> (q1, eps); (q1, b, A) -> (q1, eps); (q1, eps, Z) -> (q1, eps)" />
                             </div>
                             <div className='formGroup'>
                                 <label>Input:</label>
-                                <input type="text" value={this.state.inputPDA} onChange={(event) => this.handleChange(event, "inputPDA")} name="input" placeholder="ex: abcde" />
+                                <input type="text" value={this.state.inputPDA} onChange={(event) => this.handleChange(event, "inputPDA")} name="input" placeholder="ex: abb" />
                             </div>
                         </form>
                     </div>
